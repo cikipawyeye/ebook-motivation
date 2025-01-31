@@ -113,10 +113,10 @@ class MotivasiView extends GetView<MotivasiController> {
                 image: AssetImage("assets/images/Motivasi1.png"),
                 fit: BoxFit.cover,
               ),
-              borderRadius: BorderRadius.only(
-                bottomLeft: Radius.circular(20),
-                bottomRight: Radius.circular(20),
-              ),
+              // borderRadius: BorderRadius.only(
+              //   bottomLeft: Radius.circular(0),
+              //   bottomRight: Radius.circular(20),
+              // ),
             ),
           ),
 
