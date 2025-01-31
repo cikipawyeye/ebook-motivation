@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart'; // Import Google Fonts package
 import '../controllers/login_controller.dart';
+import 'package:flutter/foundation.dart';
 
 class LoginView extends GetView<LoginController> {
   LoginView({super.key});
@@ -11,6 +12,11 @@ class LoginView extends GetView<LoginController> {
 
   @override
   Widget build(BuildContext context) {
+    if (kDebugMode) {
+      emailC.text = 'user@example.com';
+      passC.text = 'password';
+    }
+
     return Scaffold(
       backgroundColor: Colors.white, // Menambahkan latar belakang putih
       body: ListView(
