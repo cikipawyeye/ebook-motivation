@@ -27,11 +27,11 @@ class AppPages {
       page: () => LoginView(),
       binding: LoginBinding(),
     ),
-    // GetPage(
-    //   name: _Paths.register,
-    //   page: () => RegisterPage(),
-    //   binding: RegisterBinding(),
-    // ),
+    GetPage(
+      name: _Paths.register,
+      page: () => RegisterPage(),
+      binding: RegisterBinding(),
+    ),
     GetPage(
       name: _Paths.motivasi,  // Rute untuk Motivasi
       page: () => MotivasiView(),
