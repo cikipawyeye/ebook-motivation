@@ -76,6 +76,7 @@ class Subcategory {
   final String category;
   final String categoryName;
   final bool isActive;
+  final int contentsCount;
 
   Subcategory({
     required this.id,
@@ -83,6 +84,7 @@ class Subcategory {
     required this.category,
     required this.categoryName,
     required this.isActive,
+    required this.contentsCount,
   });
 
   factory Subcategory.fromJson(Map<String, dynamic> json) {
@@ -92,6 +94,7 @@ class Subcategory {
       category: json['category'] ?? '',
       categoryName: json['category_name'] ?? '',
       isActive: json['is_active'] ?? false,
+      contentsCount: json['contents_count'] ?? 0,
     );
   }
 }
