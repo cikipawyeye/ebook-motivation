@@ -12,7 +12,13 @@ class MotivationDetailPage extends GetView<MotivasiController> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Motivasi Detail'),
+        title: Text(
+          'Motivasi Detail',
+          style: GoogleFonts.leagueSpartan(
+            color: Colors.white,
+            fontWeight: FontWeight.bold,
+          ),
+        ),
         backgroundColor: const Color(0xFF32497B),
         leading: IconButton(
           icon: const Icon(Icons.arrow_back, color: Colors.white),
