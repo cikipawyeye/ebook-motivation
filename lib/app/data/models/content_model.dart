@@ -1,37 +1,37 @@
-class Motivasi {
+class Content {
   final int id;
   final String title;
   final ImageUrls imageUrls;
-  final Subcategory subcategory;
+  final int subcategoryId;
 
-  Motivasi({
+  Content({
     required this.id,
     required this.title,
     required this.imageUrls,
-    required this.subcategory,
+    required this.subcategoryId,
   });
 
-  factory Motivasi.fromJson(Map<String, dynamic> json) {
-    return Motivasi(
+  factory Content.fromJson(Map<String, dynamic> json) {
+    return Content(
       id: json['id'] ?? 0,
       title: json['title'] ?? '',
       imageUrls: ImageUrls.fromJson(json['image_urls']),
-      subcategory: Subcategory.fromJson(json['subcategory']),
+      subcategoryId: json['subcategory_id'],
     );
   }
 }
 
 class ImageUrls {
+  final String alt;
   final String original;
   final String optimized; // URL gambar yang sudah dioptimasi
-  final List<Responsives> responsives;
-  final String alt;
+  final List<Responsives>? responsives;
 
   ImageUrls({
+    required this.alt,
     required this.original,
     required this.optimized,
-    required this.responsives,
-    required this.alt,
+    this.responsives,
   });
 
   factory ImageUrls.fromJson(Map<String, dynamic> json) {
@@ -66,35 +66,6 @@ class Responsives {
       width: json['width'] ?? 0,
       height: json['height'] ?? 0,
       url: json['url'] ?? '',
-    );
-  }
-}
-
-class Subcategory {
-  final int id;
-  final String name;
-  final String category;
-  final String categoryName;
-  final bool isActive;
-  final int contentsCount;
-
-  Subcategory({
-    required this.id,
-    required this.name,
-    required this.category,
-    required this.categoryName,
-    required this.isActive,
-    required this.contentsCount,
-  });
-
-  factory Subcategory.fromJson(Map<String, dynamic> json) {
-    return Subcategory(
-      id: json['id'] ?? 0,
-      name: json['name'] ?? '',
-      category: json['category'] ?? '',
-      categoryName: json['category_name'] ?? '',
-      isActive: json['is_active'] ?? false,
-      contentsCount: json['contents_count'] ?? 0,
     );
   }
 }

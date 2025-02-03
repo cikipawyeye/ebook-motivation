@@ -137,15 +137,12 @@ class MotivasiView extends GetView<MotivasiController> {
                       itemBuilder: (context, index) {
                         final subcategory = controller.subcategories[index];
 
-                        int contentCount = controller.motivasiList
-                            .where((motivasi) =>
-                                motivasi.subcategory.id == subcategory.id)
-                            .length;
+                        int contentCount = subcategory.contentsCount;
 
                         return GestureDetector(
                           onTap: () {
-                            Get.toNamed('/motivation-detail-page',
-                                arguments: subcategory.id);
+                            Get.toNamed('/motivation/contents',
+                                arguments: subcategory);
                           },
                           child: Container(
                             padding: const EdgeInsets.symmetric(
@@ -194,7 +191,6 @@ class MotivasiView extends GetView<MotivasiController> {
                                   ),
                                 ),
                                 const SizedBox(height: 10),
-
                                 const Divider(
                                   color: Colors.black26,
                                   height: 1,
