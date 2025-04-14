@@ -1,0 +1,1 @@
+/Users/ruxxcon/MobileDev/Flutter-Dev/Ebook_motivation/ebookapp_v2/ebookapp_v3/ebook-motivation/build/app/intermediates/cxx/Debug/21216h4s/obj/armeabi-v7a

@@ -1,0 +1,20 @@
+{
+  "buildFiles": [
+    "/Users/ruxxcon/MobileDev/Flutter-Dev/flutter-sdk/flutter/packages/flutter_tools/gradle/src/main/groovy/CMakeLists.txt"
+  ],
+  "cleanCommandsComponents": [
+    [
+      "/Users/ruxxcon/Library/Android/sdk/cmake/3.22.1/bin/ninja",
+      "-C",
+      "/Users/ruxxcon/MobileDev/Flutter-Dev/Ebook_motivation/ebookapp_v2/ebookapp_v3/ebook-motivation/android/app/.cxx/Debug/21216h4s/x86",
+      "clean"
+    ]
+  ],
+  "buildTargetsCommandComponents": [
+    "/Users/ruxxcon/Library/Android/sdk/cmake/3.22.1/bin/ninja",
+    "-C",
+    "/Users/ruxxcon/MobileDev/Flutter-Dev/Ebook_motivation/ebookapp_v2/ebookapp_v3/ebook-motivation/android/app/.cxx/Debug/21216h4s/x86",
+    "{LIST_OF_TARGETS_TO_BUILD}"
+  ],
+  "libraries": {}
+}
