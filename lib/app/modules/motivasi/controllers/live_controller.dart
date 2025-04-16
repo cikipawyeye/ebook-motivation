@@ -509,8 +509,9 @@ import 'dart:io';
 import 'package:ebookapp/app/modules/wallpaper_music/controllers/wallpaper_music_controller.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:better_player/better_player.dart'; // Import better_player
-import 'package:ebookapp/core/constants/constant.dart'; // Import AssetPaths
+import 'package:ebookapp/core/constants/constant.dart';
+import 'package:video_player/video_player.dart'; // Import AssetPaths
+import 'package:shared_preferences/shared_preferences.dart';
 
 class LiveWallpaperController extends GetxController {
   // Controller untuk wallpaper dan musik
@@ -518,8 +519,8 @@ class LiveWallpaperController extends GetxController {
       Get.find<WallpaperMusicController>();
 
   // Observable untuk wallpaper saat ini
-  final Rx<BetterPlayerController?> _videoController =
-      Rx<BetterPlayerController?>(null);
+  final Rx<VideoPlayerController?> _videoController =
+      Rx<VideoPlayerController?>(null);
   final RxDouble _wallpaperOpacity = RxDouble(0.5);
   final RxBool _isWallpaperVisible = RxBool(true);
 
@@ -561,6 +562,11 @@ class LiveWallpaperController extends GetxController {
     update();
   }
 
+  Future<String?> _getToken() async {
+    final prefs = await SharedPreferences.getInstance();
+    return prefs.getString('token');
+  }
+
   void _initializeVideoController(String videoPath) async {
     try {
       // Cari controller yang sudah diinisialisasi di WallpaperMusicController
@@ -571,23 +577,24 @@ class LiveWallpaperController extends GetxController {
         _videoController.value = existingController;
         existingController.play();
       } else {
-        // Jika belum diinisialisasi, muat dari URL
-        final dataSource = BetterPlayerDataSource(
-          BetterPlayerDataSourceType.network,
-          videoPath,
+        final token = await _getToken();
+
+        final controller = VideoPlayerController.networkUrl(
+          Uri(
+              host: baseUrl,
+              path: '/api/v1/wallpapers/1/file',
+              queryParameters: {
+                'expires': '1744394187',
+                'signature':
+                    '02330dad3ad946cae063d24809ba3adfec74b73c407ee923890c7603f7982ab5'
+              }),
+          httpHeaders: {
+            'Content-Type': 'application/json',
+            'Accept': 'application/json',
+            'Authorization': 'Bearer $token',
+          },
         );
 
-        final controller = BetterPlayerController(
-          BetterPlayerConfiguration(
-            autoPlay: true,
-            looping: true,
-            controlsConfiguration: BetterPlayerControlsConfiguration(
-              showControls: true,
-            ),
-          ),
-        );
-
-        await controller.setupDataSource(dataSource);
         _videoController.value = controller;
       }
     } catch (e) {
@@ -627,9 +634,7 @@ class LiveWallpaperController extends GetxController {
     if (videoController != null) {
       return Opacity(
         opacity: _wallpaperOpacity.value,
-
-        child: BetterPlayer(
-            controller: videoController), // Menggunakan BetterPlayer
+        child: VideoPlayer(videoController),
       );
     } else {
       return Container(

@@ -5,11 +5,11 @@ import 'package:get/get.dart';
 import 'package:http/http.dart' as http;
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:audioplayers/audioplayers.dart';
-import 'package:better_player/better_player.dart'; 
+import 'package:video_player/video_player.dart';
 import '/../../../core/constants/constant.dart';
 
 import '../model/music_track.dart';
-import '../model/wallpaper_model.dart'; 
+import '../model/wallpaper_model.dart';
 
 class WallpaperMusicController extends GetxController {
   static const int VIDEO_LOAD_TIMEOUT = 10;
@@ -21,21 +21,22 @@ class WallpaperMusicController extends GetxController {
   final audioPlayer = AudioPlayer();
   final audioVolume = RxDouble(0.5);
   final errorMessage = RxString('');
+  final token = RxString('');
 
   final musicPlaylist = RxList<MusicTrack>([]);
   final wallpapers = RxList<Wallpaper>([]);
 
-  late BetterPlayerController
-      _controller; // Ganti VideoPlayerController dengan BetterPlayerController
+  late VideoPlayerController _controller;
 
   // Menambahkan Map untuk menyimpan video controllers
-  final Map<String, BetterPlayerController> videoControllers = {};
+  final Map<String, VideoPlayerController> videoControllers = {};
 
   @override
   void onInit() {
     super.onInit();
-    _initializeVideoPlayback();
+    // _initializeVideoPlayback();
     _initializeServices();
+    _getToken().then((value) => token.value = value ?? '');
   }
 
   Future<void> _initializeVideoPlayback() async {
@@ -43,26 +44,17 @@ class WallpaperMusicController extends GetxController {
       final token = await _getToken();
       debugPrint('🔄 Mengambil video dari URL...');
 
-      // Initialize BetterPlayerController
-      BetterPlayerDataSource dataSource = BetterPlayerDataSource(
-        BetterPlayerDataSourceType.network,
-        '${baseUrl}/api/v1/wallpapers/1/file?expires=1744394187&signature=02330dad3ad946cae063d24809ba3adfec74b73c407ee923890c7603f7982ab5',
-        headers: {
+      // url expired
+      _controller = VideoPlayerController.networkUrl(
+        Uri.parse(
+            '$baseUrl/api/v1/wallpapers/1/file?expires=1744394187&signature=02330dad3ad946cae063d24809ba3adfec74b73c407ee923890c7603f7982ab5'),
+        httpHeaders: {
           'Content-Type': 'application/json',
           'Accept': 'application/json',
           'Authorization': 'Bearer $token',
         },
       );
-
-      _controller = BetterPlayerController(
-        BetterPlayerConfiguration(
-          autoPlay: true,
-          looping: true,
-          controlsConfiguration: BetterPlayerControlsConfiguration(
-            showControls: true,
-          ),
-        ),
-      )..setupDataSource(dataSource);
+      await _controller.initialize();
 
       // Memulai pemutaran
       _controller.play();
@@ -109,8 +101,7 @@ class WallpaperMusicController extends GetxController {
 
       // Memisahkan proses HTTP ke dalam Future agar UI tetap responsif
       final response = await http.get(
-        Uri.parse(
-            '${baseUrl}/api/v1/wallpapers?paginate=false'),
+        Uri.parse('$baseUrl/api/v1/wallpapers?paginate=false'),
         headers: {
           'Content-Type': 'application/json',
           'Accept': 'application/json',
@@ -123,8 +114,13 @@ class WallpaperMusicController extends GetxController {
       if (response.statusCode == 200) {
         final Map<String, dynamic> jsonResponse = json.decode(response.body);
         final List<dynamic> wallpaperData = jsonResponse['data'];
-        wallpapers.value =
-            wallpaperData.map((item) => Wallpaper.fromJson(item)).toList();
+        wallpapers.value = wallpaperData.map((item) {
+          Wallpaper wallpaper = Wallpaper.fromJson(item);
+          if (wallpaper.type == 'video') {
+            _initializeVideo(wallpaper.fileUrl);
+          }
+          return wallpaper;
+        }).toList();
         wallpaperStatus.value = WallpaperStatus.loaded;
       } else {
         throw Exception(
@@ -142,8 +138,7 @@ class WallpaperMusicController extends GetxController {
       debugPrint('🔄 Mengambil musik...');
 
       final response = await http.get(
-        Uri.parse(
-            '${baseUrl}/api/v1/musics?paginate=false'),
+        Uri.parse('$baseUrl/api/v1/musics?paginate=false'),
         headers: {
           'Content-Type': 'application/json',
           'Accept': 'application/json',
@@ -180,20 +175,19 @@ class WallpaperMusicController extends GetxController {
       return;
     }
 
-    // Hentikan dan buang video yang saat ini diinisialisasi
-    stopAndDisposeCurrentVideo();
-
     selectedWallpaper.value = wallpaper.fileUrl;
     saveSelections();
 
     // Muat video hanya jika wallpaper yang dipilih adalah tipe video
     if (wallpaper.type == 'video') {
-      _initializeVideo(wallpaper.fileUrl);
+      if (getVideoController(wallpaper.fileUrl) == null) {
+        _initializeVideo(wallpaper.fileUrl);
+      }
     } else {
       debugPrint('Wallpaper yang dipilih bukan video');
     }
 
-    update();
+    if (!isClosed) update();
   }
 
   void stopAndDisposeCurrentVideo() {
@@ -213,22 +207,25 @@ class WallpaperMusicController extends GetxController {
   Future<void> _initializeVideo(String videoUrl) async {
     try {
       debugPrint('Menginisialisasi video: $videoUrl');
-      final controller = BetterPlayerController(
-        BetterPlayerConfiguration(
-          autoPlay: true,
-          looping: true,
-          controlsConfiguration: BetterPlayerControlsConfiguration(
-            showControls: true,
-          ),
-        ),
+
+      final token = await _getToken();
+
+      final controller = VideoPlayerController.networkUrl(
+        Uri.parse(videoUrl),
+        httpHeaders: {
+          'Content-Type': 'application/json',
+          'Accept': 'application/json',
+          'Authorization': 'Bearer $token',
+        },
       );
-      final dataSource = BetterPlayerDataSource(
-        BetterPlayerDataSourceType.network,
-        videoUrl,
-      );
-      await controller.setupDataSource(dataSource);
+
+      await controller.initialize();
+      await controller.setVolume(0);
+
       videoControllers[videoUrl] = controller; // Simpan ke dalam map
       debugPrint('Video berhasil dimuat: $videoUrl');
+
+      if (!isClosed) update();
     } catch (e) {
       debugPrint('Kesalahan inisialisasi video: $videoUrl - $e');
       wallpaperStatus.value = WallpaperStatus.error;
@@ -244,7 +241,7 @@ class WallpaperMusicController extends GetxController {
     }
   }
 
-  BetterPlayerController? getVideoController(String videoPath) {
+  VideoPlayerController? getVideoController(String videoPath) {
     return videoControllers[videoPath];
   }
 
@@ -327,6 +324,7 @@ class WallpaperMusicController extends GetxController {
   void onClose() {
     // Bersihkan sumber daya
     videoControllers.forEach((_, controller) => controller.dispose());
+    videoControllers.clear();
     audioPlayer.stop();
     audioPlayer.dispose();
     _controller.dispose(); // Hapus controller baru

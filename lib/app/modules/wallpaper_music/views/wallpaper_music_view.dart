@@ -2133,10 +2133,10 @@ import 'package:get/get.dart';
 import 'package:smooth_page_indicator/smooth_page_indicator.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:video_player/video_player.dart';
 import '../controllers/wallpaper_music_controller.dart';
 import '../model/music_track.dart';
 import '../model/wallpaper_model.dart';
-import 'package:better_player/better_player.dart'; // Import BetterPlayer
 
 class WallpaperMusicView extends StatefulWidget {
   const WallpaperMusicView({Key? key}) : super(key: key);
@@ -2329,12 +2329,14 @@ class _WallpaperMusicViewState extends State<WallpaperMusicView>
         ),
         child: wallpaper.type == 'video'
             ? _buildVideoPlayer(controller, wallpaper.fileUrl, isSelected)
-            : _buildImageTile(wallpaper.thumbnailUrl, isSelected),
+            : _buildImageTile(controller, wallpaper.fileUrl, isSelected),
       ),
     );
   }
 
-  Widget _buildImageTile(String thumbnailUrl, bool isSelected) {
+  Widget _buildImageTile(WallpaperMusicController controller, String thumbnailUrl, bool isSelected) {
+    String token = controller.token.value;
+
     return Container(
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(15),
@@ -2343,6 +2345,11 @@ class _WallpaperMusicViewState extends State<WallpaperMusicView>
         borderRadius: BorderRadius.circular(15),
         child: Image.network(
           thumbnailUrl,
+          headers: {
+            'Content-Type': 'application/json',
+            'Accept': 'application/json',
+            'Authorization': 'Bearer $token',
+          },
           fit: BoxFit.cover,
           loadingBuilder: (context, child, loadingProgress) {
             if (loadingProgress == null) return child;
@@ -2361,7 +2368,7 @@ class _WallpaperMusicViewState extends State<WallpaperMusicView>
 
   Widget _buildVideoPlayer(
       WallpaperMusicController controller, String videoUrl, bool isSelected) {
-    final videoController = controller.getVideoController(videoUrl);
+    VideoPlayerController? videoController = controller.getVideoController(videoUrl);
 
     if (videoController == null) {
       return const Center(child: CircularProgressIndicator());
@@ -2386,12 +2393,14 @@ class _WallpaperMusicViewState extends State<WallpaperMusicView>
           child: Stack(
             alignment: Alignment.center,
             children: [
-              BetterPlayer(controller: videoController), // Using BetterPlayer
+              VideoPlayer(videoController), // Using BetterPlayer
               if (isSelected)
                 CircleAvatar(
                   backgroundColor: Colors.black54,
                   child: Icon(
-                    videoController.isPlaying() ?? false ? Icons.pause : Icons.play_arrow,
+                    isSelected
+                        ? Icons.pause
+                        : Icons.play_arrow,
                     color: Colors.white,
                   ),
                 ),
