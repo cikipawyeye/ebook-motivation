@@ -29,7 +29,6 @@ environment:
 # versions available, run `flutter pub outdated`.
 dependencies:
   audioplayers: ^6.2.0
-  better_player: ^0.0.84
   cached_network_image: ^3.4.1
   cupertino_icons: ^1.0.8
   dropdown_button2: ^2.3.9
@@ -106,16 +105,16 @@ flutter:
     - assets/audio/PenyejukHati10.mp3
 
     #GIF
-    - assets/gif/ocean-diver.gif
-    - assets/gif/Wallpaper01.gif
-    - assets/gif/Wallpaper02.gif
-    - assets/gif/Wallpaper03.gif
-    - assets/gif/Wallpaper04.gif
-    - assets/gif/Wallpaper05.gif
-    - assets/gif/Wallpaper06.gif
-    - assets/gif/Wallpaper07.gif
-    - assets/gif/Wallpaper08.gif
-    - assets/gif/Wallpaper09.gif
+    # - assets/gif/ocean-diver.gif
+    # - assets/gif/Wallpaper01.gif
+    # - assets/gif/Wallpaper02.gif
+    # - assets/gif/Wallpaper03.gif
+    # - assets/gif/Wallpaper04.gif
+    # - assets/gif/Wallpaper05.gif
+    # - assets/gif/Wallpaper06.gif
+    # - assets/gif/Wallpaper07.gif
+    # - assets/gif/Wallpaper08.gif
+    # - assets/gif/Wallpaper09.gif
 
     #Video
     - assets/videos/Wallpaper01.mp4
