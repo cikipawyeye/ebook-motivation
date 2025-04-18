@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:http/http.dart' as http;
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:audioplayers/audioplayers.dart';
+import 'package:just_audio/just_audio.dart';
 import 'package:video_player/video_player.dart';
 import '/../../../core/constants/constant.dart';
 
@@ -18,7 +18,7 @@ class WallpaperMusicController extends GetxController {
   final selectedMusic = RxString('');
   final wallpaperStatus = Rx<WallpaperStatus>(WallpaperStatus.idle);
   final musicStatus = Rx<WallpaperStatus>(WallpaperStatus.idle);
-  final audioPlayer = AudioPlayer();
+  final audioPlayer = AudioPlayer(useProxyForRequestHeaders: false);
   final audioVolume = RxDouble(0.5);
   final errorMessage = RxString('');
   final token = RxString('');
@@ -34,7 +34,7 @@ class WallpaperMusicController extends GetxController {
   @override
   void onInit() {
     super.onInit();
-    // _initializeVideoPlayback();
+    _initializeVideoPlayback();
     _initializeServices();
     _getToken().then((value) => token.value = value ?? '');
   }
@@ -44,10 +44,16 @@ class WallpaperMusicController extends GetxController {
       final token = await _getToken();
       debugPrint('🔄 Mengambil video dari URL...');
 
-      // url expired
+      if (selectedWallpaper.value.isEmpty && wallpapers.isNotEmpty) {
+        if (wallpapers.isNotEmpty) {
+          selectedWallpaper.value = wallpapers.first.fileUrl;
+        } else {
+          return;
+        }
+      }
+
       _controller = VideoPlayerController.networkUrl(
-        Uri.parse(
-            '$baseUrl/api/v1/wallpapers/1/file?expires=1744394187&signature=02330dad3ad946cae063d24809ba3adfec74b73c407ee923890c7603f7982ab5'),
+        Uri.parse(selectedWallpaper.value),
         httpHeaders: {
           'Content-Type': 'application/json',
           'Accept': 'application/json',
@@ -69,8 +75,9 @@ class WallpaperMusicController extends GetxController {
   Future<void> _initializeServices() async {
     try {
       await loadSelections();
-      audioPlayer.onPlayerStateChanged.listen(_handleAudioStateChange);
-      audioPlayer.onPlayerComplete.listen((_) => _handleMusicCompletion());
+      audioPlayer.setShuffleModeEnabled(false);
+      audioPlayer.setLoopMode(LoopMode.one);
+      audioPlayer.playerStateStream.listen(_handleAudioStateChange);
       await _fetchWallpapers();
       await _fetchMusic();
     } catch (e) {
@@ -246,27 +253,42 @@ class WallpaperMusicController extends GetxController {
   }
 
   // Memilih Musik
-  Future<void> selectMusic(MusicTrack musicTrack) async {
+  Future<void> selectMusic(MusicTrack? musicTrack) async {
+    if (musicTrack == null || musicTrack.fileUrl.isEmpty) {
+      return;
+    }
+
     try {
       musicStatus.value = WallpaperStatus.loading;
 
-      if (selectedMusic.value == musicTrack.fileUrl) {
-        if (audioPlayer.state == PlayerState.playing) {
-          await audioPlayer.pause();
-        } else {
-          await audioPlayer.play(UrlSource(musicTrack.fileUrl));
-        }
-      } else {
-        await audioPlayer.stop();
-        await audioPlayer.play(UrlSource(musicTrack.fileUrl));
+      final token = await _getToken(); // Dapatkan token
+      final audioSource = LockCachingAudioSource(
+        Uri.parse(musicTrack.fileUrl),
+        headers: {
+          'Content-Type': 'application/json',
+          'Accept': 'application/json',
+          'Authorization': 'Bearer $token',
+        });
+      await audioPlayer.setAudioSource(audioSource);
+
+      if ((selectedMusic.value != musicTrack.fileUrl)) {
         selectedMusic.value = musicTrack.fileUrl;
         saveSelections();
       }
 
       musicStatus.value = WallpaperStatus.loaded;
+
+      if (audioPlayer.playing) {
+        audioPlayer.pause();
+      } else {
+        audioPlayer.play();
+      }
     } catch (e) {
+      debugPrint(musicTrack.fileUrl);
       musicStatus.value = WallpaperStatus.error;
       _handleAudioError(e);
+    } finally {
+      if (!isClosed) update();
     }
   }
 
@@ -291,21 +313,18 @@ class WallpaperMusicController extends GetxController {
   }
 
   void _handleAudioStateChange(PlayerState state) {
-    switch (state) {
-      case PlayerState.playing:
-        debugPrint('Audio sedang diputar');
-        break;
-      case PlayerState.stopped:
-        debugPrint('Audio dihentikan');
-        break;
-      default:
-        break;
+    if (state.processingState == ProcessingState.completed) {
+      debugPrint('Musik telah selesai diputar');
+      // playNextTrack();
+    } else if (state.processingState == ProcessingState.ready &&
+        !state.playing) {
+      debugPrint('Audio dihentikan');
+    } else if (state.processingState == ProcessingState.ready &&
+        state.playing) {
+      debugPrint('Audio sedang diputar');
+    } else if (state.processingState == ProcessingState.buffering) {
+      debugPrint('Buffering...');
     }
-  }
-
-  void _handleMusicCompletion() {
-    debugPrint('Musik telah selesai diputar');
-    playNextTrack(); // Secara otomatis putar trek berikutnya
   }
 
   void _handleAudioError(dynamic error) {

@@ -2620,7 +2620,7 @@ class _WallpaperMusicViewState extends State<WallpaperMusicView>
               ),
               child: Center(
                 child: Icon(
-                  isSelected ? Icons.pause : Icons.play_arrow,
+                  isSelected && controller.audioPlayer.playing ? Icons.pause : Icons.play_arrow,
                   color: isSelected ? Colors.white : Colors.black54,
                   size: 20,
                 ),
