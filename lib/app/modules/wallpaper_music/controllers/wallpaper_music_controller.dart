@@ -44,7 +44,7 @@ class WallpaperMusicController extends GetxController {
       final token = await _getToken();
       debugPrint('🔄 Mengambil video dari URL...');
 
-      if (selectedWallpaper.value.isEmpty && wallpapers.isNotEmpty) {
+      if (selectedWallpaper.value.isEmpty) {
         if (wallpapers.isNotEmpty) {
           selectedWallpaper.value = wallpapers.first.fileUrl;
         } else {
@@ -262,13 +262,12 @@ class WallpaperMusicController extends GetxController {
       musicStatus.value = WallpaperStatus.loading;
 
       final token = await _getToken(); // Dapatkan token
-      final audioSource = LockCachingAudioSource(
-        Uri.parse(musicTrack.fileUrl),
-        headers: {
-          'Content-Type': 'application/json',
-          'Accept': 'application/json',
-          'Authorization': 'Bearer $token',
-        });
+      final audioSource =
+          LockCachingAudioSource(Uri.parse(musicTrack.fileUrl), headers: {
+        'Content-Type': 'application/json',
+        'Accept': 'application/json',
+        'Authorization': 'Bearer $token',
+      });
       await audioPlayer.setAudioSource(audioSource);
 
       if ((selectedMusic.value != musicTrack.fileUrl)) {
