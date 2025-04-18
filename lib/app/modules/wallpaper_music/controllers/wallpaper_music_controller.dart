@@ -268,19 +268,29 @@ class WallpaperMusicController extends GetxController {
         'Accept': 'application/json',
         'Authorization': 'Bearer $token',
       });
-      await audioPlayer.setAudioSource(audioSource);
+
+      musicStatus.value = WallpaperStatus.loaded;
 
       if ((selectedMusic.value != musicTrack.fileUrl)) {
         selectedMusic.value = musicTrack.fileUrl;
         saveSelections();
-      }
-
-      musicStatus.value = WallpaperStatus.loaded;
-
-      if (audioPlayer.playing) {
-        audioPlayer.pause();
+        audioPlayer.setAudioSource(audioSource).then((value) {
+          audioPlayer.play();
+          if (!isClosed) update();
+        });
       } else {
-        audioPlayer.play();
+        if (audioPlayer.playing) {
+          audioPlayer.pause();
+        } else {
+          if (audioPlayer.audioSource == null) {
+            audioPlayer.setAudioSource(audioSource).then((value) {
+              audioPlayer.play();
+              if (!isClosed) update();
+            });
+          } else {
+            audioPlayer.play();
+          }
+        }
       }
     } catch (e) {
       debugPrint(musicTrack.fileUrl);

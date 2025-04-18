@@ -2130,6 +2130,7 @@ import 'package:ebookapp/core/constants/constant.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:get/get.dart';
+import 'package:just_audio/just_audio.dart';
 import 'package:smooth_page_indicator/smooth_page_indicator.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -2334,7 +2335,8 @@ class _WallpaperMusicViewState extends State<WallpaperMusicView>
     );
   }
 
-  Widget _buildImageTile(WallpaperMusicController controller, String thumbnailUrl, bool isSelected) {
+  Widget _buildImageTile(WallpaperMusicController controller,
+      String thumbnailUrl, bool isSelected) {
     String token = controller.token.value;
 
     return Container(
@@ -2368,7 +2370,8 @@ class _WallpaperMusicViewState extends State<WallpaperMusicView>
 
   Widget _buildVideoPlayer(
       WallpaperMusicController controller, String videoUrl, bool isSelected) {
-    VideoPlayerController? videoController = controller.getVideoController(videoUrl);
+    VideoPlayerController? videoController =
+        controller.getVideoController(videoUrl);
 
     if (videoController == null) {
       return const Center(child: CircularProgressIndicator());
@@ -2398,9 +2401,7 @@ class _WallpaperMusicViewState extends State<WallpaperMusicView>
                 CircleAvatar(
                   backgroundColor: Colors.black54,
                   child: Icon(
-                    isSelected
-                        ? Icons.pause
-                        : Icons.play_arrow,
+                    isSelected ? Icons.pause : Icons.play_arrow,
                     color: Colors.white,
                   ),
                 ),
@@ -2620,7 +2621,7 @@ class _WallpaperMusicViewState extends State<WallpaperMusicView>
               ),
               child: Center(
                 child: Icon(
-                  isSelected && controller.audioPlayer.playing ? Icons.pause : Icons.play_arrow,
+                  getMusicControllerIcon(isSelected, controller),
                   color: isSelected ? Colors.white : Colors.black54,
                   size: 20,
                 ),
@@ -2630,5 +2631,25 @@ class _WallpaperMusicViewState extends State<WallpaperMusicView>
         ],
       ),
     );
+  }
+
+  IconData getMusicControllerIcon(
+      bool isSelected, WallpaperMusicController controller) {
+    if (!isSelected) {
+      return Icons.play_arrow;
+    }
+
+    if (controller.audioPlayer.playerState.processingState ==
+            ProcessingState.loading ||
+        controller.audioPlayer.playerState.processingState ==
+            ProcessingState.buffering) {
+      return Icons.hourglass_empty;
+    }
+
+    if (controller.audioPlayer.playing) {
+      return Icons.pause;
+    } else {
+      return Icons.play_arrow;
+    }
   }
 }
