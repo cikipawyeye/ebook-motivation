@@ -2149,6 +2149,7 @@ class WallpaperMusicView extends StatefulWidget {
 class _WallpaperMusicViewState extends State<WallpaperMusicView>
     with AutomaticKeepAliveClientMixin {
   final PageController _pageController = PageController();
+  final RxInt _currentPage = 0.obs;
 
   @override
   bool get wantKeepAlive => true;
@@ -2160,6 +2161,12 @@ class _WallpaperMusicViewState extends State<WallpaperMusicView>
       DeviceOrientation.portraitUp,
       DeviceOrientation.portraitDown,
     ]);
+    _pageController.addListener(() {
+      if (_pageController.page != null) {
+        _currentPage.value =
+            _pageController.page!.round(); // Update nilai halaman
+      }
+    });
   }
 
   @override
@@ -2172,9 +2179,12 @@ class _WallpaperMusicViewState extends State<WallpaperMusicView>
   @override
   Widget build(BuildContext context) {
     super.build(context);
-    final screenSize = MediaQuery.of(context).size;
 
     return GetBuilder<WallpaperMusicController>(
+      dispose: (state) {
+        debugPrint("Dispose WallpaperMusicController");
+        Get.delete<WallpaperMusicController>();
+      },
       builder: (controller) => Scaffold(
         backgroundColor: Colors.white,
         body: SafeArea(
@@ -2230,6 +2240,7 @@ class _WallpaperMusicViewState extends State<WallpaperMusicView>
 
             // Arahkan ke halaman /home dan refresh data pengguna
             Get.offNamed('/home', arguments: {'refresh': true});
+            Get.delete<WallpaperMusicController>();
           } else {
             // Jika halaman pertama (wallpaper selection)
             _pageController.nextPage(
@@ -2242,12 +2253,12 @@ class _WallpaperMusicViewState extends State<WallpaperMusicView>
           minimumSize: Size(screenWidth, 50),
           backgroundColor: colorBackground,
         ),
-        child: Text(
-          _pageController.hasClients && _pageController.page == 1
-              ? 'Selesai'
-              : 'Selanjutnya',
-          style: const TextStyle(color: Colors.white),
-        ),
+        child: Obx(() {
+          return Text(
+            _currentPage.value == 1 ? 'Selesai' : 'Selanjutnya',
+            style: const TextStyle(color: Colors.white),
+          );
+        }),
       ),
     );
   }
@@ -2313,7 +2324,7 @@ class _WallpaperMusicViewState extends State<WallpaperMusicView>
 
   Widget _buildWallpaperItem(
       WallpaperMusicController controller, Wallpaper wallpaper) {
-    final isSelected = controller.selectedWallpaper.value == wallpaper.fileUrl;
+    final isSelected = controller.selectedWallpaperId.value == wallpaper.id;
 
     return GestureDetector(
       onTap: () {
@@ -2552,7 +2563,7 @@ class _WallpaperMusicViewState extends State<WallpaperMusicView>
 
   Widget _buildMusicItem(
       WallpaperMusicController controller, MusicTrack musicTrack) {
-    final isSelected = controller.selectedMusic.value == musicTrack.fileUrl;
+    final isSelected = controller.selectedMusicId.value == musicTrack.id;
 
     return Container(
       height: 45,

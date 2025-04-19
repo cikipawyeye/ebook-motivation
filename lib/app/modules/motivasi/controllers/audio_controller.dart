@@ -201,13 +201,16 @@
 
 import 'dart:async';
 import 'dart:io';
+import 'dart:convert';
+import 'package:http/http.dart' as http;
+import 'package:dio/dio.dart';
 import 'package:ebookapp/app/modules/wallpaper_music/controllers/wallpaper_music_controller.dart';
 import 'package:ebookapp/core/constants/constant.dart';
-import 'package:flutter/services.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:audioplayers/audioplayers.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 import '../../wallpaper_music/model/music_track.dart';
 
@@ -232,68 +235,84 @@ class AudioController extends GetxController {
     _initializeAudioPlayer();
 
     // Listen to changes in the selected music track from the controller
-    ever(wallpaperMusicController.selectedMusic, (musicTrack) {
-      if (musicTrack.isNotEmpty) {
+    ever(wallpaperMusicController.selectedMusicId, (musicId) {
+      if (musicId != null) {
         final track = wallpaperMusicController.musicPlaylist
-            .firstWhere((track) => track.fileUrl == musicTrack);
+            .firstWhere((track) => track.id == musicId);
         changeTrack(track); // Use the MusicTrack object directly
       }
     });
   }
 
   Future<void> _initializeAudioPlayer() async {
+    debugPrint('Initializing audio player...');
     _audioPlayer = AudioPlayer();
+    final prefs = await SharedPreferences.getInstance();
+    final int? selectedMusic = prefs.getInt('selectedMusicId');
 
     try {
       // Use the currently selected music
-      final selectedMusic = wallpaperMusicController.selectedMusic.value;
-
-      if (selectedMusic.isNotEmpty) {
-        // Set the track details
-        final track = wallpaperMusicController.musicPlaylist
-            .firstWhere((track) => track.fileUrl == selectedMusic);
-        currentTrackUrl.value = track.fileUrl;
-        currentTrackTitle.value = track.title;
-
-        // Load audio from local asset
-        final localPath = await _getLocalAudioPath(track.fileUrl);
+      if (selectedMusic != null) {
+        debugPrint('Selected music ID: $selectedMusic');
+        // Load audio from local storage or download it
+        final localPath = await _getLocalAudioPath(selectedMusic);
         if (localPath.isNotEmpty) {
           await _audioPlayer.setSource(DeviceFileSource(localPath));
         }
-
-        // Setup listeners
-        _setupPlayerListeners();
+      } else {
+        debugPrint('No selected music, loading default track...');
+        // Load audio from local asset
+        await _audioPlayer.setSource(AssetSource(
+            AssetPaths.musicTracks.first.replaceAll('assets/', '')));
       }
+
+      // Setup listeners
+      await _setupPlayerListeners();
+
+      // await play();
     } catch (e) {
       _handleAudioError(e);
     }
   }
 
-  void _setupPlayerListeners() {
+  Future<void> _setupPlayerListeners() async {
     _audioPlayer.onPlayerStateChanged.listen((PlayerState state) {
       isPlaying.value = state == PlayerState.playing;
     });
 
-    _audioPlayer.onPlayerComplete.listen((_) {
-      isPlaying.value = false;
-      // Automatically play the next track
-      _playNextTrack();
-    });
+    await Future.wait([
+      _audioPlayer.setVolume(audioVolume.value),
+      _audioPlayer.setReleaseMode(ReleaseMode.loop),
+    ]);
+    // _audioPlayer.onPlayerComplete.listen((_) {
+    //   isPlaying.value = false;
+    //   // Automatically play the next track
+    //   _playNextTrack();
+    // });
   }
 
-  Future<String> _getLocalAudioPath(String audioFileName) async {
+  Future<String> _getLocalAudioPath(int musicId) async {
     try {
-      // Load bytes from the asset
-      final audioBytes = await rootBundle.load(audioFileName);
+      final permDir = await getApplicationDocumentsDirectory();
+      final permFile = File('${permDir.path}/musics/$musicId.mp3');
 
-      // Save to temporary directory
+      if (await permFile.exists()) {
+        return permFile.path;
+      }
+
       final tempDir = await getTemporaryDirectory();
-      final tempFile = File('${tempDir.path}/${audioFileName.split('/').last}');
+      final tempFile = File('${tempDir.path}/musics/$musicId.mp3');
 
-      await tempFile.writeAsBytes(audioBytes.buffer
-          .asUint8List(audioBytes.offsetInBytes, audioBytes.lengthInBytes));
+      if (await tempFile.exists()) {
+        return tempFile.path;
+      }
 
-      return tempFile.path;
+      // Kalau tidak ada, download baru
+      debugPrint('Music tidak ditemukan, mulai download...');
+      await _downloadMusic(musicId, permFile);
+      debugPrint(
+          'Music berhasil didownload ke storage permanen: ${permFile.path}');
+      return permFile.path;
     } catch (e) {
       debugPrint('Audio loading error: $e');
       return '';
@@ -311,7 +330,7 @@ class AudioController extends GetxController {
       currentTrackTitle.value = newTrack.title;
 
       // Load the new track
-      final localPath = await _getLocalAudioPath(newTrack.fileUrl);
+      final localPath = await _getLocalAudioPath(newTrack.id);
       if (localPath.isNotEmpty) {
         await _audioPlayer.setSource(DeviceFileSource(localPath));
 
@@ -346,6 +365,7 @@ class AudioController extends GetxController {
 
   // Toggle play/pause
   Future<void> togglePlayPause() async {
+    debugPrint('Toggle play/pause: ${isPlaying.value}');
     try {
       if (isPlaying.value) {
         await pause();
@@ -396,8 +416,46 @@ class AudioController extends GetxController {
     );
   }
 
+  Future<void> _downloadMusic(int musicId, File saveAs) async {
+    final prefs = await SharedPreferences.getInstance();
+    String token = prefs.getString('token')!;
+
+    final response = await http.get(
+      Uri.parse('$baseUrl/api/v1/musics/$musicId'),
+      headers: {
+        'Authorization': 'Bearer $token',
+        'Content-Type': 'application/json',
+        'Accept': 'application/json',
+      },
+    );
+
+    if (response.statusCode != 200) {
+      debugPrint('Error downloading wallpaper: ${response.statusCode}');
+      return;
+    }
+
+    debugPrint('Response: ${response.body}');
+    final jsonResponse = json.decode(response.body);
+
+    final dio = Dio();
+    await dio.download(
+      jsonResponse['file_url'],
+      saveAs.path,
+      options: Options(
+        headers: {
+          'Content-Type': 'application/json',
+          'Accept': 'application/json',
+          'Authorization': 'Bearer $token',
+        },
+      ),
+    );
+    debugPrint('Video berhasil didownload ke: ${saveAs.path}');
+  }
+
   @override
   void onClose() {
+    debugPrint('AudioController closed');
+    _audioPlayer.stop();
     _audioPlayer.dispose();
     super.onClose();
   }

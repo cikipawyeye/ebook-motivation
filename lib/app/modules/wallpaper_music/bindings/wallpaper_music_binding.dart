@@ -7,6 +7,7 @@ class WallpaperMusicBinding extends Bindings {
   void dependencies() {
     Get.lazyPut<WallpaperMusicController>(
       () => WallpaperMusicController(),
+      fenix: true,
     );
   }
 }
