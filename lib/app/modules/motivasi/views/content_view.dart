@@ -665,8 +665,7 @@
 // }
 
 import 'dart:typed_data';
-import 'dart:async'; // Tambahkan import ini
-import 'package:audioplayers/audioplayers.dart';
+import 'dart:async';
 import 'package:ebookapp/app/modules/motivasi/controllers/audio_controller.dart';
 import 'package:ebookapp/app/modules/motivasi/controllers/live_controller.dart';
 import 'package:flutter/material.dart';
@@ -692,41 +691,66 @@ class ContentView extends GetView<ContentController> {
     }
 
     final liveWallpaperController = Get.find<LiveWallpaperController>();
-    final audioController = Get.put(AudioController());
+    final audioController = Get.find<AudioController>();
     final themeController = Get.find<ThemeController>();
     final userController = Get.find<UserController>();
 
-    return Scaffold(
-      backgroundColor: Colors.black,
-      body: Stack(
-        children: [
-          Obx(() {
-            return liveWallpaperController.isWallpaperVisible
-                ? Positioned.fill(
-                    child: liveWallpaperController.renderWallpaper(),
-                  )
-                : const SizedBox.shrink();
-          }),
-          _buildBody(
-            subcategory,
-            themeController,
-            userController,
-            audioController,
-            liveWallpaperController,
-          ),
-          _buildWallpaperControls(liveWallpaperController),
-        ],
+    return PopScope(
+      canPop: false, // Supaya kita handle pop sendiri
+      onPopInvokedWithResult: (didPop, result) {
+        debugPrint("Pop invoked with result: $result, didPop: $didPop");
+        if (!didPop) {
+          // Handle pop action here
+
+          Get.back(closeOverlays: true);
+          Get.delete<ContentController>();
+          Get.delete<AudioController>();
+          Get.delete<ThemeController>();
+          Get.delete<LiveWallpaperController>();
+        }
+      },
+      child: Scaffold(
+        backgroundColor: Colors.black,
+        body: Stack(
+          children: [
+            Obx(() {
+              return liveWallpaperController.isWallpaperVisible
+                  ? Positioned.fill(
+                      child: liveWallpaperController.renderWallpaper(),
+                    )
+                  : const SizedBox.shrink();
+            }),
+            _buildBody(
+              subcategory,
+              themeController,
+              userController,
+              audioController,
+              liveWallpaperController,
+            ),
+            _buildWallpaperControls(liveWallpaperController, audioController),
+          ],
+        ),
       ),
     );
   }
 
   Widget _buildWallpaperControls(
-      LiveWallpaperController liveWallpaperController) {
+      LiveWallpaperController liveWallpaperController,
+      AudioController audioController) {
     return Positioned(
       top: 40,
       right: 20,
       child: Row(
         children: [
+          Obx(() => IconButton(
+                icon: Icon(
+                  audioController.isPlaying.value
+                      ? Icons.pause
+                      : Icons.play_arrow,
+                  color: Colors.white,
+                ),
+                onPressed: () => audioController.togglePlayPause(),
+              )),
           Obx(() => IconButton(
                 icon: Icon(
                   liveWallpaperController.isWallpaperVisible

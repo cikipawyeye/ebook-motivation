@@ -31,6 +31,7 @@ dependencies:
   audioplayers: ^6.2.0
   cached_network_image: ^3.4.1
   cupertino_icons: ^1.0.8
+  dio: ^5.8.0+1
   dropdown_button2: ^2.3.9
   dropdown_search: ^6.0.2
   flutter:
@@ -43,6 +44,7 @@ dependencies:
   http: ^1.3.0
   image: ^4.5.2
   intl: ^0.20.2
+  just_audio: ^0.10.0
   loading_animation_widget: ^1.3.0
   path_provider: ^2.1.5
   responsive_framework: ^1.5.1
@@ -92,7 +94,6 @@ flutter:
     - assets/icons/message.png
 
     # Audio
-    - assets/audio/avenged.mp3
     - assets/audio/PenyejukHati1.mp3
     - assets/audio/PenyejukHati2.mp3
     - assets/audio/PenyejukHati3.mp3

@@ -506,12 +506,16 @@
 // }
 
 import 'dart:io';
+import 'dart:convert';
+import 'package:ebookapp/core/constants/constant.dart';
+import 'package:dio/dio.dart';
 import 'package:ebookapp/app/modules/wallpaper_music/controllers/wallpaper_music_controller.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:ebookapp/core/constants/constant.dart';
+import 'package:path_provider/path_provider.dart';
 import 'package:video_player/video_player.dart'; // Import AssetPaths
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:http/http.dart' as http;
 
 class LiveWallpaperController extends GetxController {
   // Controller untuk wallpaper dan musik
@@ -519,8 +523,8 @@ class LiveWallpaperController extends GetxController {
       Get.find<WallpaperMusicController>();
 
   // Observable untuk wallpaper saat ini
-  final Rx<VideoPlayerController?> _videoController =
-      Rx<VideoPlayerController?>(null);
+  final _videoController = Rxn<VideoPlayerController>();
+  final wallpaperImagePath = RxnString();
   final RxDouble _wallpaperOpacity = RxDouble(0.5);
   final RxBool _isWallpaperVisible = RxBool(true);
 
@@ -532,74 +536,122 @@ class LiveWallpaperController extends GetxController {
 
   bool get isWallpaperVisible => _isWallpaperVisible.value;
   double get wallpaperOpacity => _wallpaperOpacity.value;
+  VideoPlayerController? get videoController => _videoController.value;
 
   @override
   void onInit() {
     super.onInit();
 
-    // Listen to changes in selected wallpaper
-    ever(wallpaperMusicController.selectedWallpaper, (_) {
-      _initializeWallpaper();
-    });
-
-    // Inisialisasi wallpaper pertama kali
-    _initializeWallpaper();
-  }
-
-  void _initializeWallpaper() {
-    // Dispose controller video lama
-    _videoController.value?.dispose();
-    _videoController.value = null;
-
-    final selectedWallpaper = currentWallpaper;
-
-    // Inisialisasi video jika perlu
-    if (selectedWallpaper.toLowerCase().endsWith('.mp4')) {
-      _initializeVideoController(selectedWallpaper);
+    if (_videoController.value != null) {
+      _videoController.value!.dispose();
+      _videoController.value = null;
     }
 
-    // Perbarui UI
-    update();
-  }
-
-  Future<String?> _getToken() async {
-    final prefs = await SharedPreferences.getInstance();
-    return prefs.getString('token');
-  }
-
-  void _initializeVideoController(String videoPath) async {
-    try {
-      // Cari controller yang sudah diinisialisasi di WallpaperMusicController
-      final existingController =
-          wallpaperMusicController.getVideoController(videoPath);
-
-      if (existingController != null) {
-        _videoController.value = existingController;
-        existingController.play();
-      } else {
-        final token = await _getToken();
-
-        final controller = VideoPlayerController.networkUrl(
-          Uri(
-              host: baseUrl,
-              path: '/api/v1/wallpapers/1/file',
-              queryParameters: {
-                'expires': '1744394187',
-                'signature':
-                    '02330dad3ad946cae063d24809ba3adfec74b73c407ee923890c7603f7982ab5'
-              }),
-          httpHeaders: {
-            'Content-Type': 'application/json',
-            'Accept': 'application/json',
-            'Authorization': 'Bearer $token',
-          },
-        );
-
-        _videoController.value = controller;
+    _getWallpaperData().then((wallpaperData) async {
+      if (wallpaperData.wallpaperId == null) {
+        debugPrint('No wallpaper selected');
+        _videoController.value =
+            VideoPlayerController.asset(AssetPaths.wallpapers.first);
+        _videoController.value!.initialize().then((_) {
+          _videoController.value!.setLooping(true);
+          _videoController.value!.setVolume(0);
+          _videoController.value!.play();
+        });
+        return;
       }
+
+      if (wallpaperData.wallpaperType == 'video') {
+        debugPrint('Video wallpaper detected');
+        await _initializeVideoController(wallpaperData.wallpaperId!);
+      } else {
+        debugPrint('image wallpaper detected');
+        await _initializeWallpaperImage(wallpaperData.wallpaperId!);
+      }
+
+      update();
+    });
+  }
+
+  Future<SelectedWallpaperData> _getWallpaperData() async {
+    final prefs = await SharedPreferences.getInstance();
+    return SelectedWallpaperData(
+      wallpaperId: prefs.getInt('selectedWallpaperId'),
+      wallpaperType: prefs.getString('selectedWallpaperType'),
+    );
+  }
+
+  Future<void> _initializeVideoController(int wallpaperId) async {
+    final permDir = await getApplicationDocumentsDirectory();
+
+    try {
+      final permFile = File('${permDir.path}/wallpapers/$wallpaperId.mp4');
+
+      if (!(await permFile.exists())) {
+        debugPrint('File tidak ditemukan, mendownload wallpaper...');
+        await _downloadWallpaper(wallpaperId, permFile);
+      }
+
+      _videoController.value = VideoPlayerController.file(permFile);
+      _videoController.value!.initialize().then((_) {
+        _videoController.value!.setLooping(true);
+        _videoController.value!.setVolume(0);
+        _videoController.value!.play();
+      });
     } catch (e) {
       debugPrint('Error inisialisasi video: $e');
     }
+  }
+
+  Future<void> _initializeWallpaperImage(int wallpaperId) async {
+    final permDir = await getApplicationDocumentsDirectory();
+    final permFile = File('${permDir.path}/wallpapers/$wallpaperId.jpg');
+
+    try {
+      if (!(await permFile.exists())) {
+        debugPrint('File tidak ditemukan, mendownload wallpaper...');
+        await _downloadWallpaper(wallpaperId, permFile);
+      }
+
+      wallpaperImagePath.value = permFile.path;
+    } catch (e) {
+      debugPrint('Error inisialisasi video: $e');
+    }
+  }
+
+  Future<void> _downloadWallpaper(int id, File saveAs) async {
+    final prefs = await SharedPreferences.getInstance();
+    String token = prefs.getString('token')!;
+
+    final response = await http.get(
+      Uri.parse('$baseUrl/api/v1/wallpapers/$id'),
+      headers: {
+        'Authorization': 'Bearer $token',
+        'Content-Type': 'application/json',
+        'Accept': 'application/json',
+      },
+    );
+
+    if (response.statusCode != 200) {
+      debugPrint('Error downloading wallpaper: ${response.statusCode}');
+      return;
+    }
+
+    debugPrint('Response: ${response.body}');
+    final jsonResponse = json.decode(response.body);
+
+    final dio = Dio();
+    await dio.download(
+      jsonResponse['file_url'],
+      saveAs.path,
+      options: Options(
+        headers: {
+          'Content-Type': 'application/json',
+          'Accept': 'application/json',
+          'Authorization': 'Bearer $token',
+        },
+      ),
+    );
+    debugPrint('File berhasil didownload ke: ${saveAs.path}');
   }
 
   void toggleWallpaperVisibility() {
@@ -616,25 +668,27 @@ class LiveWallpaperController extends GetxController {
     // Jika wallpaper tidak terlihat
     if (!_isWallpaperVisible.value) return const SizedBox.shrink();
 
-    final selectedWallpaper = currentWallpaper;
-
     // Render video
-    if (selectedWallpaper.toLowerCase().endsWith('.mp4')) {
+    if (_videoController.value != null) {
       return _renderVideoWallpaper();
     }
 
-    // Render gambar
-    return _renderImageWallpaper(selectedWallpaper);
+    // Render video
+    if (wallpaperImagePath.value != null) {
+      // Render gambar
+      return _renderImageWallpaper(wallpaperImagePath.value!);
+    }
+
+    debugPrint('No selected wallpaper found');
+    return const SizedBox.shrink();
   }
 
   Widget _renderVideoWallpaper() {
-    final videoController = _videoController.value;
-
     // Pastikan videoController diinisialisasi dan sudah ada
-    if (videoController != null) {
+    if (_videoController.value != null) {
       return Opacity(
         opacity: _wallpaperOpacity.value,
-        child: VideoPlayer(videoController),
+        child: VideoPlayer(_videoController.value!),
       );
     } else {
       return Container(
@@ -647,8 +701,8 @@ class LiveWallpaperController extends GetxController {
   Widget _renderImageWallpaper(String imagePath) {
     return Opacity(
       opacity: _wallpaperOpacity.value,
-      child: Image.asset(
-        imagePath,
+      child: Image.file(
+        File(imagePath),
         fit: BoxFit.cover,
         width: double.infinity,
         height: double.infinity,
@@ -670,6 +724,13 @@ class LiveWallpaperController extends GetxController {
     _videoController.value?.dispose();
     super.onClose();
   }
-}  
+}
 
-// Dalam ContentView  
+class SelectedWallpaperData {
+  final int? wallpaperId;
+  final String? wallpaperType;
+
+  SelectedWallpaperData({this.wallpaperId, this.wallpaperType});
+}
+
+// Dalam ContentView

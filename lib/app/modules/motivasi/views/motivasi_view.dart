@@ -1,4 +1,3 @@
-import 'package:ebookapp/app/data/models/motivasi_model.dart';
 import 'package:ebookapp/app/modules/settings/controllers/setting_theme_controller.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';

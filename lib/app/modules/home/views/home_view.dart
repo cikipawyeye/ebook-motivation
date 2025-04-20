@@ -869,7 +869,7 @@ import 'package:google_fonts/google_fonts.dart';
 import '../controllers/home_controller.dart';
 
 class HomeView extends GetView<HomeController> {
-  HomeView({super.key});
+  const HomeView({super.key});
 
   static const Color appBarColor = Color(0xFF32497B);
 

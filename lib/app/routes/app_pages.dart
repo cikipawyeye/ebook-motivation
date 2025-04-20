@@ -20,7 +20,6 @@ import '../modules/pengingat/views/content_pengingat_view.dart';
 import '../modules/pengingat/views/pengingat_view.dart';
 import '../modules/register/bindings/register_binding.dart';
 import '../modules/register/views/register_view.dart';
-import '../modules/register/views/set_password_view.dart';
 import '../modules/register/views/success_register.dart';
 import '../modules/settings/bindings/settings_binding.dart';
 import '../modules/settings/views/change_password.dart';
