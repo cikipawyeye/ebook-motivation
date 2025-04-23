@@ -2181,36 +2181,43 @@ class _WallpaperMusicViewState extends State<WallpaperMusicView>
     super.build(context);
 
     return GetBuilder<WallpaperMusicController>(
-      dispose: (state) {
-        debugPrint("Dispose WallpaperMusicController");
-        Get.delete<WallpaperMusicController>();
-      },
-      builder: (controller) => Scaffold(
-        backgroundColor: Colors.white,
-        body: SafeArea(
-          child: Padding(
-            padding: const EdgeInsets.all(20),
-            child: Column(
-              children: [
-                Expanded(
-                  child: PageView(
-                    controller: _pageController,
-                    physics: const NeverScrollableScrollPhysics(),
-                    children: [
-                      _buildWallpaperSelection(controller),
-                      _buildMusicSelection(controller),
-                    ],
+        dispose: (state) {
+          debugPrint("Dispose WallpaperMusicController");
+          Get.delete<WallpaperMusicController>();
+        },
+        builder: (controller) => Scaffold(
+              backgroundColor: Colors.white,
+              body: SafeArea(
+                child: Container(
+                  decoration: BoxDecoration(
+                    image: DecorationImage(
+                      image: AssetImage('assets/images/Template.png'),
+                      fit: BoxFit.cover,
+                    ),
+                  ),
+                  child: Padding(
+                    padding: const EdgeInsets.all(20),
+                    child: Column(
+                      children: [
+                        Expanded(
+                          child: PageView(
+                            controller: _pageController,
+                            physics: const NeverScrollableScrollPhysics(),
+                            children: [
+                              _buildWallpaperSelection(controller),
+                              _buildMusicSelection(controller),
+                            ],
+                          ),
+                        ),
+                        _buildIndicator(),
+                        const SizedBox(height: 10),
+                        _buildNavigationButton(controller),
+                      ],
+                    ),
                   ),
                 ),
-                _buildIndicator(),
-                const SizedBox(height: 10),
-                _buildNavigationButton(controller),
-              ],
-            ),
-          ),
-        ),
-      ),
-    );
+              ),
+            ));
   }
 
   Widget _buildIndicator() {
@@ -2270,12 +2277,12 @@ class _WallpaperMusicViewState extends State<WallpaperMusicView>
         Text(
           'Pilih Wallpapermu!',
           style: GoogleFonts.leagueSpartan(
-              fontSize: 34, fontWeight: FontWeight.bold),
+              fontSize: 34, fontWeight: FontWeight.bold, color: Colors.white),
           textAlign: TextAlign.left,
         ),
         Text(
           'Kamu bisa memilih wallpaper yang paling kamu suka loh.\nagar menambah pengalamanmu saat membaca',
-          style: GoogleFonts.leagueSpartan(fontSize: 14),
+          style: GoogleFonts.leagueSpartan(fontSize: 14, color: Colors.white),
           textAlign: TextAlign.left,
         ),
         const SizedBox(height: 20),
@@ -2443,14 +2450,14 @@ class _WallpaperMusicViewState extends State<WallpaperMusicView>
           style: GoogleFonts.leagueSpartan(
             fontSize: 34,
             fontWeight: FontWeight.w700,
-            color: Colors.black87,
+            color: Colors.white,
           ),
         ),
         Text(
           'Musik ini akan diputar saat kamu sedang membuka bacaan jadi pilih sesuai mood mu ya!',
           style: GoogleFonts.leagueSpartan(
             fontSize: 14,
-            color: Colors.black54,
+            color: Colors.white,
             fontWeight: FontWeight.w400,
           ),
         ),

@@ -1,5 +1,6 @@
 import 'package:ebookapp/app/routes/app_pages.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
@@ -40,6 +41,36 @@ class RegisterController extends GetxController {
   final isPasswordVisible = false.obs;
   final isConfirmPasswordVisible = false.obs;
   var firstName = ''.obs;
+
+  final canPop = true.obs;
+
+  @override
+  void onInit() {
+    super.onInit();
+    customJobController.addListener(_validateCustomJob);
+    SystemChannels.platform.setMethodCallHandler((call) async {
+      if (call.method == 'SystemNavigator.pop') {
+        handleBackButton();
+        return true;
+      }
+      return null;
+    });
+  }
+
+  Future<bool> handleBackButton() async {
+    if (canPop.value) {
+      Get.back();
+      return false;
+    }
+    return true;
+  }
+
+  void _validateCustomJob() {
+    if (selectedJobType.value == 0) {
+      final customJob = customJobController.text.trim();
+      isCustomJobError.value = customJob.isEmpty;
+    }
+  }
 
   bool validateName() {
     final name = nameController.text.trim();
@@ -97,11 +128,24 @@ class RegisterController extends GetxController {
     return isValid;
   }
 
-  bool validateJob() {
-    final isValid = selectedJobType.value != 0 ||
-        customJobController.text.trim().isNotEmpty;
-    isJobError.value = !isValid;
+  bool validateDomisili() {
+    final isValid = domisiliController.text.isNotEmpty &&
+        cityCodeController.text.isNotEmpty;
+    isDomisiliError.value = !isValid;
     return isValid;
+  }
+
+  bool validateJob() {
+    if (selectedJobType.value == 0) {
+      final isValid = customJobController.text.trim().isNotEmpty;
+      isCustomJobError.value = !isValid;
+      isJobError.value = !isValid;
+      return isValid;
+    } else {
+      final isValid = selectedJobType.value != 0;
+      isJobError.value = !isValid;
+      return isValid;
+    }
   }
 
   bool isEmailValid() {
@@ -133,6 +177,65 @@ class RegisterController extends GetxController {
     isConfirmPasswordVisible.value = !isConfirmPasswordVisible.value;
   }
 
+  bool canProceedToNextPage(String currentPage) {
+    switch (currentPage) {
+      case 'personal_info':
+        return validateName() &&
+            validateEmail() &&
+            validatePassword(passwordController.text) &&
+            validateConfirmPassword(confirmPasswordController.text);
+      case 'contact_info':
+        return validatePhoneNumber() &&
+            validateDob() &&
+            validateGender() &&
+            validateDomisili();
+      case 'job_info':
+        return validateJob();
+      case 'agreement':
+        return isAgreed.value;
+      default:
+        return false;
+    }
+  }
+
+  void showValidationErrors(String currentPage) {
+    switch (currentPage) {
+      case 'personal_info':
+        validateName();
+        validateEmail();
+        validatePassword(passwordController.text);
+        validateConfirmPassword(confirmPasswordController.text);
+        break;
+      case 'contact_info':
+        validatePhoneNumber();
+        validateDob();
+        validateGender();
+        validateDomisili();
+        break;
+      case 'job_info':
+        validateJob();
+        break;
+      case 'agreement':
+        if (!isAgreed.value) {
+          Get.snackbar(
+            'Persetujuan Diperlukan',
+            'Anda harus menyetujui syarat dan ketentuan untuk melanjutkan',
+            backgroundColor: Colors.red,
+            colorText: Colors.white,
+          );
+        }
+        break;
+    }
+  }
+
+  void navigateToNextPage(String currentPage, String nextRoute) {
+    if (canProceedToNextPage(currentPage)) {
+      Get.toNamed(nextRoute);
+    } else {
+      showValidationErrors(currentPage);
+    }
+  }
+
   bool validateAllFields() {
     return validateName() &&
         validateEmail() &&
@@ -142,10 +245,21 @@ class RegisterController extends GetxController {
         validateDob() &&
         validateJob() &&
         validateGender() &&
+        validateDomisili() &&
         isAgreed.value;
   }
 
   Future<void> register() async {
+    if (!validateAllFields()) {
+      Get.snackbar(
+        'Validasi Gagal',
+        'Pastikan semua data yang dimasukkan sudah benar',
+        backgroundColor: Colors.red,
+        colorText: Colors.white,
+      );
+      return;
+    }
+
     isLoading.value = true;
 
     final requestBody = {
@@ -165,13 +279,13 @@ class RegisterController extends GetxController {
       final response = await _performRegistration(requestBody);
 
       if (response.statusCode == 200) {
-        Get.offAllNamed(Routes.successRegis);
+        await _handleSuccessfulRegistration(response);
       } else {
-        Get.offAllNamed(Routes.successRegis);
+        _handleRegistrationError(response);
       }
     } catch (e) {
       print('Kesalahan: $e');
-      Get.offAllNamed(Routes.successRegis);
+      _handleUnexpectedError(e);
     } finally {
       isLoading.value = false;
     }
@@ -283,8 +397,7 @@ class RegisterController extends GetxController {
     try {
       print('Mencari kota untuk query: $query');
       final response = await http.get(
-        Uri.parse(
-            '${baseUrl}/api/v1/register/cities?search=$query'),
+        Uri.parse('${baseUrl}/api/v1/register/cities?search=$query'),
         headers: {
           'Content-Type': 'application/json',
           'Accept': 'application/json',
@@ -356,6 +469,7 @@ class RegisterController extends GetxController {
     phoneNumberController.dispose();
     domisiliController.dispose();
     customJobController.dispose();
+    customJobController.removeListener(_validateCustomJob);
 
     super.onClose();
   }

@@ -83,6 +83,7 @@ flutter:
     - assets/images/screen_view.png
     - assets/images/Abu_gradasi.png
     - assets/images/watermark_icon.png
+    - assets/images/Template.png
 
     #load icons assets
     - assets/icons/crown_icon.png

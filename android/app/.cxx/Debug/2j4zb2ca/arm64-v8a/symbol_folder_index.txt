@@ -1,0 +1,1 @@
+/Users/ruxxcon/MobileDev/Flutter-Dev/Ebook_motivation/ebookapp_v2/ebook-motivation-v1/ebook2/ebook-motivation/build/app/intermediates/cxx/Debug/2j4zb2ca/obj/arm64-v8a
