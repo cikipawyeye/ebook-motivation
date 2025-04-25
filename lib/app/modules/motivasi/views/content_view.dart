@@ -696,18 +696,15 @@ class ContentView extends GetView<ContentController> {
     final userController = Get.find<UserController>();
 
     return PopScope(
-      canPop: false, // Supaya kita handle pop sendiri
+      canPop: false,
       onPopInvokedWithResult: (didPop, result) {
-        debugPrint("Pop invoked with result: $result, didPop: $didPop");
         if (!didPop) {
-          // Handle pop action here
-
           Get.back(closeOverlays: true);
-          Get.delete<ContentController>();
-          Get.delete<AudioController>();
-          Get.delete<ThemeController>();
-          Get.delete<LiveWallpaperController>();
         }
+        Get.delete<ContentController>();
+        Get.delete<AudioController>();
+        Get.delete<ThemeController>();
+        Get.delete<LiveWallpaperController>();
       },
       child: Scaffold(
         backgroundColor: Colors.black,

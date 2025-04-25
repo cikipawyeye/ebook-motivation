@@ -1037,23 +1037,27 @@ class HomeView extends GetView<HomeController> {
                               ),
                             ),
                             child: Center(
-                              child: Column(
-                                mainAxisAlignment: MainAxisAlignment.center,
-                                children: [
-                                  Text(
-                                    subcategory.name,
-                                    style: TextStyle(
-                                      color: Colors.white,
-                                      fontWeight: FontWeight.bold,
+                              child: Padding(
+                                padding: EdgeInsets.all(4),
+                                child: Column(
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  children: [
+                                    Text(
+                                      subcategory.name,
+                                      style: TextStyle(
+                                        color: Colors.white,
+                                        fontWeight: FontWeight.bold,
+                                      ),
+                                      textAlign: TextAlign.center,
                                     ),
-                                  ),
-                                  Text(
-                                    "Halaman: ${subcategory.contentsCount}",
-                                    style: TextStyle(
-                                      color: Colors.white70,
+                                    Text(
+                                      "Halaman: ${subcategory.contentsCount}",
+                                      style: TextStyle(
+                                        color: Colors.white70,
+                                      ),
                                     ),
-                                  ),
-                                ],
+                                  ],
+                                ),
                               ),
                             ),
                           ),
@@ -1221,23 +1225,27 @@ class HomeView extends GetView<HomeController> {
                               ),
                             ),
                             child: Center(
-                              child: Column(
-                                mainAxisAlignment: MainAxisAlignment.center,
-                                children: [
-                                  Text(
-                                    subcategory.name,
-                                    style: TextStyle(
-                                      color: Colors.white,
-                                      fontWeight: FontWeight.bold,
+                              child: Padding(
+                                padding: EdgeInsets.all(4),
+                                child: Column(
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  children: [
+                                    Text(
+                                      subcategory.name,
+                                      textAlign: TextAlign.center,
+                                      style: TextStyle(
+                                        color: Colors.white,
+                                        fontWeight: FontWeight.bold,
+                                      ),
                                     ),
-                                  ),
-                                  Text(
-                                    "Halaman: ${subcategory.contentsCount}",
-                                    style: TextStyle(
-                                      color: Colors.white70,
+                                    Text(
+                                      "Halaman: ${subcategory.contentsCount}",
+                                      style: TextStyle(
+                                        color: Colors.white70,
+                                      ),
                                     ),
-                                  ),
-                                ],
+                                  ],
+                                ),
                               ),
                             ),
                           ),

@@ -2,6 +2,7 @@ import 'dart:convert';
 import 'dart:typed_data';
 import 'package:ebookapp/app/data/models/content_model.dart';
 import 'package:ebookapp/app/data/models/cursor_pagination_model.dart';
+import 'package:ebookapp/app/modules/motivasi/controllers/audio_controller.dart';
 import 'package:flutter/foundation.dart' show kDebugMode;
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -10,7 +11,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:image/image.dart' as img;
 import '/../../../core/constants/constant.dart';
 
-class ContentController extends GetxController {
+class ContentController extends GetxController with WidgetsBindingObserver {
   var contents = <Content>[].obs;
   var imageBytesList = <Rx<Uint8List?>>[].obs;
   var isLoading = false.obs;
@@ -19,17 +20,34 @@ class ContentController extends GetxController {
   @override
   void onInit() {
     debugPrint("ContentController initialized");
+    WidgetsBinding.instance.addObserver(this);
     super.onInit();
   }
 
   @override
   void onClose() {
     debugPrint("ContentController closed");
+    WidgetsBinding.instance.removeObserver(this);
     contents.clear();
     imageBytesList.clear();
     isLoading.value = false;
     nextCursor.value = null;
     super.onClose();
+  }
+
+  @override
+  void didChangeAppLifecycleState(AppLifecycleState state) {
+    final audioController = Get.find<AudioController>();
+    // 🛑 Pause audio jika app masuk background
+    if (state == AppLifecycleState.paused ||
+        state == AppLifecycleState.inactive ||
+        state == AppLifecycleState.hidden) {
+      audioController.pause();
+    } else {
+      audioController.play();
+    }
+
+    debugPrint('🛑🛑🛑🛑🛑Rokeoke: $state');
   }
 
   Future<String?> getToken() async {

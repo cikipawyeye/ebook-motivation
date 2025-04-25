@@ -22,8 +22,8 @@ class WallpaperMusicController extends GetxController {
   final selectedWallpaperType = RxnString();
   final selectedMusic = RxString('');
   final selectedMusicId = RxnInt();
-  final wallpaperStatus = Rx<WallpaperStatus>(WallpaperStatus.idle);
-  final musicStatus = Rx<WallpaperStatus>(WallpaperStatus.idle);
+  final wallpaperStatus = Rx<WallpaperStatus>(WallpaperStatus.loading);
+  final musicStatus = Rx<WallpaperStatus>(WallpaperStatus.loading);
   final audioPlayer = AudioPlayer(useProxyForRequestHeaders: false);
   final audioVolume = RxDouble(0.5);
   final errorMessage = RxString('');
@@ -351,10 +351,14 @@ class WallpaperMusicController extends GetxController {
     }
 
     try {
-      musicStatus.value = WallpaperStatus.loading;
+      final results = await Future.wait<dynamic>([
+        _getToken(),
+        getTemporaryDirectory(),
+      ]);
 
-      final token = await _getToken(); // Dapatkan token
-      final dir = await getTemporaryDirectory();
+      final token = results[0] as String;
+      final dir = results[1] as Directory;
+
       final localFile = File('${dir.path}/musics/${musicTrack.id}.mp3');
       final audioSource = LockCachingAudioSource(Uri.parse(musicTrack.fileUrl),
           cacheFile: localFile,
@@ -363,8 +367,6 @@ class WallpaperMusicController extends GetxController {
             'Accept': 'application/json',
             'Authorization': 'Bearer $token',
           });
-
-      musicStatus.value = WallpaperStatus.loaded;
 
       if ((selectedMusic.value != musicTrack.fileUrl)) {
         selectedMusic.value = musicTrack.fileUrl;
@@ -390,7 +392,6 @@ class WallpaperMusicController extends GetxController {
       }
     } catch (e) {
       debugPrint(musicTrack.fileUrl);
-      musicStatus.value = WallpaperStatus.error;
       _handleAudioError(e);
     } finally {
       if (!isClosed) update();
@@ -451,8 +452,18 @@ class WallpaperMusicController extends GetxController {
     videoControllers.clear();
     audioPlayer.stop();
     audioPlayer.dispose();
-    _controller.dispose(); // Hapus controller baru
+
+    try {
+      if (_controller.value.isInitialized) {
+        _controller.dispose();
+      }
+    } catch (e) {
+      debugPrint('Kesalahan saat menutup controller video: $e');
+    }
+
     super.onClose();
+
+    debugPrint("WallpaperMusicController closed");
   }
 }
 

@@ -34,8 +34,12 @@ class HomeController extends GetxController {
         return;
       }
 
+      // curl -H "Authorization: Bearer 578|aXDY6OPmcDijsKUYlkqkRcpucHLfxP0MdhbBRpV63de2eba1" \
+      //      -H "Content-Type: application/json" \
+      //      -H "Accept: application/json" \
+      //      https://motivasiislami.com/api/v1/profile
       final response = await http.get(
-        Uri.parse('${baseUrl}/api/v1/profile'),
+        Uri.parse('$baseUrl/api/v1/profile'),
         headers: {
           'Authorization': 'Bearer $token',
           'Content-Type': 'application/json',
@@ -56,7 +60,8 @@ class HomeController extends GetxController {
     } catch (e) {
       Get.snackbar(
           'Kesalahan', 'Terjadi kesalahan saat mengambil profil pengguna.');
-      debugPrint("Kesalahan saat mengambil profil pengguna: $e");
+      debugPrint(
+          "[home_controller] Kesalahan saat mengambil profil pengguna: $e");
     } finally {
       isLoading.value = false;
     }

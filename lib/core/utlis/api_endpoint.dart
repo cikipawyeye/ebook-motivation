@@ -1,8 +1,9 @@
 class ApiEndpoint {
-  static final String baseUrl = 'https://ebook.dev.whatthefun.id/';
+  static final String baseUrl = 'https://motivasiislami.com/';
 
   static _AuthEndPoint get authEndPoint => _AuthEndPoint();
-  static _ContentEndPoint get contentEndPoint => _ContentEndPoint();  // Menambahkan endpoint baru
+  static _ContentEndPoint get contentEndPoint =>
+      _ContentEndPoint(); // Menambahkan endpoint baru
 }
 
 class _AuthEndPoint {
@@ -13,6 +14,6 @@ class _AuthEndPoint {
 class _ContentEndPoint {
   // Endpoint untuk mengambil konten dengan subcategory_id yang dinamis
   String getContents(int contentId) {
-    return 'api/v1/contents/$contentId';  // Menggunakan parameter dinamis
+    return 'api/v1/contents/$contentId'; // Menggunakan parameter dinamis
   }
 }

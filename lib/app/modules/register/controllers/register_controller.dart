@@ -1,3 +1,4 @@
+import 'package:ebookapp/app/modules/register/models/register_response.dart';
 import 'package:ebookapp/app/routes/app_pages.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -284,7 +285,7 @@ class RegisterController extends GetxController {
         _handleRegistrationError(response);
       }
     } catch (e) {
-      print('Kesalahan: $e');
+      debugPrint('Kesalahan: $e');
       _handleUnexpectedError(e);
     } finally {
       isLoading.value = false;
@@ -316,9 +317,9 @@ class RegisterController extends GetxController {
 
   Future<http.Response> _performRegistration(
       Map<String, dynamic> requestBody) async {
-    print('Melakukan Pendaftaran: $requestBody');
+    debugPrint('Melakukan Pendaftaran: $requestBody');
     final response = await http.post(
-      Uri.parse('${baseUrl}/api/v1/register'),
+      Uri.parse('$baseUrl/api/v1/register'),
       headers: {
         'Content-Type': 'application/json',
         'Accept': 'application/json',
@@ -326,21 +327,21 @@ class RegisterController extends GetxController {
       body: jsonEncode(requestBody),
     );
 
-    print('Status Code: ${response.statusCode}');
-    print('Response Body: ${response.body}');
+    debugPrint('Status Code: ${response.statusCode}');
+    debugPrint('Response Body: ${response.body}');
 
     return response;
   }
 
   Future<void> _handleSuccessfulRegistration(http.Response response) async {
     try {
-      print('Response Status Code: ${response.statusCode}');
+      debugPrint('Response Status Code: ${response.statusCode}');
 
       final responseBody = jsonDecode(response.body);
-      final userResponse = UserResponse.fromJson(responseBody);
+      final registerResponse = RegisterResponse.fromJson(responseBody);
 
-      if (userResponse.token != null) {
-        await _saveUserData(userResponse);
+      if (registerResponse.data.token.isNotEmpty) {
+        await _saveUserToken(registerResponse.data.token);
         resetForm();
         Get.offAllNamed(Routes.successRegis);
       } else {
@@ -348,18 +349,18 @@ class RegisterController extends GetxController {
         _handleRegistrationError(response);
       }
 
-      print('Job: ${userResponse.user.job}');
-      print('Job Type: ${userResponse.user.jobType}');
+      debugPrint('Job: ${registerResponse.data.user.job}');
+      debugPrint('Job Type: ${registerResponse.data.user.jobType}');
     } catch (e) {
       errorMessage.value = 'Kesalahan dalam memproses respon pendaftaran';
       _handleUnexpectedError(e);
     }
   }
 
-  Future<void> _saveUserData(UserResponse userResponse) async {
+  Future<void> _saveUserToken(String token) async {
     final prefs = await SharedPreferences.getInstance();
-    await prefs.setString('user_token', userResponse.token ?? '');
-    print('Token pengguna disimpan: ${userResponse.token}');
+    await prefs.setString('user_token', token);
+    debugPrint('Token pengguna disimpan: $token');
   }
 
   void _handleRegistrationError(http.Response response) {
@@ -395,9 +396,9 @@ class RegisterController extends GetxController {
     }
 
     try {
-      print('Mencari kota untuk query: $query');
+      debugPrint('Mencari kota untuk query: $query');
       final response = await http.get(
-        Uri.parse('${baseUrl}/api/v1/register/cities?search=$query'),
+        Uri.parse('$baseUrl/api/v1/register/cities?search=$query'),
         headers: {
           'Content-Type': 'application/json',
           'Accept': 'application/json',
@@ -412,13 +413,13 @@ class RegisterController extends GetxController {
                 'code': city['code'],
               }),
         );
-        print('Kota ditemukan: ${domisiliList.length}');
+        debugPrint('Kota ditemukan: ${domisiliList.length}');
       } else {
         Get.snackbar('Kesalahan', 'Gagal mencari kota');
       }
     } catch (e) {
       Get.snackbar('Kesalahan', 'Terjadi kesalahan saat mencari kota');
-      print('Kesalahan saat mencari kota: $e');
+      debugPrint('Kesalahan saat mencari kota: $e');
     }
   }
 

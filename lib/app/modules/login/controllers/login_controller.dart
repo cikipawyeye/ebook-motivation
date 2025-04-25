@@ -1,10 +1,10 @@
 import 'dart:convert';
-import 'dart:typed_data';
 import 'package:ebookapp/core/utlis/api_endpoint.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:http/http.dart' as http;
+import 'package:ebookapp/core/constants/constant.dart';
 
 class LoginController extends GetxController {
   TextEditingController emailController = TextEditingController();
@@ -77,8 +77,7 @@ class LoginController extends GetxController {
     var headers = {'Content-Type': 'application/json'};
 
     try {
-      var url =
-          Uri.parse('https://ebook.dev.whatthefun.id/api/v1/forgot-password');
+      var url = Uri.parse('$baseUrl/api/v1/forgot-password');
       Map<String, String> body = {
         'email': email.trim(),
       };

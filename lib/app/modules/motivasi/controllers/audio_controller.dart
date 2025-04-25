@@ -397,6 +397,10 @@ class AudioController extends GetxController {
     }
   }
 
+  getState() {
+    return _audioPlayer.state;
+  }
+
   // Volume control
   void setVolume(double volume) {
     audioVolume.value = volume.clamp(0.0, 1.0);

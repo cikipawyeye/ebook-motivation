@@ -66,7 +66,7 @@ class SettingsView extends GetView<SettingsController> {
                 image: 'assets/icons/pencil_icon.png',
                 title: 'Ganti Wallpaper dan Musik',
                 onTap: () {
-                  Get.toNamed(Routes.wallpaperMusic);
+                  Get.offNamed(Routes.wallpaperMusic);
                 },
               ),
               const Divider(),
@@ -255,15 +255,15 @@ class SettingsView extends GetView<SettingsController> {
                       await userController.logout();
                       Get.offAllNamed(Routes.login);
                     },
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: const Color(0xFFE33535),
+                    ),
                     child: Text(
                       'Keluar',
                       style: GoogleFonts.leagueSpartan(
                         fontSize: 15,
                         color: Colors.white,
                       ),
-                    ),
-                    style: ElevatedButton.styleFrom(
-                      backgroundColor: const Color(0xFFE33535),
                     ),
                   ),
                 ),

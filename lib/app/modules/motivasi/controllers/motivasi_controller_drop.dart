@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'dart:typed_data';
 import 'package:ebookapp/app/data/models/motivasi_model.dart';
+import 'package:ebookapp/core/constants/constant.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:http/http.dart' as http;
@@ -53,8 +54,8 @@ class MotivasiControllerDrop extends GetxController {
   // Fetch subcategories
   Future<void> fetchSubcategories() async {
     debugPrint('🔄 Fetching subcategories...');
-    final response = await makeAuthenticatedRequest(
-        'https://ebook.dev.whatthefun.id/api/v1/0/subcategories');
+    final response =
+        await makeAuthenticatedRequest('$baseUrl/api/v1/0/subcategories');
     if (response == null || response.statusCode != 200) {
       Get.snackbar('Error', 'Failed to fetch subcategories');
       return;
@@ -98,7 +99,7 @@ class MotivasiControllerDrop extends GetxController {
     update();
 
     final response = await makeAuthenticatedRequest(
-        'https://ebook.dev.whatthefun.id/api/v1/contents?subcategory_id=$subcategoryId&page=${currentPage.value}');
+        '$baseUrl/api/v1/contents?subcategory_id=$subcategoryId&page=${currentPage.value}');
     if (response == null || response.statusCode != 200) {
       Get.snackbar('Error', 'Failed to fetch motivasi data');
       return;
@@ -172,8 +173,7 @@ class MotivasiControllerDrop extends GetxController {
         return;
       }
 
-      var url =
-          Uri.parse('https://ebook.dev.whatthefun.id/api/v1/contents/$id');
+      var url = Uri.parse('$baseUrl/api/v1/contents/$id');
       final response = await http.get(url, headers: {
         'Authorization': 'Bearer $token',
         'Content-Type': 'application/json',

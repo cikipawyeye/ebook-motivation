@@ -1,3 +1,5 @@
+import 'package:ebookapp/core/constants/constant.dart';
+
 class UserResponse {
   final User user;
   final String? token; // Make optional
@@ -60,7 +62,9 @@ class User {
       birthDate: json['birth_date'],
       jobType: int.tryParse(json['job_type']?.toString() ?? '0') ??
           0, // Ubah menjadi int
-      job: json['job']?.toString(),
+      job: json['job'] != null
+          ? json['job']?.toString()
+          : userJob[json['job_type'].toString()],
       gender: json['gender'],
       cityCode: json['city_code']?.toString() ?? '',
       createdAt: json['created_at'],

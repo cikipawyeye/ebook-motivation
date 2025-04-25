@@ -1982,7 +1982,6 @@
 //   }
 // }
 
-
 import 'package:ebookapp/app/routes/app_pages.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -1995,41 +1994,64 @@ import 'package:smooth_page_indicator/smooth_page_indicator.dart';
 class RegisterPage extends GetView<RegisterController> {
   final PageController _pageController = PageController();
 
+  RegisterPage({super.key});
+
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: Colors.white,
-      appBar: _buildAppBar(),
-      body: SafeArea(
-        child: Container(
-          decoration: BoxDecoration(
-            image: DecorationImage(
-              image: AssetImage('assets/images/Watermark.png'),
-              fit: BoxFit.cover,
+    return PopScope(
+      canPop: false,
+      onPopInvokedWithResult: (didPop, result) {
+        debugPrint("Pop invoked with result: $result, didPop: $didPop");
+
+        if (didPop) {
+          return;
+        }
+
+        int currentPage = _pageController.page?.round() ?? 0;
+
+        if (currentPage > 0) {
+          _pageController.previousPage(
+            duration: Duration(milliseconds: 300),
+            curve: Curves.easeInOut,
+          );
+        } else {
+          Get.back(closeOverlays: true);
+        }
+      },
+      child: Scaffold(
+        backgroundColor: Colors.white,
+        appBar: _buildAppBar(),
+        body: SafeArea(
+          child: Container(
+            decoration: BoxDecoration(
+              image: DecorationImage(
+                image: AssetImage('assets/images/Watermark.png'),
+                fit: BoxFit.cover,
+              ),
             ),
-          ),
-          child: Padding(
-            padding: const EdgeInsets.all(20),
-            child: Column(
-              children: [
-                Expanded(
-                  child: PageView(
-                    controller: _pageController,
-                    physics: NeverScrollableScrollPhysics(),
-                    children: [
-                      _buildNameStep(),
-                      _buildEmailStep(),
-                      _buildPhoneStep(),
-                      _buildDobStep(),
-                      _buildDomisiliStep(),
-                      _buildGenderStep(),
-                      _buildJobStep(),
-                      _buildPasswordStep(),
-                    ],
+            child: Padding(
+              padding: const EdgeInsets.all(20),
+              child: Column(
+                children: [
+                  Expanded(
+                    child: PageView(
+                      controller: _pageController,
+                      physics: NeverScrollableScrollPhysics(),
+                      children: [
+                        _buildNameStep(),
+                        _buildEmailStep(),
+                        _buildPhoneStep(),
+                        _buildDobStep(),
+                        _buildDomisiliStep(),
+                        _buildGenderStep(),
+                        _buildJobStep(),
+                        _buildPasswordStep(),
+                      ],
+                    ),
                   ),
-                ),
-                _buildNavigationButton(),
-              ],
+                  _buildNavigationButton(),
+                ],
+              ),
             ),
           ),
         ),
@@ -2086,36 +2108,36 @@ class RegisterPage extends GetView<RegisterController> {
       ),
       SizedBox(height: 20),
       Obx(() => TextField(
-        controller: controller.nameController,
-        decoration: InputDecoration(
-          labelText: 'Nama Lengkap',
-          errorText: controller.isNameError.value
-              ? 'Nama harus minimal 2 karakter'
-              : null,
-          border: OutlineInputBorder(
-            borderRadius: BorderRadius.circular(30),
-            borderSide: BorderSide(color: Colors.grey, width: 1.5),
-          ),
-          focusedBorder: OutlineInputBorder(
-            borderRadius: BorderRadius.circular(30),
-            borderSide: BorderSide(color: colorBackground, width: 2),
-          ),
-          enabledBorder: OutlineInputBorder(
-            borderRadius: BorderRadius.circular(30),
-            borderSide: BorderSide(color: Colors.grey, width: 1.5),
-          ),
-        ),
-        onChanged: (value) {
-          controller.validateName(); // Called on every change
-          // Ambil nama depan dari nama lengkap
-          if (value.isNotEmpty) {
-            List<String> names = value.split(' ');
-            controller.firstName.value = names.first; // Ambil nama depan
-          } else {
-            controller.firstName.value = ''; // Reset jika kosong
-          }
-        },
-      )),
+            controller: controller.nameController,
+            decoration: InputDecoration(
+              labelText: 'Nama Lengkap',
+              errorText: controller.isNameError.value
+                  ? 'Nama harus minimal 2 karakter'
+                  : null,
+              border: OutlineInputBorder(
+                borderRadius: BorderRadius.circular(30),
+                borderSide: BorderSide(color: Colors.grey, width: 1.5),
+              ),
+              focusedBorder: OutlineInputBorder(
+                borderRadius: BorderRadius.circular(30),
+                borderSide: BorderSide(color: colorBackground, width: 2),
+              ),
+              enabledBorder: OutlineInputBorder(
+                borderRadius: BorderRadius.circular(30),
+                borderSide: BorderSide(color: Colors.grey, width: 1.5),
+              ),
+            ),
+            onChanged: (value) {
+              controller.validateName(); // Called on every change
+              // Ambil nama depan dari nama lengkap
+              if (value.isNotEmpty) {
+                List<String> names = value.split(' ');
+                controller.firstName.value = names.first; // Ambil nama depan
+              } else {
+                controller.firstName.value = ''; // Reset jika kosong
+              }
+            },
+          )),
       SizedBox(height: 20),
       GestureDetector(
         onTap: () {
@@ -2154,7 +2176,7 @@ class RegisterPage extends GetView<RegisterController> {
     return _buildScrollableColumn(
       child: [
         Obx(
-              () => Text(
+          () => Text(
             'Terima kasih, ${controller.firstName.value}!',
             style: GoogleFonts.leagueSpartan(
               fontSize: 28,
@@ -2189,27 +2211,27 @@ class RegisterPage extends GetView<RegisterController> {
         ),
         SizedBox(height: 20),
         Obx(() => TextField(
-          controller: controller.emailController,
-          keyboardType: TextInputType.emailAddress,
-          decoration: InputDecoration(
-            labelText: 'Email',
-            errorText:
-            controller.isEmailError.value ? 'Email tidak valid' : null,
-            border: OutlineInputBorder(
-              borderRadius: BorderRadius.circular(30),
-              borderSide: BorderSide(color: Colors.grey, width: 1.5),
-            ),
-            focusedBorder: OutlineInputBorder(
-              borderRadius: BorderRadius.circular(30),
-              borderSide: BorderSide(color: colorBackground, width: 2),
-            ),
-            enabledBorder: OutlineInputBorder(
-              borderRadius: BorderRadius.circular(30),
-              borderSide: BorderSide(color: Colors.grey, width: 1.5),
-            ),
-          ),
-          onChanged: (_) => controller.validateEmail(),
-        )),
+              controller: controller.emailController,
+              keyboardType: TextInputType.emailAddress,
+              decoration: InputDecoration(
+                labelText: 'Email',
+                errorText:
+                    controller.isEmailError.value ? 'Email tidak valid' : null,
+                border: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(30),
+                  borderSide: BorderSide(color: Colors.grey, width: 1.5),
+                ),
+                focusedBorder: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(30),
+                  borderSide: BorderSide(color: colorBackground, width: 2),
+                ),
+                enabledBorder: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(30),
+                  borderSide: BorderSide(color: Colors.grey, width: 1.5),
+                ),
+              ),
+              onChanged: (_) => controller.validateEmail(),
+            )),
       ],
     );
   }
@@ -2251,28 +2273,28 @@ class RegisterPage extends GetView<RegisterController> {
       ),
       SizedBox(height: 20),
       Obx(() => TextField(
-        controller: controller.phoneNumberController,
-        keyboardType: TextInputType.phone,
-        decoration: InputDecoration(
-          labelText: 'Nomor Telepon',
-          errorText: controller.isPhoneError.value
-              ? 'Nomor telepon tidak valid'
-              : null,
-          border: OutlineInputBorder(
-            borderRadius: BorderRadius.circular(30),
-            borderSide: BorderSide(color: Colors.grey, width: 1.5),
-          ),
-          focusedBorder: OutlineInputBorder(
-            borderRadius: BorderRadius.circular(30),
-            borderSide: BorderSide(color: colorBackground, width: 2),
-          ),
-          enabledBorder: OutlineInputBorder(
-            borderRadius: BorderRadius.circular(30),
-            borderSide: BorderSide(color: Colors.grey, width: 1.5),
-          ),
-        ),
-        onChanged: (_) => controller.validatePhoneNumber(),
-      )),
+            controller: controller.phoneNumberController,
+            keyboardType: TextInputType.phone,
+            decoration: InputDecoration(
+              labelText: 'Nomor Telepon',
+              errorText: controller.isPhoneError.value
+                  ? 'Nomor telepon tidak valid'
+                  : null,
+              border: OutlineInputBorder(
+                borderRadius: BorderRadius.circular(30),
+                borderSide: BorderSide(color: Colors.grey, width: 1.5),
+              ),
+              focusedBorder: OutlineInputBorder(
+                borderRadius: BorderRadius.circular(30),
+                borderSide: BorderSide(color: colorBackground, width: 2),
+              ),
+              enabledBorder: OutlineInputBorder(
+                borderRadius: BorderRadius.circular(30),
+                borderSide: BorderSide(color: Colors.grey, width: 1.5),
+              ),
+            ),
+            onChanged: (_) => controller.validatePhoneNumber(),
+          )),
     ]);
   }
 
@@ -2372,12 +2394,12 @@ class RegisterPage extends GetView<RegisterController> {
         onChanged: (value) => controller.fetchCities(value),
       ),
       Obx(
-            () => Column(
+        () => Column(
           children: controller.domisiliList
               .map((city) => ListTile(
-            title: Text(city['name']),
-            onTap: () => controller.onCitySelected(city),
-          ))
+                    title: Text(city['name']),
+                    onTap: () => controller.onCitySelected(city),
+                  ))
               .toList(),
         ),
       ),
@@ -2412,68 +2434,68 @@ class RegisterPage extends GetView<RegisterController> {
       ),
       SizedBox(height: 20),
       Obx(() => Column(
-        children: [
-          GestureDetector(
-            onTap: () {
-              controller.setGender('M'); // Laki-laki
-            },
-            child: Container(
-              width: double.infinity,
-              padding: EdgeInsets.all(12),
-              margin: EdgeInsets.only(right: 10),
-              decoration: BoxDecoration(
-                color: controller.selectedGender.value == 'M'
-                    ? colorBackground
-                    : Colors.white,
-                borderRadius: BorderRadius.circular(10),
-                border: Border.all(
-                  color: controller.selectedGender.value == 'M'
-                      ? colorBackground
-                      : Colors.grey,
+            children: [
+              GestureDetector(
+                onTap: () {
+                  controller.setGender('M'); // Laki-laki
+                },
+                child: Container(
+                  width: double.infinity,
+                  padding: EdgeInsets.all(12),
+                  margin: EdgeInsets.only(right: 10),
+                  decoration: BoxDecoration(
+                    color: controller.selectedGender.value == 'M'
+                        ? colorBackground
+                        : Colors.white,
+                    borderRadius: BorderRadius.circular(10),
+                    border: Border.all(
+                      color: controller.selectedGender.value == 'M'
+                          ? colorBackground
+                          : Colors.grey,
+                    ),
+                  ),
+                  child: Text(
+                    'Laki-laki',
+                    style: TextStyle(
+                      color: controller.selectedGender.value == 'M'
+                          ? Colors.white
+                          : Colors.black,
+                    ),
+                  ),
                 ),
               ),
-              child: Text(
-                'Laki-laki',
-                style: TextStyle(
-                  color: controller.selectedGender.value == 'M'
-                      ? Colors.white
-                      : Colors.black,
+              const SizedBox(height: 10),
+              GestureDetector(
+                onTap: () {
+                  controller.setGender('F'); // Perempuan
+                },
+                child: Container(
+                  width: double.infinity,
+                  padding: EdgeInsets.all(12),
+                  margin: EdgeInsets.only(right: 10),
+                  decoration: BoxDecoration(
+                    color: controller.selectedGender.value == 'F'
+                        ? colorBackground
+                        : Colors.white,
+                    borderRadius: BorderRadius.circular(10),
+                    border: Border.all(
+                      color: controller.selectedGender.value == 'F'
+                          ? colorBackground
+                          : Colors.grey,
+                    ),
+                  ),
+                  child: Text(
+                    'Perempuan',
+                    style: TextStyle(
+                      color: controller.selectedGender.value == 'F'
+                          ? Colors.white
+                          : Colors.black,
+                    ),
+                  ),
                 ),
               ),
-            ),
-          ),
-          const SizedBox(height: 10),
-          GestureDetector(
-            onTap: () {
-              controller.setGender('F'); // Perempuan
-            },
-            child: Container(
-              width: double.infinity,
-              padding: EdgeInsets.all(12),
-              margin: EdgeInsets.only(right: 10),
-              decoration: BoxDecoration(
-                color: controller.selectedGender.value == 'F'
-                    ? colorBackground
-                    : Colors.white,
-                borderRadius: BorderRadius.circular(10),
-                border: Border.all(
-                  color: controller.selectedGender.value == 'F'
-                      ? colorBackground
-                      : Colors.grey,
-                ),
-              ),
-              child: Text(
-                'Perempuan',
-                style: TextStyle(
-                  color: controller.selectedGender.value == 'F'
-                      ? Colors.white
-                      : Colors.black,
-                ),
-              ),
-            ),
-          ),
-        ],
-      )),
+            ],
+          )),
     ]);
   }
 
@@ -2514,62 +2536,62 @@ class RegisterPage extends GetView<RegisterController> {
         ),
         SizedBox(height: 20),
         Obx(() => Column(
-          children: jobType.entries.map((entry) {
-            final key = entry.key;
-            final title = entry.value;
-            return GestureDetector(
-              onTap: () {
-                controller.selectedJobType.value = int.parse(key);
-              },
-              child: Container(
-                width: double.infinity,
-                margin: EdgeInsets.only(bottom: 10),
-                padding: EdgeInsets.all(15),
-                decoration: BoxDecoration(
-                  color: controller.selectedJobType.value == int.parse(key)
-                      ? colorBackground
-                      : Colors.white,
-                  borderRadius: BorderRadius.circular(20),
-                  border: Border.all(
-                    color:
-                    controller.selectedJobType.value == int.parse(key)
-                        ? colorBackground
-                        : Colors.black,
-                    width: 1.5,
+              children: jobType.entries.map((entry) {
+                final key = entry.key;
+                final title = entry.value;
+                return GestureDetector(
+                  onTap: () {
+                    controller.selectedJobType.value = int.parse(key);
+                  },
+                  child: Container(
+                    width: double.infinity,
+                    margin: EdgeInsets.only(bottom: 10),
+                    padding: EdgeInsets.all(15),
+                    decoration: BoxDecoration(
+                      color: controller.selectedJobType.value == int.parse(key)
+                          ? colorBackground
+                          : Colors.white,
+                      borderRadius: BorderRadius.circular(20),
+                      border: Border.all(
+                        color:
+                            controller.selectedJobType.value == int.parse(key)
+                                ? colorBackground
+                                : Colors.black,
+                        width: 1.5,
+                      ),
+                    ),
+                    child: Text(
+                      title,
+                      style: TextStyle(
+                        color:
+                            controller.selectedJobType.value == int.parse(key)
+                                ? Colors.white
+                                : Colors.black,
+                      ),
+                    ),
                   ),
-                ),
-                child: Text(
-                  title,
-                  style: TextStyle(
-                    color:
-                    controller.selectedJobType.value == int.parse(key)
-                        ? Colors.white
-                        : Colors.black,
-                  ),
-                ),
-              ),
-            );
-          }).toList(),
-        )),
+                );
+              }).toList(),
+            )),
         Obx(() => controller.selectedJobType.value == 0
             ? TextField(
-          controller: controller.customJobController,
-          decoration: InputDecoration(
-            labelText: 'Tuliskan Pekerjaan Lain',
-            border: OutlineInputBorder(
-              borderRadius: BorderRadius.circular(30),
-              borderSide: BorderSide(color: Colors.grey, width: 1.5),
-            ),
-            focusedBorder: OutlineInputBorder(
-              borderRadius: BorderRadius.circular(30),
-              borderSide: BorderSide(color: colorBackground, width: 2),
-            ),
-            enabledBorder: OutlineInputBorder(
-              borderRadius: BorderRadius.circular(30),
-              borderSide: BorderSide(color: Colors.grey, width: 1.5),
-            ),
-          ),
-        )
+                controller: controller.customJobController,
+                decoration: InputDecoration(
+                  labelText: 'Tuliskan Pekerjaan Lain',
+                  border: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(30),
+                    borderSide: BorderSide(color: Colors.grey, width: 1.5),
+                  ),
+                  focusedBorder: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(30),
+                    borderSide: BorderSide(color: colorBackground, width: 2),
+                  ),
+                  enabledBorder: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(30),
+                    borderSide: BorderSide(color: Colors.grey, width: 1.5),
+                  ),
+                ),
+              )
             : SizedBox.shrink()),
       ],
     );
@@ -2579,143 +2601,143 @@ class RegisterPage extends GetView<RegisterController> {
   Widget _buildPasswordStep() {
     return _buildScrollableColumn(
       child: [
-      Text(
-      'Atur kata sandi kamu',
-      style: GoogleFonts.leagueSpartan(
-          fontSize: 28, fontWeight: FontWeight.bold),
-    ),
-    Text(
-    'Buat kata sandi mu agar aman ya!',
-    style: GoogleFonts.leagueSpartan(
-    fontSize: 14, fontWeight: FontWeight.normal),
-    ),
-    SizedBox(height: 20),
-    Obx(
-    () => Column(
-    children: [
-    TextField(
-    controller: controller.passwordController,
-    obscureText: !controller.isPasswordVisible.value,
-    decoration: InputDecoration(
-    labelText: 'Kata Sandi',
-    errorText: controller.isPasswordError.value
-    ? 'Password minimal 8 karakter, huruf kapital dan angka'
-        : null,
-    suffixIcon: IconButton(
-    icon: Icon(controller.isPasswordVisible.value
-    ? Icons.visibility
-        : Icons.visibility_off),
-    onPressed: controller.togglePasswordVisibility,
-    ),
-    border: OutlineInputBorder(
-    borderRadius: BorderRadius.circular(30),
-    borderSide: BorderSide(color: Colors.grey, width: 1.5),
-    ),
-    focusedBorder: OutlineInputBorder(
-    borderRadius: BorderRadius.circular(30),
-    borderSide: BorderSide(color: colorBackground, width: 2),
-    ),
-    enabledBorder: OutlineInputBorder(
-    borderRadius: BorderRadius.circular(30),
-    borderSide: BorderSide(color: Colors.grey, width: 1.5),
-    ),
-    ),
-    onChanged: (value) => controller.validatePassword(value),
-    ),
-    SizedBox(height: 16),
-    TextField(
-    controller: controller.confirmPasswordController,
-    obscureText: !controller.isConfirmPasswordVisible.value,
-    decoration: InputDecoration(
-    labelText: 'Konfirmasi Kata Sandi',
-    errorText: controller.isConfirmPasswordError.value
-    ? 'Konfirmasi password tidak cocok'
-        : null,
-    suffixIcon: IconButton(
-    icon: Icon(controller.isConfirmPasswordVisible.value
-    ? Icons.visibility
-        : Icons.visibility_off),
-    onPressed: controller.toggleConfirmPasswordVisibility,
-    ),
-    border: OutlineInputBorder(
-    borderRadius: BorderRadius.circular(30),
-    borderSide: BorderSide(color: Colors.grey, width: 1.5),
-    ),
-    focusedBorder: OutlineInputBorder(
-    borderRadius: BorderRadius.circular(30),
-    borderSide: BorderSide(color: colorBackground, width: 2),
-    ),
-    enabledBorder: OutlineInputBorder(
-    borderRadius: BorderRadius.circular(30),
-    borderSide: BorderSide(color: Colors.grey, width: 1.5),
-    ),
-    ),
-    onChanged: (value) => controller.validateConfirmPassword(value),
-    ),
-    SizedBox(height: 16),
-
-      // CheckBox for terms and conditions
-      Obx(
-            () => Row(
-          children: [
-            Checkbox(
-              value: controller.isAgreed.value,
-              onChanged: (value) {
-                if (value != null) {
-                  controller.isAgreed.value = value;
-                  if (value) {
-                    _showTermsAndConditions(Get.context!);
-                  }
-                }
-              },
-            ),
-            Expanded(
-              child: Text.rich(
-                TextSpan(
-                  text: 'Saya telah menyetujui ',
-                  style: GoogleFonts.leagueSpartan(
-                    fontSize: 14,
-                    fontWeight: FontWeight.normal,
+        Text(
+          'Atur kata sandi kamu',
+          style: GoogleFonts.leagueSpartan(
+              fontSize: 28, fontWeight: FontWeight.bold),
+        ),
+        Text(
+          'Buat kata sandi mu agar aman ya!',
+          style: GoogleFonts.leagueSpartan(
+              fontSize: 14, fontWeight: FontWeight.normal),
+        ),
+        SizedBox(height: 20),
+        Obx(
+          () => Column(
+            children: [
+              TextField(
+                controller: controller.passwordController,
+                obscureText: !controller.isPasswordVisible.value,
+                decoration: InputDecoration(
+                  labelText: 'Kata Sandi',
+                  errorText: controller.isPasswordError.value
+                      ? 'Password minimal 8 karakter, huruf kapital dan angka'
+                      : null,
+                  suffixIcon: IconButton(
+                    icon: Icon(controller.isPasswordVisible.value
+                        ? Icons.visibility
+                        : Icons.visibility_off),
+                    onPressed: controller.togglePasswordVisibility,
                   ),
+                  border: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(30),
+                    borderSide: BorderSide(color: Colors.grey, width: 1.5),
+                  ),
+                  focusedBorder: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(30),
+                    borderSide: BorderSide(color: colorBackground, width: 2),
+                  ),
+                  enabledBorder: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(30),
+                    borderSide: BorderSide(color: Colors.grey, width: 1.5),
+                  ),
+                ),
+                onChanged: (value) => controller.validatePassword(value),
+              ),
+              SizedBox(height: 16),
+              TextField(
+                controller: controller.confirmPasswordController,
+                obscureText: !controller.isConfirmPasswordVisible.value,
+                decoration: InputDecoration(
+                  labelText: 'Konfirmasi Kata Sandi',
+                  errorText: controller.isConfirmPasswordError.value
+                      ? 'Konfirmasi password tidak cocok'
+                      : null,
+                  suffixIcon: IconButton(
+                    icon: Icon(controller.isConfirmPasswordVisible.value
+                        ? Icons.visibility
+                        : Icons.visibility_off),
+                    onPressed: controller.toggleConfirmPasswordVisibility,
+                  ),
+                  border: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(30),
+                    borderSide: BorderSide(color: Colors.grey, width: 1.5),
+                  ),
+                  focusedBorder: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(30),
+                    borderSide: BorderSide(color: colorBackground, width: 2),
+                  ),
+                  enabledBorder: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(30),
+                    borderSide: BorderSide(color: Colors.grey, width: 1.5),
+                  ),
+                ),
+                onChanged: (value) => controller.validateConfirmPassword(value),
+              ),
+              SizedBox(height: 16),
+
+              // CheckBox for terms and conditions
+              Obx(
+                () => Row(
                   children: [
-                    TextSpan(
-                      text: 'term of service',
-                      style: GoogleFonts.leagueSpartan(
-                        fontSize: 14,
-                        fontWeight: FontWeight.bold,
-                      ),
+                    Checkbox(
+                      value: controller.isAgreed.value,
+                      onChanged: (value) {
+                        if (value != null) {
+                          controller.isAgreed.value = value;
+                          if (value) {
+                            _showTermsAndConditions(Get.context!);
+                          }
+                        }
+                      },
                     ),
-                    TextSpan(
-                      text: ' dan ',
-                      style: GoogleFonts.leagueSpartan(
-                        fontSize: 14,
-                        fontWeight: FontWeight.normal,
-                      ),
-                    ),
-                    TextSpan(
-                      text: 'Privacy Policy',
-                      style: GoogleFonts.leagueSpartan(
-                        fontSize: 14,
-                        fontWeight: FontWeight.bold,
-                      ),
-                    ),
-                    TextSpan(
-                      text: ' yang berlaku.',
-                      style: GoogleFonts.leagueSpartan(
-                        fontSize: 14,
-                        fontWeight: FontWeight.normal,
+                    Expanded(
+                      child: Text.rich(
+                        TextSpan(
+                          text: 'Saya telah menyetujui ',
+                          style: GoogleFonts.leagueSpartan(
+                            fontSize: 14,
+                            fontWeight: FontWeight.normal,
+                          ),
+                          children: [
+                            TextSpan(
+                              text: 'term of service',
+                              style: GoogleFonts.leagueSpartan(
+                                fontSize: 14,
+                                fontWeight: FontWeight.bold,
+                              ),
+                            ),
+                            TextSpan(
+                              text: ' dan ',
+                              style: GoogleFonts.leagueSpartan(
+                                fontSize: 14,
+                                fontWeight: FontWeight.normal,
+                              ),
+                            ),
+                            TextSpan(
+                              text: 'Privacy Policy',
+                              style: GoogleFonts.leagueSpartan(
+                                fontSize: 14,
+                                fontWeight: FontWeight.bold,
+                              ),
+                            ),
+                            TextSpan(
+                              text: ' yang berlaku.',
+                              style: GoogleFonts.leagueSpartan(
+                                fontSize: 14,
+                                fontWeight: FontWeight.normal,
+                              ),
+                            ),
+                          ],
+                        ),
                       ),
                     ),
                   ],
                 ),
               ),
-            ),
-          ],
+            ],
+          ),
         ),
-      ),
-    ],
-    ),
-    ),
       ],
     );
   }
@@ -2723,21 +2745,21 @@ class RegisterPage extends GetView<RegisterController> {
   // Navigation Button
   Widget _buildNavigationButton() {
     return Obx(() => ElevatedButton(
-      onPressed: controller.isLoading.value ? null : _navigateOrRegister,
-      style: ElevatedButton.styleFrom(
-        minimumSize: Size(double.infinity, 50),
-        backgroundColor: colorBackground,
-      ),
-      child: controller.isLoading.value
-          ? CircularProgressIndicator(color: Colors.white)
-          : Text(
-        'Lanjutkan',
-        style: GoogleFonts.leagueSpartan(
-          color: Colors.white,
-          fontWeight: FontWeight.bold,
-        ),
-      ),
-    ));
+          onPressed: controller.isLoading.value ? null : _navigateOrRegister,
+          style: ElevatedButton.styleFrom(
+            minimumSize: Size(double.infinity, 50),
+            backgroundColor: colorBackground,
+          ),
+          child: controller.isLoading.value
+              ? CircularProgressIndicator(color: Colors.white)
+              : Text(
+                  'Lanjutkan',
+                  style: GoogleFonts.leagueSpartan(
+                    color: Colors.white,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+        ));
   }
 
   // Logic Navigation
@@ -2762,10 +2784,10 @@ class RegisterPage extends GetView<RegisterController> {
         if (controller.domisiliController.text.isEmpty) return;
         break;
       case 5:
-      // Gender selection doesn't need validation for this demo
+        // Gender selection doesn't need validation for this demo
         break;
       case 6:
-      // Job selection handle
+        // Job selection handle
         if (controller.selectedJobType.value < 0) return;
         break;
       case 7:

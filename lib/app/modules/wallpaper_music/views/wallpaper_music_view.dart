@@ -2140,7 +2140,7 @@ import '../model/music_track.dart';
 import '../model/wallpaper_model.dart';
 
 class WallpaperMusicView extends StatefulWidget {
-  const WallpaperMusicView({Key? key}) : super(key: key);
+  const WallpaperMusicView({super.key});
 
   @override
   _WallpaperMusicViewState createState() => _WallpaperMusicViewState();
@@ -2182,21 +2182,37 @@ class _WallpaperMusicViewState extends State<WallpaperMusicView>
 
     return GetBuilder<WallpaperMusicController>(
         dispose: (state) {
-          debugPrint("Dispose WallpaperMusicController");
           Get.delete<WallpaperMusicController>();
         },
         builder: (controller) => Scaffold(
               backgroundColor: Colors.white,
-              body: SafeArea(
-                child: Container(
-                  decoration: BoxDecoration(
-                    image: DecorationImage(
-                      image: AssetImage('assets/images/Template.png'),
-                      fit: BoxFit.cover,
+              body: PopScope(
+                canPop: false,
+                onPopInvokedWithResult: (didPop, result) {
+                  if (didPop) {
+                    return;
+                  }
+
+                  int currentPage = _pageController.page?.round() ?? 0;
+
+                  if (currentPage > 0) {
+                    _pageController.previousPage(
+                      duration: Duration(milliseconds: 300),
+                      curve: Curves.easeInOut,
+                    );
+                  } else {
+                    Get.back();
+                    Get.delete<WallpaperMusicController>();
+                  }
+                },
+                child: SafeArea(
+                  child: Container(
+                    decoration: BoxDecoration(
+                      image: DecorationImage(
+                        image: AssetImage('assets/images/Template.png'),
+                        fit: BoxFit.cover,
+                      ),
                     ),
-                  ),
-                  child: Padding(
-                    padding: const EdgeInsets.all(20),
                     child: Column(
                       children: [
                         Expanded(
@@ -2209,6 +2225,7 @@ class _WallpaperMusicViewState extends State<WallpaperMusicView>
                             ],
                           ),
                         ),
+                        const SizedBox(height: 10),
                         _buildIndicator(),
                         const SizedBox(height: 10),
                         _buildNavigationButton(controller),
@@ -2235,56 +2252,68 @@ class _WallpaperMusicViewState extends State<WallpaperMusicView>
 
   Widget _buildNavigationButton(WallpaperMusicController controller) {
     final screenWidth = MediaQuery.of(context).size.width;
-    return SizedBox(
-      width: screenWidth,
-      child: ElevatedButton(
-        onPressed: () async {
-          if (_pageController.page == 1) {
-            // Jika ini halaman kedua (musical selection)
-            SharedPreferences prefs = await SharedPreferences.getInstance();
-            prefs.setBool(
-                'isNewUser', false); // Set pengguna baru menjadi false
+    return Padding(
+        padding: EdgeInsets.only(bottom: 20, left: 20, right: 20),
+        child: SizedBox(
+          width: screenWidth,
+          child: ElevatedButton(
+            onPressed: () async {
+              if (_pageController.page == 1) {
+                // Jika ini halaman kedua (musical selection)
+                SharedPreferences prefs = await SharedPreferences.getInstance();
+                prefs.setBool(
+                    'isNewUser', false); // Set pengguna baru menjadi false
 
-            // Arahkan ke halaman /home dan refresh data pengguna
-            Get.offNamed('/home', arguments: {'refresh': true});
-            Get.delete<WallpaperMusicController>();
-          } else {
-            // Jika halaman pertama (wallpaper selection)
-            _pageController.nextPage(
-              duration: const Duration(milliseconds: 300),
-              curve: Curves.easeInOut,
-            );
-          }
-        },
-        style: ElevatedButton.styleFrom(
-          minimumSize: Size(screenWidth, 50),
-          backgroundColor: colorBackground,
-        ),
-        child: Obx(() {
-          return Text(
-            _currentPage.value == 1 ? 'Selesai' : 'Selanjutnya',
-            style: const TextStyle(color: Colors.white),
-          );
-        }),
-      ),
-    );
+                // Arahkan ke halaman /home dan refresh data pengguna
+                Get.offNamed('/home', arguments: {'refresh': true})?.then(
+                    (onValue) => {Get.delete<WallpaperMusicController>()});
+              } else {
+                // Jika halaman pertama (wallpaper selection)
+                _pageController.nextPage(
+                  duration: const Duration(milliseconds: 300),
+                  curve: Curves.easeInOut,
+                );
+              }
+            },
+            style: ElevatedButton.styleFrom(
+              minimumSize: Size(screenWidth, 50),
+              backgroundColor: colorBackground,
+            ),
+            child: Obx(() {
+              return Text(
+                _currentPage.value == 1 ? 'Selesai' : 'Selanjutnya',
+                style: const TextStyle(color: Colors.white),
+              );
+            }),
+          ),
+        ));
   }
 
   Widget _buildWallpaperSelection(WallpaperMusicController controller) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Text(
-          'Pilih Wallpapermu!',
-          style: GoogleFonts.leagueSpartan(
-              fontSize: 34, fontWeight: FontWeight.bold, color: Colors.white),
-          textAlign: TextAlign.left,
-        ),
-        Text(
-          'Kamu bisa memilih wallpaper yang paling kamu suka loh.\nagar menambah pengalamanmu saat membaca',
-          style: GoogleFonts.leagueSpartan(fontSize: 14, color: Colors.white),
-          textAlign: TextAlign.left,
-        ),
+        Padding(
+            padding: EdgeInsets.all(20),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  'Pilih Wallpapermu!',
+                  style: GoogleFonts.leagueSpartan(
+                      fontSize: 34,
+                      fontWeight: FontWeight.bold,
+                      color: Colors.white),
+                  textAlign: TextAlign.left,
+                ),
+                Text(
+                  'Kamu bisa memilih wallpaper yang paling kamu suka loh.\nagar menambah pengalamanmu saat membaca',
+                  style: GoogleFonts.leagueSpartan(
+                      fontSize: 14, color: Colors.white),
+                  textAlign: TextAlign.left,
+                ),
+              ],
+            )),
         const SizedBox(height: 20),
         Obx(() {
           if (controller.wallpaperStatus.value == WallpaperStatus.loading) {
@@ -2294,26 +2323,29 @@ class _WallpaperMusicViewState extends State<WallpaperMusicView>
               ),
             );
           }
-          if (controller.wallpaperStatus.value == WallpaperStatus.error) {
-            return Expanded(
-              child: Center(
-                child: Text(
-                  'Error: ${controller.errorMessage.value}',
-                  style: const TextStyle(color: Colors.red),
-                ),
-              ),
-            );
-          }
+
+          // TODO: Error per video card
+          // if (controller.wallpaperStatus.value == WallpaperStatus.error) {
+          //   return Expanded(
+          //     child: Center(
+          //       child: Text(
+          //         'Error: ${controller.errorMessage.value}',
+          //         style: const TextStyle(color: Colors.red),
+          //       ),
+          //     ),
+          //   );
+          // }
 
           final wallpapers = controller.wallpapers;
-          final size = MediaQuery.of(context).size;
           return Expanded(
             child: wallpapers.isEmpty
                 ? const Center(child: Text("Tidak ada wallpaper tersedia"))
                 : GridView.builder(
+                    padding: EdgeInsets.only(left: 20, right: 20),
+                    scrollDirection: Axis.horizontal,
                     gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                      crossAxisCount: (size.width > 400) ? 3 : 2,
-                      childAspectRatio: 0.7,
+                      crossAxisCount: 3,
+                      childAspectRatio: 1.3,
                       crossAxisSpacing: 8,
                       mainAxisSpacing: 8,
                     ),
@@ -2431,14 +2463,16 @@ class _WallpaperMusicViewState extends State<WallpaperMusicView>
   }
 
   Widget _buildMusicSelection(WallpaperMusicController controller) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        _buildMusicHeader(),
-        const SizedBox(height: 20),
-        _buildMusicContent(controller),
-      ],
-    );
+    return Padding(
+        padding: EdgeInsets.only(top: 20, left: 20, right: 20),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            _buildMusicHeader(),
+            const SizedBox(height: 20),
+            _buildMusicContent(controller),
+          ],
+        ));
   }
 
   Widget _buildMusicHeader() {
@@ -2482,7 +2516,7 @@ class _WallpaperMusicViewState extends State<WallpaperMusicView>
       return Expanded(
         child: ListView.separated(
           itemCount: controller.musicPlaylist.length,
-          separatorBuilder: (context, index) => const SizedBox(height: 10),
+          separatorBuilder: (context, index) => const SizedBox(height: 6),
           itemBuilder: (context, index) =>
               _buildMusicItem(controller, controller.musicPlaylist[index]),
         ),
@@ -2572,81 +2606,72 @@ class _WallpaperMusicViewState extends State<WallpaperMusicView>
       WallpaperMusicController controller, MusicTrack musicTrack) {
     final isSelected = controller.selectedMusicId.value == musicTrack.id;
 
-    return Container(
-      height: 45,
-      decoration: BoxDecoration(
-        gradient: LinearGradient(
-          colors: isSelected
-              ? [
-                  colorBackground.withOpacity(0.2),
-                  colorBackground.withOpacity(0.1)
-                ]
-              : [Colors.white, Colors.white],
-        ),
-        borderRadius: BorderRadius.circular(15),
-        border: Border.all(
-          color: isSelected ? colorBackground : Colors.grey.shade200,
-          width: 1.5,
-        ),
-      ),
-      child: Row(
-        children: [
-          // Leading Icon
-          Container(
-            width: 40,
-            height: 40,
-            margin: const EdgeInsets.only(left: 10),
-            decoration: BoxDecoration(
-              color: isSelected ? colorBackground : Colors.grey.shade200,
-              borderRadius: BorderRadius.circular(10),
-            ),
-            child: Center(
-              child: Icon(
-                Icons.music_note,
-                color: isSelected ? Colors.white : Colors.black54,
-                size: 20,
-              ),
-            ),
+    return GestureDetector(
+      onTap: () => controller.selectMusic(musicTrack),
+      child: Container(
+        decoration: BoxDecoration(
+          gradient: LinearGradient(
+            colors: isSelected
+                ? [
+                    colorBackground.withValues(alpha: 0.9),
+                    colorBackground.withValues(alpha: 0.1)
+                  ]
+                : [
+                    Colors.white.withValues(alpha: 0.3),
+                    Colors.white.withValues(alpha: 0.3)
+                  ],
           ),
-
-          // Title
-          Expanded(
-            child: Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 12),
-              child: Text(
-                musicTrack.title,
-                style: GoogleFonts.leagueSpartan(
-                  fontSize: 16,
-                  fontWeight: FontWeight.w600,
-                  color: Colors.black87,
-                ),
-                overflow: TextOverflow.ellipsis,
-              ),
-            ),
+          borderRadius: BorderRadius.circular(20),
+          border: Border.all(
+            color: isSelected
+                ? colorBackground
+                : Colors.black.withValues(alpha: 0.3),
+            width: 1.5,
           ),
-
-          // Play/Pause Button
-          GestureDetector(
-            onTap: () => controller.selectMusic(musicTrack),
-            child: AnimatedContainer(
-              duration: const Duration(milliseconds: 300),
-              width: 40,
-              height: 40,
-              margin: const EdgeInsets.only(right: 10),
-              decoration: BoxDecoration(
-                color: isSelected ? colorBackground : Colors.grey.shade200,
-                borderRadius: BorderRadius.circular(10),
-              ),
-              child: Center(
-                child: Icon(
-                  getMusicControllerIcon(isSelected, controller),
-                  color: isSelected ? Colors.white : Colors.black54,
-                  size: 20,
+        ),
+        child: Row(
+          children: [
+            // Title
+            Expanded(
+              child: Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 14),
+                child: Text(
+                  musicTrack.title,
+                  style: GoogleFonts.leagueSpartan(
+                    fontSize: 16,
+                    fontWeight: FontWeight.w600,
+                    color: Colors.white,
+                  ),
+                  overflow: TextOverflow.ellipsis,
                 ),
               ),
             ),
-          ),
-        ],
+
+            // Play/Pause Button
+            Padding(
+              padding: EdgeInsets.only(top: 2, bottom: 2),
+              child: AnimatedContainer(
+                duration: const Duration(milliseconds: 300),
+                width: 37,
+                height: 37,
+                margin: const EdgeInsets.only(right: 10),
+                decoration: BoxDecoration(
+                  color: isSelected
+                      ? colorBackground
+                      : Colors.black.withValues(alpha: 0.3),
+                  borderRadius: BorderRadius.circular(15),
+                ),
+                child: Center(
+                  child: Icon(
+                    getMusicControllerIcon(isSelected, controller),
+                    color: isSelected ? Colors.white : colorBackground,
+                    size: 18,
+                  ),
+                ),
+              ),
+            ),
+          ],
+        ),
       ),
     );
   }

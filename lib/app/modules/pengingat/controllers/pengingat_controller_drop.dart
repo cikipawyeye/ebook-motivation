@@ -2,6 +2,7 @@ import 'dart:convert';
 import 'dart:typed_data';
 import 'package:ebookapp/app/data/models/content_model.dart';
 import 'package:ebookapp/app/data/models/cursor_pagination_model.dart';
+import 'package:ebookapp/core/constants/constant.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:http/http.dart' as http;
@@ -42,11 +43,11 @@ class PengingatControllerDrop extends GetxController {
 
       debugPrint('🔄 Fetching motivasi data for subcategoryId: $subcategoryId');
       debugPrint(
-          '🔄 https://ebook.dev.whatthefun.id/api/v1/contents?subcategory_id=$subcategoryId&cursor=${nextCursor.value ?? ''}&limit=3');
+          '🔄 $baseUrl/api/v1/contents?subcategory_id=$subcategoryId&cursor=${nextCursor.value ?? ''}&limit=3');
 
       final response = await http.get(
         Uri.parse(
-            'https://ebook.dev.whatthefun.id/api/v1/contents?subcategory_id=$subcategoryId&cursor=${nextCursor.value ?? ''}&limit=3'),
+            '$baseUrl/api/v1/contents?subcategory_id=$subcategoryId&cursor=${nextCursor.value ?? ''}&limit=3'),
         headers: {
           'Authorization': 'Bearer $token',
           'Content-Type': 'application/json',

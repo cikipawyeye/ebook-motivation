@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 
 const String imageDirectory = 'assets/images/';
 const String imageURL = 'https://trustcollect.qrbdl.com/';
-const String baseUrl = 'https://ebook.dev.whatthefun.id';
+const String baseUrl = 'https://motivasiislami.com';
 const String kBase64Extend = 'data:image/jpeg;base64,';
 const String kBase64ExtendVideo = 'data:video/mp4;base64,';
 const String kBase64ExtendAudio = 'data:audio/mp3;base64,';
@@ -128,3 +128,15 @@ class AssetPaths {
     'assets/pictures/Wallpaper_img_09.jpg',
   ];
 }
+
+const userJob = {
+  '0': 'Lainnya',
+  '1': 'Pelajar',
+  '2': 'Mahasiswa',
+  '3': 'Pegawai Negeri (ASN)',
+  '4': 'Pegawai Swasta/Karyawan Swasta',
+  '5': 'Profesional/Ahli',
+  '6': 'Ibu Rumah Tangga',
+  '7': 'Wiraswasta/Pengusaha',
+  '8': 'Tidak Bekerja',
+};

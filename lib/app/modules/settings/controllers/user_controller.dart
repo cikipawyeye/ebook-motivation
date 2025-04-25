@@ -62,10 +62,10 @@ class UserController extends GetxController {
       }
 
       debugPrint('🔄 Mengambil data profil pengguna');
-      debugPrint('🔄 ${baseUrl}/api/v1/profile');
+      debugPrint('🔄 $baseUrl/api/v1/profile');
 
       final response = await http.get(
-        Uri.parse('${baseUrl}/api/v1/profile'),
+        Uri.parse('$baseUrl/api/v1/profile'),
         headers: {
           'Authorization': 'Bearer $token',
           'Content-Type': 'application/json',
@@ -125,11 +125,11 @@ class UserController extends GetxController {
       }
 
       debugPrint('🔄 Memperbarui data profil pengguna');
-      debugPrint('🔄 ${baseUrl}/api/v1/profile');
+      debugPrint('🔄 $baseUrl/api/v1/profile');
 
       // Kirim data ke server dengan format yang sesuai
       final response = await http.post(
-        Uri.parse('${baseUrl}/api/v1/profile'),
+        Uri.parse('$baseUrl/api/v1/profile'),
         headers: {
           'Authorization': 'Bearer $token',
           'Content-Type': 'application/json',
@@ -184,10 +184,10 @@ class UserController extends GetxController {
       }
 
       debugPrint('🔄 Mencari kota dengan query: $query');
-      debugPrint('🔄 ${baseUrl}/api/v1/register/cities?search=$query');
+      debugPrint('🔄 $baseUrl/api/v1/register/cities?search=$query');
 
       final response = await http.get(
-        Uri.parse('${baseUrl}/api/v1/register/cities?search=$query'),
+        Uri.parse('$baseUrl/api/v1/register/cities?search=$query'),
         headers: {
           'Authorization': 'Bearer $token',
           'Content-Type': 'application/json',
@@ -237,10 +237,10 @@ class UserController extends GetxController {
       }
 
       debugPrint('🔄 Keluar');
-      debugPrint('🔄 ${baseUrl}/api/v1/logout');
+      debugPrint('🔄 $baseUrl/api/v1/logout');
 
       final response = await http.post(
-        Uri.parse('${baseUrl}/api/v1/logout'),
+        Uri.parse('$baseUrl/api/v1/logout'),
         headers: {
           'Authorization': 'Bearer $token',
           'Content-Type': 'application/json',
@@ -248,11 +248,11 @@ class UserController extends GetxController {
         },
       );
 
-      if (response.statusCode != 200) {
-        Get.snackbar('Kesalahan', 'Gagal untuk keluar');
-        debugPrint('Respon kesalahan: ${response.body}');
-        return;
-      }
+      // if (response.statusCode != 200) {
+      //   Get.snackbar('Kesalahan', 'Gagal untuk keluar');
+      //   debugPrint('Respon kesalahan: ${response.body}');
+      //   return;
+      // }
 
       // Hapus token dan semua data pembayaran dari SharedPreferences
       final prefs = await SharedPreferences.getInstance();
