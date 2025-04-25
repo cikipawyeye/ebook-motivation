@@ -133,7 +133,7 @@
 //                                 shadows: [
 //                                   Shadow(
 //                                     blurRadius: 5.0,
-//                                     color: Colors.black.withOpacity(0.7),
+//                                     color: Colors.black.withValues(alpha: 0.7),
 //                                     offset: const Offset(2, 2),
 //                                   ),
 //                                 ],
@@ -185,7 +185,7 @@
 //                                 shadows: [
 //                                   Shadow(
 //                                     blurRadius: 5.0,
-//                                     color: Colors.black.withOpacity(0.7),
+//                                     color: Colors.black.withValues(alpha: 0.7),
 //                                     offset: const Offset(2, 2),
 //                                   ),
 //                                 ],
@@ -293,7 +293,7 @@
 //         motivasiController.searchQuery.value = '';
 
 //         return Dialog(
-//           backgroundColor: Colors.white.withOpacity(0.7),
+//           backgroundColor: Colors.white.withValues(alpha: 0.7),
 //           shape: RoundedRectangleBorder(
 //             borderRadius: BorderRadius.circular(16),
 //           ),
@@ -476,7 +476,7 @@
 //       pengingatController.searchQuery.value = '';
 
 //       return Dialog(
-//         backgroundColor: Colors.white.withOpacity(0.7),
+//         backgroundColor: Colors.white.withValues(alpha: 0.7),
 //         shape: RoundedRectangleBorder(
 //           borderRadius: BorderRadius.circular(16),
 //         ),
@@ -743,7 +743,7 @@
 //                                 shadows: [
 //                                   Shadow(
 //                                     blurRadius: 5.0,
-//                                     color: Colors.black.withOpacity(0.7),
+//                                     color: Colors.black.withValues(alpha: 0.7),
 //                                     offset: const Offset(2, 2),
 //                                   ),
 //                                 ],
@@ -793,7 +793,7 @@
 //                                 shadows: [
 //                                   Shadow(
 //                                     blurRadius: 5.0,
-//                                     color: Colors.black.withOpacity(0.7),
+//                                     color: Colors.black.withValues(alpha: 0.7),
 //                                     offset: const Offset(2, 2),
 //                                   ),
 //                                 ],
@@ -895,14 +895,14 @@ class HomeView extends GetView<HomeController> {
 
     showDialog(
       context: context,
-      barrierColor: Colors.black.withOpacity(0.3),
+      barrierColor: Colors.black.withValues(alpha: 0.3),
       builder: (BuildContext context) {
         motivasiController.searchQuery.value = '';
 
         return BackdropFilter(
           filter: ImageFilter.blur(sigmaX: 5, sigmaY: 5),
           child: Dialog(
-            backgroundColor: Colors.white.withOpacity(0.9),
+            backgroundColor: Colors.white.withValues(alpha: 0.9),
             shape: RoundedRectangleBorder(
               borderRadius: BorderRadius.circular(16),
             ),
@@ -1022,7 +1022,7 @@ class HomeView extends GetView<HomeController> {
 
                         return GestureDetector(
                           onTap: () {
-                            Get.toNamed('/motivation/contents',
+                            Get.offNamed('/motivation/contents',
                                 arguments: subcategory);
                           },
                           child: Container(
@@ -1083,14 +1083,14 @@ class HomeView extends GetView<HomeController> {
 
     showDialog(
       context: context,
-      barrierColor: Colors.black.withOpacity(0.3),
+      barrierColor: Colors.black.withValues(alpha: 0.3),
       builder: (BuildContext context) {
         pengingatController.searchQuery.value = '';
 
         return BackdropFilter(
           filter: ImageFilter.blur(sigmaX: 5, sigmaY: 5),
           child: Dialog(
-            backgroundColor: Colors.white.withOpacity(0.9),
+            backgroundColor: Colors.white.withValues(alpha: 0.9),
             shape: RoundedRectangleBorder(
               borderRadius: BorderRadius.circular(16),
             ),
@@ -1210,7 +1210,7 @@ class HomeView extends GetView<HomeController> {
 
                         return GestureDetector(
                           onTap: () {
-                            Get.toNamed('/reminders/contents',
+                            Get.offNamed('/reminders/contents',
                                 arguments: subcategory);
                           },
                           child: Container(
@@ -1362,7 +1362,7 @@ class HomeView extends GetView<HomeController> {
                                 shadows: [
                                   Shadow(
                                     blurRadius: 5.0,
-                                    color: Colors.black.withOpacity(0.7),
+                                    color: Colors.black.withValues(alpha: 0.7),
                                     offset: const Offset(2, 2),
                                   ),
                                 ],
@@ -1412,7 +1412,7 @@ class HomeView extends GetView<HomeController> {
                                 shadows: [
                                   Shadow(
                                     blurRadius: 5.0,
-                                    color: Colors.black.withOpacity(0.7),
+                                    color: Colors.black.withValues(alpha: 0.7),
                                     offset: const Offset(2, 2),
                                   ),
                                 ],

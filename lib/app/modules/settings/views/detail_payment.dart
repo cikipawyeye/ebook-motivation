@@ -1,5 +1,6 @@
 import 'package:ebookapp/app/modules/settings/controllers/payment_detail_controller.dart';
 import 'package:ebookapp/app/modules/settings/controllers/setting_theme_controller.dart';
+import 'package:ebookapp/app/modules/settings/enums/payment.dart';
 import 'package:ebookapp/app/routes/app_pages.dart';
 import 'package:ebookapp/core/constants/constant.dart';
 import 'package:flutter/material.dart';
@@ -7,26 +8,13 @@ import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 class PaymentDetail extends GetView<PaymentController> {
-  PaymentDetail({super.key});
-
-  // Dummy data untuk pilihan pembayaran
-  final Map<String, List<String>> paymentChannels = {
-    'VIRTUAL_ACCOUNT': ['BRI', 'BCA', 'Mandiri', 'BNI', 'CIMB', 'Permata'],
-    'E-WALLET': ['OVO', 'DANA', 'ShopeePay', 'LinkAja', 'GoPay'],
-  };
-
-  final Map<String, String> paymentTypeLabels = {
-    'VIRTUAL_ACCOUNT': 'Virtual Account',
-    'E-WALLET': 'E-Wallet',
-  };
-
-  // State untuk menyimpan pilihan pengguna
-  String? selectedPaymentType;
-  String? selectedChannelCode;
+  const PaymentDetail({super.key});
 
   @override
   Widget build(BuildContext context) {
+    final PaymentController paymentController = Get.find<PaymentController>();
     final ThemeController themeController = Get.find<ThemeController>();
+
     return Scaffold(
       backgroundColor: Colors.white,
       appBar: AppBar(
@@ -62,7 +50,7 @@ class PaymentDetail extends GetView<PaymentController> {
                     borderRadius: BorderRadius.circular(16),
                     boxShadow: [
                       BoxShadow(
-                        color: Colors.grey.withOpacity(0.2),
+                        color: Colors.grey.withValues(alpha: 0.2),
                         spreadRadius: 2,
                         blurRadius: 5,
                         offset: const Offset(0, 3),
@@ -147,7 +135,7 @@ class PaymentDetail extends GetView<PaymentController> {
                     borderRadius: BorderRadius.circular(16),
                     boxShadow: [
                       BoxShadow(
-                        color: Colors.grey.withOpacity(0.2),
+                        color: Colors.grey.withValues(alpha: 0.2),
                         spreadRadius: 2,
                         blurRadius: 5,
                         offset: const Offset(0, 3),
@@ -176,25 +164,26 @@ class PaymentDetail extends GetView<PaymentController> {
                       // ExpansionTile untuk kategori pembayaran
                       ExpansionTile(
                         title: Text(
-                          selectedChannelCode ?? 'Pilih Metode Pembayaran',
+                          paymentController.selectedChannelCode.value ??
+                              'Pilih Metode Pembayaran',
                           style: GoogleFonts.leagueSpartan(
                             fontSize: 16,
                             color: Colors.black54,
                           ),
                         ),
-                        children: paymentChannels.keys.map((paymentType) {
+                        children: PaymentType.values.map((paymentType) {
                           return Container(
                             margin: const EdgeInsets.symmetric(vertical: 4),
                             decoration: BoxDecoration(
                               border: Border.all(
-                                color: Colors.grey.withOpacity(0.3),
+                                color: Colors.grey.withValues(alpha: 0.3),
                                 width: 1,
                               ),
                               borderRadius: BorderRadius.circular(8),
                             ),
                             child: ExpansionTile(
                               title: Text(
-                                paymentTypeLabels[paymentType]!,
+                                paymentType.label,
                                 style: GoogleFonts.leagueSpartan(
                                   fontSize: 16,
                                   fontWeight: FontWeight.w500,
@@ -207,25 +196,32 @@ class PaymentDetail extends GetView<PaymentController> {
                                   ),
                                   decoration: BoxDecoration(
                                     borderRadius: BorderRadius.circular(8),
-                                    color: Colors.grey.withOpacity(0.1),
+                                    color: Colors.grey.withValues(alpha: 0.1),
                                   ),
                                   child: Scrollbar(
                                     child: SingleChildScrollView(
                                       child: Column(
-                                        children: paymentChannels[paymentType]!
+                                        children: paymentType.channels
                                             .map((channelCode) {
                                           return ListTile(
                                             title: Text(
-                                              channelCode,
+                                              channelCode.label,
                                               style: GoogleFonts.leagueSpartan(
                                                 fontSize: 16,
                                               ),
                                             ),
                                             onTap: () {
-                                              selectedPaymentType = paymentType;
-                                              selectedChannelCode = channelCode;
+                                              paymentController
+                                                  .selectedPaymentType
+                                                  .value = paymentType.value;
+                                              paymentController
+                                                  .selectedChannelCode
+                                                  .value = channelCode.value;
                                               Get.snackbar('Berhasil',
-                                                  'Metode pembayaran dipilih: $channelCode');
+                                                  'Metode pembayaran dipilih: ${channelCode.label}',
+                                                  isDismissible: true,
+                                                  duration: const Duration(
+                                                      seconds: 1));
                                               // Update UI
                                               Get.forceAppUpdate();
                                             },
@@ -238,14 +234,19 @@ class PaymentDetail extends GetView<PaymentController> {
                                               borderRadius:
                                                   BorderRadius.circular(8),
                                             ),
-                                            tileColor: selectedChannelCode ==
-                                                    channelCode
-                                                ? Colors.blue.withOpacity(0.1)
+                                            tileColor: paymentController
+                                                        .selectedChannelCode
+                                                        .value ==
+                                                    channelCode.value
+                                                ? Colors.blue
+                                                    .withValues(alpha: 0.1)
                                                 : Colors.white,
-                                            selected: selectedChannelCode ==
-                                                channelCode,
-                                            selectedTileColor:
-                                                Colors.blue.withOpacity(0.1),
+                                            selected: paymentController
+                                                    .selectedChannelCode
+                                                    .value ==
+                                                channelCode.value,
+                                            selectedTileColor: Colors.blue
+                                                .withValues(alpha: 0.1),
                                             selectedColor: Colors.blue,
                                           );
                                         }).toList(),
@@ -271,7 +272,7 @@ class PaymentDetail extends GetView<PaymentController> {
                     borderRadius: BorderRadius.circular(16),
                     boxShadow: [
                       BoxShadow(
-                        color: Colors.grey.withOpacity(0.2),
+                        color: Colors.grey.withValues(alpha: 0.2),
                         spreadRadius: 2,
                         blurRadius: 5,
                         offset: const Offset(0, 3),
@@ -355,17 +356,18 @@ class PaymentDetail extends GetView<PaymentController> {
                 Center(
                   child: ElevatedButton(
                     onPressed: () async {
-                      if (selectedPaymentType == null ||
-                          selectedChannelCode == null) {
+                      if (paymentController.selectedPaymentType.value == null ||
+                          paymentController.selectedChannelCode.value == null) {
                         Get.snackbar(
                             'Gagal', 'Pilih metode pembayaran terlebih dahulu');
                       } else {
                         // Upgrade akun dan ambil paymentId
                         await controller.upgradeAccount(
-                          paymentType: selectedPaymentType!,
-                          channelCode: selectedChannelCode!,
-                          phoneNumber: 
-                              '+628888888888', // Nomor telepon default
+                          paymentType:
+                              paymentController.selectedPaymentType.value!,
+                          channelCode:
+                              paymentController.selectedChannelCode.value!,
+                          phoneNumber: '+628888888888', // Nomor telepon default
                         );
 
                         // Debugging: Tampilkan nilai paymentId

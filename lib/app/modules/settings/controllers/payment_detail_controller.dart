@@ -9,6 +9,9 @@ import 'package:ebookapp/app/data/models/payment_mode.dart';
 import '/../../../core/constants/constant.dart';
 
 class PaymentController extends GetxController {
+  final selectedPaymentType = Rxn<String>();
+  final selectedChannelCode = Rxn<String>();
+
   final isExpanded = false.obs;
   // State variables
   var isLoading = false.obs;
@@ -82,6 +85,9 @@ class PaymentController extends GetxController {
     required String channelCode,
     String? phoneNumber,
   }) async {
+    debugPrint(
+        '🔄 Meng-upgrade akun dengan tipe: $paymentType dan channel: $channelCode');
+
     if (isLoading.value) return;
     isLoading.value = true;
 

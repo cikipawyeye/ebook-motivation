@@ -29,11 +29,11 @@ class UpgradeAccount extends GetView<PaymentController> {
         backgroundColor: themeController.currentColor, // Warna biru gelap
       ),
       body: Container(
-        decoration: BoxDecoration(  
-          image: DecorationImage(  
-            image: AssetImage('assets/images/Watermark.png'),  
-            fit: BoxFit.cover, // Mengatur gambar agar menutupi seluruh area  
-          ),  
+        decoration: BoxDecoration(
+          image: DecorationImage(
+            image: AssetImage('assets/images/Watermark.png'),
+            fit: BoxFit.cover, // Mengatur gambar agar menutupi seluruh area
+          ),
         ),
         child: Padding(
           padding: const EdgeInsets.all(16.0),
@@ -49,7 +49,7 @@ class UpgradeAccount extends GetView<PaymentController> {
                       borderRadius: BorderRadius.circular(16),
                       boxShadow: [
                         BoxShadow(
-                          color: Colors.grey.withOpacity(0.2),
+                          color: Colors.grey.withValues(alpha: 0.2),
                           spreadRadius: 2,
                           blurRadius: 5,
                           offset: const Offset(0, 3),
@@ -80,10 +80,9 @@ class UpgradeAccount extends GetView<PaymentController> {
                         Text(
                           'Akun Anda sudah \nPremium',
                           style: GoogleFonts.leagueSpartan(
-                            fontSize: 35,
-                            fontWeight: FontWeight.bold,
-                            height: 1.1
-                          ),
+                              fontSize: 35,
+                              fontWeight: FontWeight.bold,
+                              height: 1.1),
                         ),
                         const SizedBox(height: 8),
                         Text(
@@ -104,7 +103,7 @@ class UpgradeAccount extends GetView<PaymentController> {
                       borderRadius: BorderRadius.circular(16),
                       boxShadow: [
                         BoxShadow(
-                          color: Colors.grey.withOpacity(0.2),
+                          color: Colors.grey.withValues(alpha: 0.2),
                           spreadRadius: 2,
                           blurRadius: 5,
                           offset: const Offset(0, 3),
@@ -159,22 +158,24 @@ class UpgradeAccount extends GetView<PaymentController> {
                         Center(
                           child: Obx(() {
                             // Gunakan paymentStatus dari controller
-                            final paymentStatus = controller.paymentStatus.value;
-        
+                            final paymentStatus =
+                                controller.paymentStatus.value;
+
                             // Tentukan teks dan aksi berdasarkan paymentStatus
                             final buttonText = paymentStatus == null
                                 ? 'Dapatkan Sekarang!'
                                 : paymentStatus == 'PENDING'
                                     ? 'Menunggu Konfirmasi Pembayaran'
                                     : 'Dapatkan Sekarang!';
-        
+
                             final isDisabled = paymentStatus == 'PENDING';
-        
+
                             return ElevatedButton(
                               onPressed: isDisabled
                                   ? null // Nonaktifkan tombol jika status PENDING
                                   : () {
-                                      print('Navigating to payment detail...');
+                                      debugPrint(
+                                          'Navigating to payment detail...');
                                       Get.toNamed(Routes
                                           .paymentDetail); // Navigasi ke halaman detail pembayaran
                                     },
@@ -196,8 +197,9 @@ class UpgradeAccount extends GetView<PaymentController> {
                                 buttonText,
                                 style: GoogleFonts.leagueSpartan(
                                   fontSize: 16,
-                                  color:
-                                      isDisabled ? Colors.black54 : Colors.white,
+                                  color: isDisabled
+                                      ? Colors.black54
+                                      : Colors.white,
                                 ),
                               ),
                             );
