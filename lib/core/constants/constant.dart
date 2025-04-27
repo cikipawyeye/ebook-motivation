@@ -140,3 +140,7 @@ const userJob = {
   '7': 'Wiraswasta/Pengusaha',
   '8': 'Tidak Bekerja',
 };
+
+const errorTitle = 'Oops! Sepertinya ada sedikit kendala';
+const errorDescription =
+    'Jangan khawatir—bukan salah Anda! Sesuatu tidak berjalan sebagaimana mestinya, tapi kami sedang mengatasinya.';

@@ -1,7 +1,4 @@
-import 'package:ebookapp/app/modules/motivasi/controllers/content_controller.dart';
-import 'package:ebookapp/app/modules/motivasi/controllers/motivasi_controller.dart';
-import 'package:ebookapp/app/modules/pengingat/controllers/pengingat_category_controller.dart';
-import 'package:ebookapp/app/modules/pengingat/controllers/pengingat_controller.dart';
+import 'package:ebookapp/app/modules/content/controllers/subcategory_controller.dart';
 import 'package:ebookapp/app/modules/settings/controllers/payment_detail_controller.dart';
 import 'package:ebookapp/app/modules/settings/controllers/setting_theme_controller.dart';
 import 'package:ebookapp/app/modules/settings/controllers/user_controller.dart';
@@ -24,17 +21,8 @@ class HomeBinding extends Bindings {
     Get.lazyPut<PaymentController>(
       () => PaymentController(),
     );
-    Get.lazyPut<ContentController>(
-      () => ContentController(),
+    Get.lazyPut<SubcategoryController>(
+      () => SubcategoryController(),
     );
-    Get.lazyPut<MotivasiController>(
-      () => MotivasiController(),
-    );
-    Get.lazyPut<PengingatController>(  
-      () => PengingatController(),  
-    );  
-    Get.lazyPut<PengingatIdController>(  
-      () => PengingatIdController(),  
-    );  
   }
 }

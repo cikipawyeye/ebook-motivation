@@ -701,10 +701,6 @@ class ContentView extends GetView<ContentController> {
         if (!didPop) {
           Get.back(closeOverlays: true);
         }
-        Get.delete<ContentController>();
-        Get.delete<AudioController>();
-        Get.delete<ThemeController>();
-        Get.delete<LiveWallpaperController>();
       },
       child: Scaffold(
         backgroundColor: Colors.black,

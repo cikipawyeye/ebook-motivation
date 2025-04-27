@@ -3,13 +3,13 @@ import 'dart:typed_data';
 import 'package:ebookapp/app/data/models/content_model.dart';
 import 'package:ebookapp/app/data/models/cursor_pagination_model.dart';
 import 'package:ebookapp/app/modules/motivasi/controllers/audio_controller.dart';
+import 'package:ebookapp/core/constants/constant.dart';
 import 'package:flutter/foundation.dart' show kDebugMode;
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:http/http.dart' as http;
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:image/image.dart' as img;
-import '/../../../core/constants/constant.dart';
 
 class ContentController extends GetxController with WidgetsBindingObserver {
   var contents = <Content>[].obs;

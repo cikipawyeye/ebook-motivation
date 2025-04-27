@@ -55,7 +55,7 @@ class CobaPremium extends GetView<PaymentController> {
                         borderRadius: BorderRadius.circular(16),
                         boxShadow: [
                           BoxShadow(
-                            color: Colors.grey.withOpacity(0.2),
+                            color: Colors.grey.withValues(alpha: 0.2),
                             spreadRadius: 2,
                             blurRadius: 5,
                             offset: const Offset(0, 3),
@@ -111,7 +111,7 @@ class CobaPremium extends GetView<PaymentController> {
                         borderRadius: BorderRadius.circular(16),
                         boxShadow: [
                           BoxShadow(
-                            color: Colors.grey.withOpacity(0.2),
+                            color: Colors.grey.withValues(alpha: 0.2),
                             spreadRadius: 2,
                             blurRadius: 5,
                             offset: const Offset(0, 3),
@@ -148,7 +148,7 @@ class CobaPremium extends GetView<PaymentController> {
                           ),
                           const SizedBox(height: 8),
                           Text(
-                            'Hanya Rp49.900 untuk selamanya!',
+                            'Hanya Rp29.900 untuk selamanya!',
                             style: GoogleFonts.leagueSpartan(
                               fontSize: 16,
                               color: Colors.black,
@@ -173,7 +173,7 @@ class CobaPremium extends GetView<PaymentController> {
                                 onPressed: isDisabled
                                     ? null
                                     : () {
-                                        print(
+                                        debugPrint(
                                             'Navigating to payment detail...');
                                         Get.toNamed(Routes.paymentDetail);
                                       },

@@ -1,4 +1,3 @@
-import 'package:ebookapp/app/data/models/user_model.dart';
 import 'package:ebookapp/app/modules/settings/controllers/setting_theme_controller.dart';
 import 'package:ebookapp/app/modules/settings/controllers/settings_controller.dart';
 import 'package:ebookapp/app/modules/settings/controllers/user_controller.dart';
@@ -23,22 +22,9 @@ class AccountSettings extends GetView<SettingsController> {
   final _cityController = TextEditingController();
   final _jobController = TextEditingController();
   var isEditing = false.obs;
-  var _cityCode = ''.obs; // Untuk menyimpan city_code
-  var _gender = ''.obs; // Untuk menyimpan gender
-  var _job = ''.obs; // Untuk menyimpan pekerjaan
-
-  // Daftar pilihan pekerjaan
-  final Map<String, String> JobType = {
-    '0': 'Lainnya', // Lainnya
-    '1': 'Pelajar', // Pelajar
-    '2': 'Mahasiswa', // Mahasiswa
-    '3': 'Pegawai Negeri (ASN)', // Pegawai Negeri (ASN)
-    '4': 'Pegawai Swasta/Karyawan Swasta', // Pegawai Swasta/Karyawan Swasta
-    '5': 'Profesional/Ahli', // Profesional/Ahli
-    '6': 'Ibu Rumah Tangga', // Ibu Rumah Tangga
-    '7': 'Wiraswasta/Pengusaha', // Wiraswasta/Pengusaha
-    '8': 'Tidak Bekerja', // Tidak Bekerja
-  };
+  final _cityCode = ''.obs; // Untuk menyimpan city_code
+  final _gender = ''.obs; // Untuk menyimpan gender
+  final _job = ''.obs; // Untuk menyimpan pekerjaan
 
   // Daftar pilihan gender
   final Map<String, String> GenderOptions = {
@@ -114,28 +100,30 @@ class AccountSettings extends GetView<SettingsController> {
             // Inisialisasi nilai controller jika belum diisi
             if (!isEditing.value) {
               _nameController.text =
-                  userController.userResponse.value?.user?.name ??
+                  userController.userResponse.value?.user.name ??
                       'Tidak tersedia';
               _emailController.text =
-                  userController.userResponse.value?.user?.email ??
+                  userController.userResponse.value?.user.email ??
                       'Tidak tersedia';
               _phoneController.text =
-                  userController.userResponse.value?.user?.phoneNumber ??
+                  userController.userResponse.value?.user.phoneNumber ??
                       'Tidak tersedia';
               _birthDateController.text =
-                  userController.userResponse.value?.user?.birthDate ??
+                  userController.userResponse.value?.user.birthDate ??
                       'Tidak tersedia';
               _cityController.text =
-                  userController.userResponse.value?.user?.city?.name ??
+                  userController.userResponse.value?.user.city.name ??
                       'Tidak tersedia';
               _jobController.text =
-                  userController.userResponse.value?.user?.job ??
+                  userController.userResponse.value?.user.job ??
                       'Tidak tersedia';
               _cityCode.value =
-                  userController.userResponse.value?.user?.city?.code ?? '';
+                  userController.userResponse.value?.user.city.code ?? '';
               _gender.value =
-                  userController.userResponse.value?.user?.gender ?? '';
-              _job.value = userController.userResponse.value?.user?.job ?? '';
+                  userController.userResponse.value?.user.gender ?? '';
+              _job.value =
+                  userController.userResponse.value?.user.jobType.toString() ??
+                      '';
             }
 
             return Padding(
@@ -167,7 +155,7 @@ class AccountSettings extends GetView<SettingsController> {
                           borderRadius: BorderRadius.circular(20),
                         ),
                         filled: true,
-                        fillColor: Colors.white.withOpacity(0.7),
+                        fillColor: Colors.white.withValues(alpha: 0.7),
                       ),
                       items: GenderOptions.entries.map((entry) {
                         return DropdownMenuItem(
@@ -218,7 +206,7 @@ class AccountSettings extends GetView<SettingsController> {
                               borderRadius: BorderRadius.circular(20),
                             ),
                             filled: true,
-                            fillColor: Colors.white.withOpacity(0.7),
+                            fillColor: Colors.white.withValues(alpha: 0.7),
                           ),
                           validator: (value) {
                             if (value == null || value.isEmpty) {
@@ -250,9 +238,9 @@ class AccountSettings extends GetView<SettingsController> {
                           borderRadius: BorderRadius.circular(20),
                         ),
                         filled: true,
-                        fillColor: Colors.white.withOpacity(0.7),
+                        fillColor: Colors.white.withValues(alpha: 0.7),
                       ),
-                      items: JobType.entries.map((entry) {
+                      items: userJob.entries.map((entry) {
                         return DropdownMenuItem(
                           value: entry.key,
                           child: Text(entry.value),
@@ -344,10 +332,11 @@ class AccountSettings extends GetView<SettingsController> {
         ),
         filled: true,
         fillColor: Colors.white
-            .withOpacity(0.7), // Warna latar belakang dengan transparansi
+            .withValues(alpha: 0.7), // Warna latar belakang dengan transparansi
       ),
       style: TextStyle(
-        color: Colors.black.withOpacity(0.7), // Warna teks dengan transparansi
+        color: Colors.black
+            .withValues(alpha: 0.7), // Warna teks dengan transparansi
       ),
       validator: validator,
     );

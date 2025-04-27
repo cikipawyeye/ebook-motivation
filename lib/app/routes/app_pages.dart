@@ -35,6 +35,9 @@ import '../modules/ticket_premium/bindings/ticket_premium_binding.dart';
 import '../modules/ticket_premium/views/ticket_premium_view.dart';
 import '../modules/wallpaper_music/bindings/wallpaper_music_binding.dart';
 import '../modules/wallpaper_music/views/wallpaper_music_view.dart';
+import '../modules/content/bindings/content_binding.dart'
+    as content_general_binding;
+import '../modules/content/views/content_view.dart' as content_general_view;
 
 part 'app_routes.dart';
 
@@ -74,10 +77,11 @@ class AppPages {
       page: () => SuccessPassword(),
       binding: RegisterBinding(),
     ),
-    // GetPage(
-    //     name: _Paths.confirmPass,
-    //     page: () => SetPasswordView(),
-    //     binding: RegisterBinding()),
+    GetPage(
+      name: _Paths.contents, // Rute untuk Motivasi
+      page: () => content_general_view.ContentView(),
+      binding: content_general_binding.ContentBinding(),
+    ),
     GetPage(
       name: _Paths.motivasi, // Rute untuk Motivasi
       page: () => MotivasiView(),

@@ -1,6 +1,7 @@
 import 'package:ebookapp/app/routes/app_pages.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import '../controllers/splash_screen_controller.dart';
 
 class SplashScreenView extends GetView<SplashScreenController> {
@@ -10,8 +11,8 @@ class SplashScreenView extends GetView<SplashScreenController> {
   Widget build(BuildContext context) {
     // Gunakan Future.delayed untuk menunda navigasi selama 2 detik
     Future.delayed(const Duration(seconds: 2), () {
-      // Navigasi ke halaman berikutnya setelah 2 detik
-      Get.offNamed(Routes.login); // Contoh navigasi ke halaman login
+      // Panggil fungsi untuk mengarahkan pengguna
+      _redirect();
     });
 
     return Scaffold(
@@ -31,5 +32,23 @@ class SplashScreenView extends GetView<SplashScreenController> {
         ),
       ),
     );
+  }
+
+  Future<void> _redirect() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+
+    String? token = prefs.getString('token');
+    if (token != null) {
+      Get.offNamed(Routes.home);
+      return;
+    }
+
+    bool? hasAccount = prefs.getBool('hasAccount') ?? false;
+
+    if (!hasAccount) {
+      Get.offNamed(Routes.register);
+    } else {
+      Get.offNamed(Routes.login);
+    }
   }
 }

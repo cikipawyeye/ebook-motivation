@@ -284,11 +284,6 @@ class AudioController extends GetxController {
       _audioPlayer.setVolume(audioVolume.value),
       _audioPlayer.setReleaseMode(ReleaseMode.loop),
     ]);
-    // _audioPlayer.onPlayerComplete.listen((_) {
-    //   isPlaying.value = false;
-    //   // Automatically play the next track
-    //   _playNextTrack();
-    // });
   }
 
   Future<String> _getLocalAudioPath(int musicId) async {
@@ -342,25 +337,6 @@ class AudioController extends GetxController {
     } catch (e) {
       _handleAudioError(e);
     }
-  }
-
-  // Automatically play the next track
-  void _playNextTrack() {
-    // Use the playlist from WallpaperMusicController
-    final musicTracks = wallpaperMusicController.musicPlaylist;
-
-    if (musicTracks.isEmpty) return;
-
-    // Find the index of the current track
-    final currentIndex = musicTracks
-        .indexWhere((track) => track.fileUrl == currentTrackUrl.value);
-
-    // Calculate the next track's index
-    final nextIndex =
-        currentIndex == -1 ? 0 : (currentIndex + 1) % musicTracks.length;
-
-    // Change to the next track
-    changeTrack(musicTracks[nextIndex]);
   }
 
   // Toggle play/pause

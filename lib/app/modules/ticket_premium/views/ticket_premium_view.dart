@@ -35,7 +35,7 @@ class TicketPremiumView extends GetView<TicketPremiumController> {
               ),
               const SizedBox(height: 16),
               Text(
-                'Yahh, scroll gratisimu sudah habis!\nWaktunya untuk tingkatkan ke premium!',
+                'Yahh, scroll gratismu sudah habis!\nWaktunya untuk tingkatkan ke premium!',
                 textAlign: TextAlign.center,
                 style: GoogleFonts.leagueSpartan(fontSize: 20),
               ),

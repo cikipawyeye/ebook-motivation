@@ -140,7 +140,7 @@ class UpgradeAccount extends GetView<PaymentController> {
                         ),
                         const SizedBox(height: 8),
                         Text(
-                          'Hanya Rp49.900 untuk selamanya!',
+                          'Hanya Rp29.900 untuk selamanya!',
                           style: GoogleFonts.leagueSpartan(
                             fontSize: 16,
                             color: Colors.black,

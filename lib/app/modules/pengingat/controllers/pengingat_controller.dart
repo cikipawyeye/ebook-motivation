@@ -3,14 +3,13 @@ import 'dart:typed_data';
 import 'package:ebookapp/app/data/models/content_model.dart';
 import 'package:ebookapp/app/data/models/cursor_pagination_model.dart';
 import 'package:ebookapp/app/data/models/motivasi_model.dart';
-import 'package:ebookapp/app/modules/motivasi/controllers/motivasi_controller.dart';
 import 'package:ebookapp/app/modules/pengingat/controllers/pengingat_category_controller.dart';
 import 'package:ebookapp/app/routes/app_pages.dart';
+import 'package:ebookapp/core/constants/constant.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:http/http.dart' as http;
 import 'package:shared_preferences/shared_preferences.dart';
-import '/../../../core/constants/constant.dart';
 
 class PengingatController extends GetxController {
   var contents = <Content>[].obs;
@@ -54,7 +53,7 @@ class PengingatController extends GetxController {
 
       final response = await http.get(
         Uri.parse(
-            '${baseUrl}/api/v1/contents?subcategory_id=$subcategoryId&cursor=${nextCursor.value ?? ''}&limit=3'),
+            '$baseUrl/api/v1/contents?subcategory_id=$subcategoryId&cursor=${nextCursor.value ?? ''}&limit=3'),
         headers: {
           'Authorization': 'Bearer $token',
           'Content-Type': 'application/json',

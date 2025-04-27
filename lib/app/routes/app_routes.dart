@@ -25,8 +25,7 @@ abstract class Routes {
   static const paymentDetail = _Paths.paymentDetail;
   static const paymentPage = _Paths.paymentPage;
   static const tryPremium = _Paths.tryPremium;
-  static const motivationDetailPage = _Paths
-      .motivationDetailPage; // Menambahkan rute untuk halaman detail motivasi
+  static const motivationDetailPage = _Paths.motivationDetailPage;
   static const ticketPremium = _Paths.ticketPremium;
   static const splashScreen = _Paths.splashScreen;
   static const wallpaperMusic = _Paths.wallpaperMusic;
@@ -41,7 +40,8 @@ abstract class _Paths {
   static const successRegis = '/success-regis';
   static const successForgot = '/success-forgot';
   static const confirmPass = '/confirm';
-  static const motivasi = '/motivasi'; // Pastikan ini sesuai dengan rute di UI
+  static const motivasi = '/motivasi';
+  static const contents = '/contents';
   static const motivationContents = '/motivation/contents';
   static const motivationContentsDrop = '/motivation-drop';
   static const contentViewPush = '/conteng-push';
@@ -57,8 +57,7 @@ abstract class _Paths {
   static const paymentDetail = '/detail-payment';
   static const paymentPage = '/payment-page';
   static const tryPremium = '/try-premium';
-  static const motivationDetailPage =
-      '/motivation-detail-page'; // Menambahkan path untuk halaman detail motivasi
+  static const motivationDetailPage = '/motivation-detail-page';
   static const ticketPremium = '/ticket-premium';
   static const splashScreen = '/splash-screen';
   static const wallpaperMusic = '/wallpaper-music';

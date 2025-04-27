@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:ebookapp/app/modules/register/models/register_response.dart';
 import 'package:ebookapp/app/routes/app_pages.dart';
 import 'package:flutter/material.dart';
@@ -6,7 +8,6 @@ import 'package:get/get.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:ebookapp/app/data/models/user_model.dart';
 import '/../../../core/constants/constant.dart';
 
 class RegisterController extends GetxController {
@@ -25,6 +26,7 @@ class RegisterController extends GetxController {
   final selectedGender = ''.obs;
   final isLoading = false.obs;
   final errorMessage = ''.obs;
+  final cities = <Map<String, dynamic>>[].obs;
   final domisiliList = <Map<String, dynamic>>[].obs;
   final selectedJobType = 8.obs;
   final isAgreed = false.obs;
@@ -56,6 +58,8 @@ class RegisterController extends GetxController {
       }
       return null;
     });
+
+    fetchCities();
   }
 
   Future<bool> handleBackButton() async {
@@ -359,8 +363,10 @@ class RegisterController extends GetxController {
 
   Future<void> _saveUserToken(String token) async {
     final prefs = await SharedPreferences.getInstance();
-    await prefs.setString('user_token', token);
-    debugPrint('Token pengguna disimpan: $token');
+    await prefs.setBool('hasAccount', true);
+    // Must login again
+    // await prefs.setString('user_token', token);
+    // debugPrint('Token pengguna disimpan: $token');
   }
 
   void _handleRegistrationError(http.Response response) {
@@ -389,16 +395,11 @@ class RegisterController extends GetxController {
     );
   }
 
-  Future<void> fetchCities(String query) async {
-    if (query.isEmpty) {
-      domisiliList.clear();
-      return;
-    }
-
+  Future<void> fetchCities() async {
     try {
-      debugPrint('Mencari kota untuk query: $query');
+      debugPrint('Getting cities...');
       final response = await http.get(
-        Uri.parse('$baseUrl/api/v1/register/cities?search=$query'),
+        Uri.parse('$baseUrl/api/v1/register/cities'),
         headers: {
           'Content-Type': 'application/json',
           'Accept': 'application/json',
@@ -407,20 +408,44 @@ class RegisterController extends GetxController {
 
       if (response.statusCode == 200) {
         final jsonResponse = json.decode(response.body);
-        domisiliList.value = List<Map<String, dynamic>>.from(
+        cities.value = List<Map<String, dynamic>>.from(
           jsonResponse['data'].map((city) => {
                 'name': city['name'],
                 'code': city['code'],
               }),
         );
-        debugPrint('Kota ditemukan: ${domisiliList.length}');
       } else {
-        Get.snackbar('Kesalahan', 'Gagal mencari kota');
+        Get.snackbar('Kesalahan', 'Gagal mendapatkan data kota');
       }
     } catch (e) {
-      Get.snackbar('Kesalahan', 'Terjadi kesalahan saat mencari kota');
-      debugPrint('Kesalahan saat mencari kota: $e');
+      Get.snackbar('Kesalahan', 'Terjadi kesalahan saat mendapatkan data kota');
+      debugPrint('Kesalahan saat mendapatkan data kota: $e');
     }
+  }
+
+  Timer? _debounce;
+  final isSearching = false.obs;
+  Future<void> searchCities(String query) async {
+    if (_debounce?.isActive ?? false) {
+      _debounce?.cancel();
+    }
+
+    _debounce = Timer(const Duration(milliseconds: 500), () {
+      if (query.isEmpty) {
+        domisiliList.clear();
+        return;
+      }
+
+      isSearching.value = true;
+      update();
+
+      domisiliList.value = cities.where((city) {
+        return city['name']!.toLowerCase().contains(query.toLowerCase());
+      }).toList();
+
+      isSearching.value = false;
+      update();
+    });
   }
 
   void onCitySelected(Map<String, dynamic> city) {

@@ -5,7 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:http/http.dart' as http;
 import 'package:shared_preferences/shared_preferences.dart';
-import '/../../../core/constants/constant.dart';
+import 'package:ebookapp/core/constants/constant.dart';
 
 class MotivasiController extends GetxController {
   var motivasiList = <Motivasi>[].obs;
@@ -54,8 +54,8 @@ class MotivasiController extends GetxController {
   // Fetch subcategories
   Future<void> fetchSubcategories() async {
     debugPrint('🔄 Fetching subcategories...');
-    final response = await makeAuthenticatedRequest(
-        '${baseUrl}/api/v1/0/subcategories');
+    final response =
+        await makeAuthenticatedRequest('$baseUrl/api/v1/0/subcategories');
     if (response == null || response.statusCode != 200) {
       Get.snackbar('Error', 'Failed to fetch subcategories');
       return;
@@ -99,7 +99,7 @@ class MotivasiController extends GetxController {
     update();
 
     final response = await makeAuthenticatedRequest(
-        '${baseUrl}/api/v1/contents?subcategory_id=$subcategoryId&page=${currentPage.value}');
+        '$baseUrl/api/v1/contents?subcategory_id=$subcategoryId&page=${currentPage.value}');
     if (response == null || response.statusCode != 200) {
       Get.snackbar('Error', 'Failed to fetch motivasi data');
       return;
@@ -143,26 +143,6 @@ class MotivasiController extends GetxController {
         'Updated motivasi list: ${motivasiList.map((motivasi) => motivasi.subcategory.id).toList()}');
   }
 
-  // Fetch images for motivasi data
-  Future<void> _fetchImagesForMotivasi(
-      List<Motivasi> subcategoryMotivasi) async {
-    imageBytesList.clear();
-    await Future.wait(subcategoryMotivasi.map((motivasi) async {
-      Rx<Uint8List?> imageRx = Rx<Uint8List?>(null);
-      String imageToDownload = motivasi.imageUrls.original.isNotEmpty
-          ? motivasi.imageUrls.original
-          : '';
-
-      if (imageToDownload.isNotEmpty) {
-        final imageResponse = await http.get(Uri.parse(imageToDownload));
-        if (imageResponse.statusCode == 200) {
-          imageRx.value = imageResponse.bodyBytes;
-        }
-      }
-      imageBytesList.add(imageRx);
-    }));
-  }
-
   // Fetch motivation detail
   Future<void> fetchMotivationDetail(int id) async {
     isDetailLoading(true);
@@ -173,8 +153,7 @@ class MotivasiController extends GetxController {
         return;
       }
 
-      var url =
-          Uri.parse('${baseUrl}/api/v1/contents/$id');
+      var url = Uri.parse('$baseUrl/api/v1/contents/$id');
       final response = await http.get(url, headers: {
         'Authorization': 'Bearer $token',
         'Content-Type': 'application/json',
@@ -192,7 +171,9 @@ class MotivasiController extends GetxController {
         throw Exception('Gagal mengambil data detail motivasi');
       }
     } catch (e) {
-      Get.snackbar('Error', 'Gagal mengambil data detail: $e');
+      debugPrint("Error: $e");
+      Get.snackbar('Oops! Sepertinya ada sedikit kendala',
+          'Jangan khawatir—bukan salah Anda! Sesuatu tidak berjalan sebagaimana mestinya, tapi kami sedang mengatasinya.');
     } finally {
       isDetailLoading(false);
     }
