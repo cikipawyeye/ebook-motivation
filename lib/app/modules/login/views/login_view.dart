@@ -75,7 +75,7 @@ class LoginView extends GetView<LoginController> {
                           fontSize: 12,
                           color: Colors.black.withValues(alpha: 0.3)),
                       errorText: controller.isEmailError.value
-                          ? 'Nomor telepon tidak valid'
+                          ? 'Kredensial tidak valid'
                           : null,
                       border: OutlineInputBorder(
                         borderRadius: BorderRadius.circular(30),

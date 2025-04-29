@@ -454,9 +454,7 @@ class WallpaperMusicController extends GetxController {
     audioPlayer.dispose();
 
     try {
-      if (_controller.value.isInitialized) {
-        _controller.dispose();
-      }
+      _controller.dispose();
     } catch (e) {
       debugPrint('Kesalahan saat menutup controller video: $e');
     }

@@ -25,15 +25,12 @@ class HomeController extends GetxController {
   Future<void> fetchUserProfile() async {
     if (isLoading.value) return;
     isLoading.value = true;
-    update();
 
     try {
       final token = await getToken();
       if (token == null) {
         Get.snackbar('Kesalahan', 'Pengguna tidak terautentikasi!');
         isLoading.value = false;
-
-        update();
         return;
       }
 
@@ -67,7 +64,6 @@ class HomeController extends GetxController {
           "[home_controller] Kesalahan saat mengambil profil pengguna: $e");
     } finally {
       isLoading.value = false;
-      update();
     }
   }
 }

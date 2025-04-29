@@ -1,3 +1,5 @@
+import 'package:ebookapp/app/data/enum/option.dart';
+
 class PaymentResponse {
   final PaymentData data;
   final int paymentId;

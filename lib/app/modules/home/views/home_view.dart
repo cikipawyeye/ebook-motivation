@@ -1,7 +1,6 @@
 import 'dart:ui';
 import 'package:ebookapp/app/modules/content/controllers/subcategory_controller.dart';
 import 'package:ebookapp/app/modules/content/enums/category.dart';
-import 'package:ebookapp/app/modules/settings/controllers/payment_detail_controller.dart';
 import 'package:ebookapp/app/modules/settings/controllers/setting_theme_controller.dart';
 import 'package:ebookapp/app/routes/app_pages.dart';
 import 'package:ebookapp/core/constants/constant.dart';
@@ -191,10 +190,7 @@ class HomeView extends GetView<HomeController> {
                     children: [
                       OutlinedButton.icon(
                         onPressed: () {
-                          final paymentStatus =
-                              Get.find<PaymentController>().paymentStatus.value;
-                          Get.toNamed(Routes.tryPremium,
-                              arguments: paymentStatus);
+                          Get.toNamed(Routes.accountStatus);
                         },
                         icon: Image.asset(
                           'assets/images/crown.png',

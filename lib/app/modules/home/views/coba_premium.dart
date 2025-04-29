@@ -1,6 +1,6 @@
+import 'package:ebookapp/app/modules/account_upgrade/models/account_status/account_status.dart';
 import 'package:ebookapp/app/modules/settings/controllers/payment_detail_controller.dart';
 import 'package:ebookapp/app/modules/settings/controllers/setting_theme_controller.dart';
-import 'package:ebookapp/app/modules/settings/controllers/user_controller.dart';
 import 'package:ebookapp/app/routes/app_pages.dart';
 import 'package:ebookapp/core/constants/constant.dart';
 import 'package:flutter/material.dart';
@@ -13,9 +13,9 @@ class CobaPremium extends GetView<PaymentController> {
   @override
   Widget build(BuildContext context) {
     final ThemeController themeController = Get.find<ThemeController>();
-    // Inisialisasi PaymentController
-    final PaymentController paymentController = Get.put(PaymentController());
-    final UserController userController = Get.find<UserController>();
+    final PaymentController paymentController = Get.find<PaymentController>();
+
+    paymentController.checkAccountStatus();
 
     return Obx(
       () => Scaffold(
@@ -46,8 +46,16 @@ class CobaPremium extends GetView<PaymentController> {
                 const SizedBox(
                     height: 16), // Padding untuk menghindari tumpang tindih
                 Obx(() {
+                  if (paymentController.checkingAccountStatus.value) {
+                    return const Center(
+                      child: CircularProgressIndicator(),
+                    );
+                  }
+
                   // Cek apakah user sudah premium
-                  if (userController.isPremium.value) {
+                  if (paymentController.accountStatus.value != null &&
+                      paymentController.accountStatus.value!.status ==
+                          AccountUpgradeStatus.premium) {
                     return Container(
                       padding: const EdgeInsets.all(30),
                       decoration: BoxDecoration(
@@ -130,23 +138,23 @@ class CobaPremium extends GetView<PaymentController> {
                               ),
                               const SizedBox(width: 8),
                               Text(
-                                'Upgrade to Premium',
+                                'Premium',
                                 style: GoogleFonts.leagueSpartan(
-                                  fontSize: 20,
-                                  fontWeight: FontWeight.bold,
-                                ),
+                                    fontSize: 20,
+                                    fontWeight: FontWeight.bold,
+                                    color: themeController.defaultColor),
                               ),
                             ],
                           ),
-                          const SizedBox(height: 16),
+                          const SizedBox(height: 20),
                           Text(
-                            'Nikmati fitur baca \ntanpa batas',
+                            'Nikmati fitur baca\ntanpa batas',
                             style: GoogleFonts.leagueSpartan(
-                              fontSize: 35,
-                              fontWeight: FontWeight.bold,
-                            ),
+                                fontSize: 30,
+                                fontWeight: FontWeight.bold,
+                                height: 0.95),
                           ),
-                          const SizedBox(height: 8),
+                          const SizedBox(height: 10),
                           Text(
                             'Hanya Rp29.900 untuk selamanya!',
                             style: GoogleFonts.leagueSpartan(
@@ -154,7 +162,7 @@ class CobaPremium extends GetView<PaymentController> {
                               color: Colors.black,
                             ),
                           ),
-                          const SizedBox(height: 8),
+                          const SizedBox(height: 10),
                           Text(
                             '• Semua halaman terbuka',
                             style: GoogleFonts.leagueSpartan(
@@ -162,44 +170,67 @@ class CobaPremium extends GetView<PaymentController> {
                               color: Colors.black54,
                             ),
                           ),
-                          const SizedBox(height: 20),
-                          Center(
-                            child: Obx(() {
-                              final paymentStatus =
-                                  paymentController.paymentStatus.value;
-                              final isDisabled = paymentStatus == 'PENDING';
+                          Text(
+                            '• Tidak ada iklan',
+                            style: GoogleFonts.leagueSpartan(
+                              fontSize: 16,
+                              color: Colors.black54,
+                            ),
+                          ),
+                          const SizedBox(height: 30),
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.end,
+                            children: <Widget>[
+                              Obx(() {
+                                if (paymentController.accountStatus.value ==
+                                        null ||
+                                    paymentController
+                                            .accountStatus.value!.status ==
+                                        AccountUpgradeStatus.notPremium) {
+                                  return ElevatedButton(
+                                    onPressed: () {
+                                      Get.toNamed(Routes.paymentDetail);
+                                    },
+                                    style: ElevatedButton.styleFrom(
+                                      backgroundColor: Colors.green,
+                                      padding: const EdgeInsets.symmetric(
+                                          horizontal: 30, vertical: 8),
+                                      shape: RoundedRectangleBorder(
+                                        borderRadius: BorderRadius.circular(30),
+                                      ),
+                                    ),
+                                    child: Text(
+                                      'Dapatkan Sekarang!',
+                                      style: GoogleFonts.leagueSpartan(
+                                        fontSize: 16,
+                                        color: Colors.white,
+                                      ),
+                                    ),
+                                  );
+                                }
 
-                              return ElevatedButton(
-                                onPressed: isDisabled
-                                    ? null
-                                    : () {
-                                        debugPrint(
-                                            'Navigating to payment detail...');
-                                        Get.toNamed(Routes.paymentDetail);
-                                      },
-                                style: ElevatedButton.styleFrom(
-                                  backgroundColor: isDisabled
-                                      ? const Color(0xFFE2E2E2)
-                                      : Colors.green,
-                                  padding: const EdgeInsets.symmetric(
-                                      horizontal: 40, vertical: 12),
-                                  shape: RoundedRectangleBorder(
-                                    borderRadius: BorderRadius.circular(30),
+                                return ElevatedButton(
+                                  onPressed: () {
+                                    // Get.toNamed(Routes.paymentDetail);
+                                  },
+                                  style: ElevatedButton.styleFrom(
+                                    backgroundColor: const Color(0xFFE2E2E2),
+                                    padding: const EdgeInsets.symmetric(
+                                        horizontal: 30, vertical: 8),
+                                    shape: RoundedRectangleBorder(
+                                      borderRadius: BorderRadius.circular(30),
+                                    ),
                                   ),
-                                ),
-                                child: Text(
-                                  isDisabled
-                                      ? 'Menunggu Konfirmasi Pembayaran'
-                                      : 'Dapatkan Sekarang!',
-                                  style: GoogleFonts.leagueSpartan(
-                                    fontSize: 16,
-                                    color: isDisabled
-                                        ? Colors.black54
-                                        : Colors.white,
+                                  child: Text(
+                                    'Lihat status pembayaran',
+                                    style: GoogleFonts.leagueSpartan(
+                                      fontSize: 16,
+                                      color: Colors.black54,
+                                    ),
                                   ),
-                                ),
-                              );
-                            }),
+                                );
+                              })
+                            ],
                           ),
                         ],
                       ),

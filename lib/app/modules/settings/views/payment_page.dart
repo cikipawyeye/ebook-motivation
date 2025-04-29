@@ -1,5 +1,4 @@
 import 'dart:async';
-import 'package:ebookapp/app/modules/settings/controllers/setting_theme_controller.dart';
 import 'package:ebookapp/app/routes/app_pages.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -13,7 +12,6 @@ class PaymentPage extends GetView<PaymentController> {
   @override
   Widget build(BuildContext context) {
     // Terima argument
-    final ThemeController themeController = Get.find<ThemeController>();
     final arguments = Get.arguments as Map<String, dynamic>?;
     final paymentId = arguments?['paymentId'] as int?;
 
@@ -80,7 +78,7 @@ class PaymentPage extends GetView<PaymentController> {
                       borderRadius: BorderRadius.circular(16),
                       boxShadow: [
                         BoxShadow(
-                          color: Colors.grey.withOpacity(0.2),
+                          color: Colors.grey.withValues(alpha: 0.2),
                           spreadRadius: 2,
                           blurRadius: 5,
                           offset: const Offset(0, 3),
@@ -169,7 +167,7 @@ class PaymentPage extends GetView<PaymentController> {
                       ),
                       elevation: 2,
                       child: Padding(
-                        padding: const EdgeInsets.all(20),
+                        padding: const EdgeInsets.all(18),
                         child: Row(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -226,7 +224,7 @@ class PaymentPage extends GetView<PaymentController> {
                       ),
                       elevation: 2,
                       child: Padding(
-                        padding: const EdgeInsets.all(20),
+                        padding: const EdgeInsets.all(18),
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
@@ -249,7 +247,7 @@ class PaymentPage extends GetView<PaymentController> {
                               padding: const EdgeInsets.symmetric(
                                   horizontal: 12, vertical: 8),
                               decoration: BoxDecoration(
-                                color: Colors.grey.withOpacity(0.1),
+                                color: Colors.grey.withValues(alpha: 0.1),
                                 borderRadius: BorderRadius.circular(8),
                               ),
                               child: Row(
@@ -303,7 +301,7 @@ class PaymentPage extends GetView<PaymentController> {
                       borderRadius: BorderRadius.circular(16),
                       boxShadow: [
                         BoxShadow(
-                          color: Colors.grey.withOpacity(0.2),
+                          color: Colors.grey.withValues(alpha: 0.2),
                           spreadRadius: 2,
                           blurRadius: 5,
                           offset: const Offset(0, 3),

@@ -1,3 +1,9 @@
+import 'package:ebookapp/app/modules/account_upgrade/bindings/account_status_binding.dart';
+import 'package:ebookapp/app/modules/account_upgrade/bindings/create_payment_binding.dart';
+import 'package:ebookapp/app/modules/account_upgrade/bindings/payment_detail_binding.dart';
+import 'package:ebookapp/app/modules/account_upgrade/views/account_status_view.dart';
+import 'package:ebookapp/app/modules/account_upgrade/views/create_payment_view.dart';
+import 'package:ebookapp/app/modules/account_upgrade/views/payment_detail_view.dart';
 import 'package:ebookapp/app/modules/login/views/forgot_password.dart';
 import 'package:ebookapp/app/modules/login/views/success_forgot.dart';
 import 'package:get/get.dart';
@@ -169,6 +175,21 @@ class AppPages {
       name: _Paths.wallpaperMusic,
       page: () => WallpaperMusicView(),
       binding: WallpaperMusicBinding(),
+    ),
+    GetPage(
+      name: _Paths.accountStatus,
+      page: () => AccountStatusView(),
+      binding: AccountStatusBinding(),
+    ),
+    GetPage(
+      name: _Paths.createPayment,
+      page: () => CreatePaymentView(),
+      binding: CreatePaymentBinding(),
+    ),
+    GetPage(
+      name: _Paths.paymentInfo,
+      page: () => PaymentDetailView(),
+      binding: PaymentDetailBinding(),
     ),
   ];
 }

@@ -2,7 +2,8 @@ import 'package:flutter/material.dart';
 
 const String imageDirectory = 'assets/images/';
 const String imageURL = 'https://trustcollect.qrbdl.com/';
-const String baseUrl = 'https://motivasiislami.com';
+const String baseUrl = 'https://motivasiislami.com'; // Prod
+// const String baseUrl = 'https://ebook.dev.whatthefun.id'; // Dev
 const String kBase64Extend = 'data:image/jpeg;base64,';
 const String kBase64ExtendVideo = 'data:video/mp4;base64,';
 const String kBase64ExtendAudio = 'data:audio/mp3;base64,';
@@ -43,7 +44,7 @@ const width24 = SizedBox(width: 24);
 // Box Shadow
 
 BoxShadow customShadow =
-    BoxShadow(blurRadius: 20, color: colorBlack.withOpacity(0.2));
+    BoxShadow(blurRadius: 20, color: colorBlack.withValues(alpha: 0.2));
 
 //Axis Alignment
 const crossAxisCenter = CrossAxisAlignment.center;

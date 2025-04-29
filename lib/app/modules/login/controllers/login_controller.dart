@@ -65,6 +65,7 @@ class LoginController extends GetxController {
         return false;
       }
     } catch (e) {
+      debugPrint('$e');
       setErrorState();
       errorMessage.value = 'Silahkan Coba Kembali.';
       Get.snackbar('Login Gagal', errorMessage.value);

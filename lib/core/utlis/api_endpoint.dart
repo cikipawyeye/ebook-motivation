@@ -1,5 +1,7 @@
+import 'package:ebookapp/core/constants/constant.dart' as constant;
+
 class ApiEndpoint {
-  static final String baseUrl = 'https://motivasiislami.com/';
+  static final String baseUrl = '${constant.baseUrl}/';
 
   static _AuthEndPoint get authEndPoint => _AuthEndPoint();
   static _ContentEndPoint get contentEndPoint =>

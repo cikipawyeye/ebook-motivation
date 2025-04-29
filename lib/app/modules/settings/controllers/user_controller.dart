@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:http/http.dart' as http;
 import 'package:shared_preferences/shared_preferences.dart';
-import '/../../../core/constants/constant.dart';
+import 'package:ebookapp/core/constants/constant.dart';
 
 class UserController extends GetxController {
   var isLoading = false.obs; // Untuk menandai proses loading

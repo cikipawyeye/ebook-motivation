@@ -356,6 +356,10 @@ class PaymentDetail extends GetView<PaymentController> {
                 Center(
                   child: ElevatedButton(
                     onPressed: () async {
+                      if (paymentController.isLoading.value) {
+                        return;
+                      }
+
                       if (paymentController.selectedPaymentType.value == null ||
                           paymentController.selectedChannelCode.value == null) {
                         Get.snackbar(
@@ -375,7 +379,8 @@ class PaymentDetail extends GetView<PaymentController> {
 
                         // Tunggu hingga paymentId diatur
                         if (controller.paymentId.value == null) {
-                          Get.snackbar('Gagal', 'Mohon di Tunggu');
+                          Get.snackbar(
+                              'Pembayaran Gagal', 'Silahkan coba lagi');
                           return;
                         }
 
@@ -417,7 +422,9 @@ class PaymentDetail extends GetView<PaymentController> {
                       ),
                     ),
                     child: Text(
-                      'Lanjutkan Pembayaran',
+                      paymentController.isLoading.value
+                          ? 'Memproses...'
+                          : 'Lanjutkan Pembayaran',
                       style: GoogleFonts.leagueSpartan(
                         fontSize: 16,
                         color: Colors.white,

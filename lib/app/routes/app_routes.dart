@@ -29,6 +29,9 @@ abstract class Routes {
   static const ticketPremium = _Paths.ticketPremium;
   static const splashScreen = _Paths.splashScreen;
   static const wallpaperMusic = _Paths.wallpaperMusic;
+  static const accountStatus = _Paths.accountStatus;
+  static const createPayment = _Paths.createPayment;
+  static const paymentInfo = _Paths.paymentInfo;
 }
 
 abstract class _Paths {
@@ -61,4 +64,7 @@ abstract class _Paths {
   static const ticketPremium = '/ticket-premium';
   static const splashScreen = '/splash-screen';
   static const wallpaperMusic = '/wallpaper-music';
+  static const accountStatus = '/upgrade/account-status';
+  static const createPayment = '/upgrade/create-payment';
+  static const paymentInfo = '/upgrade/payment-info';
 }

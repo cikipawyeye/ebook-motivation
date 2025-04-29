@@ -136,7 +136,7 @@ class TicketPremiumView extends GetView<TicketPremiumController> {
                 height: 50,
                 child: ElevatedButton(
                   onPressed: () {
-                    Get.toNamed(Routes.paymentDetail);
+                    Get.toNamed(Routes.accountStatus);
                   },
                   style: ElevatedButton.styleFrom(
                     padding: const EdgeInsets.symmetric(

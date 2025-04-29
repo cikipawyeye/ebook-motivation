@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'dart:convert';
+import 'package:ebookapp/app/modules/account_upgrade/models/account_status/account_status.dart';
 import 'package:ebookapp/app/modules/settings/controllers/user_controller.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -29,6 +30,9 @@ class PaymentController extends GetxController {
 
   // Getter untuk isPremium
   bool get isPremium => userController.isPremium.value;
+
+  final checkingAccountStatus = RxBool(false);
+  final accountStatus = Rxn<AccountStatus>();
 
   @override
   void onInit() {
@@ -90,11 +94,14 @@ class PaymentController extends GetxController {
 
     if (isLoading.value) return;
     isLoading.value = true;
+    update();
 
     try {
       // Cek apakah user sudah premium
       if (isPremium) {
         Get.snackbar('Info', 'Anda sudah premium, tidak perlu upgrade lagi.');
+        isLoading.value = false;
+        update();
         return;
       }
 
@@ -104,12 +111,14 @@ class PaymentController extends GetxController {
       final token = await _getToken();
       if (token == null) {
         _handleApiError('Pengguna tidak terautentikasi!', null);
+        isLoading.value = false;
+        update();
         return;
       }
 
       debugPrint('🔄 Meng-upgrade akun');
       final response = await http.post(
-        Uri.parse('${baseUrl}/api/v1/upgrade'),
+        Uri.parse('$baseUrl/api/v1/upgrade'),
         headers: {
           'Authorization': 'Bearer $token',
           'Content-Type': 'application/json',
@@ -124,6 +133,8 @@ class PaymentController extends GetxController {
 
       if (response.statusCode != 200) {
         _handleApiError('Gagal untuk meng-upgrade akun', response.body);
+        isLoading.value = false;
+        update();
         return;
       }
 
@@ -131,6 +142,8 @@ class PaymentController extends GetxController {
       if (jsonResponse['data'] == null) {
         _handleApiError(
             'Gagal untuk meng-upgrade akun: ${jsonResponse['message']}', null);
+        isLoading.value = false;
+        update();
         return;
       }
 
@@ -146,6 +159,7 @@ class PaymentController extends GetxController {
       _handleApiError('Terjadi kesalahan saat meng-upgrade akun.', e);
     } finally {
       isLoading.value = false;
+      update();
     }
   }
 
@@ -158,12 +172,13 @@ class PaymentController extends GetxController {
       final token = await _getToken();
       if (token == null) {
         _handleApiError('Pengguna tidak terautentikasi!', null);
+        isLoading.value = false;
         return;
       }
 
       debugPrint('🔄 Mengambil informasi pembayaran untuk ID: $paymentId');
       final response = await http.get(
-        Uri.parse('${baseUrl}/api/v1/payments/$paymentId'),
+        Uri.parse('$baseUrl/api/v1/payments/$paymentId'),
         headers: {
           'Authorization': 'Bearer $token',
           'Content-Type': 'application/json',
@@ -173,6 +188,7 @@ class PaymentController extends GetxController {
 
       if (response.statusCode != 200) {
         _handleApiError('Gagal mengambil informasi pembayaran', response.body);
+        isLoading.value = false;
         return;
       }
 
@@ -276,7 +292,7 @@ class PaymentController extends GetxController {
       }
 
       final response = await http.get(
-        Uri.parse('${baseUrl}/api/v1/payments/$paymentId'),
+        Uri.parse('$baseUrl/api/v1/payments/$paymentId'),
         headers: {
           'Authorization': 'Bearer $token',
           'Content-Type': 'application/json',
@@ -295,6 +311,39 @@ class PaymentController extends GetxController {
     } catch (e) {
       _handleApiError('Terjadi kesalahan saat memeriksa status pembayaran.', e);
       return 'GAGAL';
+    }
+  }
+
+  Future<void> checkAccountStatus() async {
+    checkingAccountStatus.value = true;
+    try {
+      final token = await _getToken();
+      if (token == null) {
+        _handleApiError('Pengguna tidak terautentikasi!', null);
+        checkingAccountStatus.value = false;
+      }
+
+      final response = await http.get(
+        Uri.parse('$baseUrl/api/v1/upgrade/status'),
+        headers: {
+          'Authorization': 'Bearer $token',
+          'Content-Type': 'application/json',
+          'Accept': 'application/json',
+        },
+      );
+
+      if (response.statusCode != 200) {
+        _handleApiError('Gagal mengambil status pembayaran', response.body);
+        checkingAccountStatus.value = false;
+        return;
+      }
+
+      final jsonResponse = json.decode(response.body);
+      accountStatus.value = AccountStatus.fromJson(jsonResponse['data']);
+    } catch (e) {
+      _handleApiError('Terjadi kesalahan saat memeriksa status pembayaran.', e);
+    } finally {
+      checkingAccountStatus.value = false;
     }
   }
 }
