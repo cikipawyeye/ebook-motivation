@@ -70,7 +70,7 @@ class CreatePaymentController extends GetxController {
 
       debugPrint(response.body);
 
-      Get.offNamed(Routes.paymentInfo, arguments: {
+      Get.offAllNamed(Routes.paymentInfo, arguments: {
         'paymentId': jsonResponse['data']['payment_id'],
       });
     } catch (e) {

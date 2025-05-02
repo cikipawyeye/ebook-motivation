@@ -5,7 +5,6 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 // Import Controllers
-import 'package:ebookapp/app/modules/settings/controllers/payment_detail_controller.dart';
 import 'package:ebookapp/app/modules/settings/controllers/setting_theme_controller.dart';
 import 'package:ebookapp/app/modules/settings/controllers/user_controller.dart';
 import 'package:ebookapp/app/modules/settings/controllers/settings_controller.dart';
@@ -82,9 +81,7 @@ class SettingsView extends GetView<SettingsController> {
                 image: 'assets/icons/crown_icon.png',
                 title: 'Tingkatkan Akun',
                 onTap: () {
-                  final paymentStatus =
-                      Get.find<PaymentController>().paymentStatus.value;
-                  Get.toNamed(Routes.upgradeAccount, arguments: paymentStatus);
+                  Get.toNamed(Routes.accountStatus);
                 },
               ),
               const Divider(),

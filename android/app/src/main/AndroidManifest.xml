@@ -9,7 +9,7 @@
 
     <application
         android:usesCleartextTraffic="true"
-        android:label="Ebook Motivasi"  
+        android:label="Motivasi Penyejuk Hati"  
         android:name="${applicationName}"  
         android:icon="@mipmap/launcher_icon">  
 

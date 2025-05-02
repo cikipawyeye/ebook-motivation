@@ -916,17 +916,48 @@ class RegisterPage extends GetView<RegisterController> {
       builder: (BuildContext context) {
         return AlertDialog(
           backgroundColor: Colors.white,
-          title: Text(
-            'SYARAT KETENTUAN PENGGUNAAN DAN KEBIJAKAN PRIVASI',
-            style: GoogleFonts.poppins(fontWeight: FontWeight.bold),
-          ),
           content: SingleChildScrollView(
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
+                SizedBox(
+                  height: 20,
+                ),
+                Center(
+                    child: Text(
+                  'KEBIJAKAN PRIVASI',
+                  textAlign: TextAlign.center,
+                  style: GoogleFonts.poppins(
+                    fontSize: 20,
+                    fontWeight: FontWeight.bold,
+                  ),
+                )),
+                SizedBox(
+                  height: 10,
+                ),
+                Center(
+                    child: Text(
+                  'Aplikasi Mobile Motivasi Penyejuk Hati dari Al-Qur’an',
+                  textAlign: TextAlign.center,
+                  style: GoogleFonts.poppins(),
+                )),
+                Center(
+                    child: Text(
+                  'Versi Terakhir: 6 Desember 2024',
+                  textAlign: TextAlign.center,
+                  style: GoogleFonts.poppins(),
+                )),
+                SizedBox(
+                  height: 10,
+                ),
+                Divider(
+                  color: Colors.grey, // warna garis
+                  thickness: 1, // ketebalan garis
+                ),
+                SizedBox(
+                  height: 10,
+                ),
                 Text(
-                  'Aplikasi Mobile Motivasi Penyejuk Hati dari Al-Qur’an\n'
-                  'Versi Terakhir: 6 Desember 2024\n'
                   'Selamat datang di aplikasi mobile e-book Motivasi Penyejuk Hati dari Al-Qur’an. '
                   'Syarat dan Ketentuan ini mengatur akses dan penggunaan Aplikasi oleh pengguna ("Anda") '
                   'yang disediakan oleh [Eli Nur Nirmala Sari] ("Kami"). Dengan mengunduh, menginstal, '

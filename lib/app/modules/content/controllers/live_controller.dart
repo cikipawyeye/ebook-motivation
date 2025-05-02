@@ -67,7 +67,8 @@ class LiveWallpaperController extends GetxController {
         await _downloadWallpaper(wallpaperId, permFile);
       }
 
-      _videoController.value = VideoPlayerController.file(permFile);
+      _videoController.value = VideoPlayerController.file(permFile,
+          videoPlayerOptions: VideoPlayerOptions(mixWithOthers: true));
       _videoController.value!.initialize().then((_) {
         _videoController.value!.setLooping(true);
         _videoController.value!.setVolume(0);

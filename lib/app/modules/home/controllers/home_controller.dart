@@ -11,6 +11,12 @@ class HomeController extends GetxController {
   var userResponse = Rxn<UserResponse>();
 
   @override
+  void onInit() {
+    fetchUserProfile();
+    super.onInit();
+  }
+
+  @override
   void onClose() {
     userResponse.value = null;
     isLoading.value = false;

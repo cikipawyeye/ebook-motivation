@@ -424,7 +424,8 @@ class RegisterController extends GetxController {
   }
 
   Timer? _debounce;
-  final isSearching = false.obs;
+  final isSearching = RxBool(false);
+
   Future<void> searchCities(String query) async {
     if (_debounce?.isActive ?? false) {
       _debounce?.cancel();
@@ -437,14 +438,12 @@ class RegisterController extends GetxController {
       }
 
       isSearching.value = true;
-      update();
 
       domisiliList.value = cities.where((city) {
         return city['name']!.toLowerCase().contains(query.toLowerCase());
       }).toList();
 
       isSearching.value = false;
-      update();
     });
   }
 
