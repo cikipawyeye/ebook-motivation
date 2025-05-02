@@ -77,41 +77,40 @@ class WallpaperMusicView extends GetView<WallpaperMusicController> {
   }
 
   Widget _buildNavigationButton(BuildContext context) {
-    final screenWidth = MediaQuery.of(context).size.width;
     return Padding(
         padding: EdgeInsets.only(bottom: 20, left: 20, right: 20),
-        child: SizedBox(
-          width: screenWidth,
-          child: ElevatedButton(
-            onPressed: () async {
-              if (controller.currentIndex.value == 1) {
-                // Jika ini halaman kedua (musical selection)
-                SharedPreferences prefs = await SharedPreferences.getInstance();
-                prefs.setBool(
-                    'isNewUser', false); // Set pengguna baru menjadi false
+        child: ElevatedButton(
+          onPressed: () async {
+            if (controller.currentIndex.value == 1) {
+              // Jika ini halaman kedua (musical selection)
+              SharedPreferences prefs = await SharedPreferences.getInstance();
+              prefs.setBool(
+                  'isNewUser', false); // Set pengguna baru menjadi false
 
-                // Arahkan ke halaman /home dan refresh data pengguna
-                Get.offNamed('/home');
-              } else {
-                // Jika halaman pertama (wallpaper selection)
-                controller.nextPage();
-              }
-            },
-            style: ElevatedButton.styleFrom(
-              minimumSize: Size(180, 40),
-              backgroundColor: colorBackground,
-            ),
-            child: Padding(
-                padding: EdgeInsets.symmetric(horizontal: 26),
-                child: Obx(() {
-                  return Text(
-                    controller.currentIndex.value == 1
-                        ? 'Selesai'
-                        : 'Selanjutnya',
-                    style: const TextStyle(color: Colors.white),
-                  );
-                })),
+              // Arahkan ke halaman /home dan refresh data pengguna
+              Get.offNamed('/home');
+            } else {
+              // Jika halaman pertama (wallpaper selection)
+              controller.nextPage();
+            }
+          },
+          style: ElevatedButton.styleFrom(
+            minimumSize: Size(180, 40),
+            backgroundColor: Colors.white.withValues(alpha: 0.3),
           ),
+          child: Padding(
+              padding: EdgeInsets.symmetric(horizontal: 26),
+              child: Obx(() {
+                return Text(
+                  controller.currentIndex.value == 1
+                      ? 'Selesai'
+                      : 'Selanjutnya',
+                  style: GoogleFonts.leagueSpartan(
+                    color: Colors.white,
+                    fontWeight: FontWeight.bold,
+                  ),
+                );
+              })),
         ));
   }
 

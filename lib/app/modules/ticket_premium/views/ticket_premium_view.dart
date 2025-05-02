@@ -20,9 +20,9 @@ class TicketPremiumView extends GetView<TicketPremiumController> {
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
               Image.asset(
-                'assets/images/hati.png',
-                width: 92,
-                height: 92,
+                'assets/images/hati_edge.png',
+                width: 80,
+                height: 80,
               ),
               const SizedBox(height: 16),
               Text(

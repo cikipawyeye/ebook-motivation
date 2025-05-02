@@ -27,10 +27,10 @@ class LoginView extends GetView<LoginController> {
             SizedBox(height: 50),
             Center(
               child: Padding(
-                padding: const EdgeInsets.only(bottom: 20),
+                padding: const EdgeInsets.only(bottom: 40),
                 child: Image.asset(
-                  'assets/images/hati.png',
-                  width: 120,
+                  'assets/images/logo_white.png',
+                  width: 85,
                 ),
               ),
             ),

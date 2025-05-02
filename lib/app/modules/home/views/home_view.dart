@@ -49,12 +49,9 @@ class HomeView extends GetView<HomeController> {
             ),
           ),
           child: Obx(() {
-            if (controller.isLoading.value) {
+            if (controller.isLoading.value ||
+                controller.userResponse.value == null) {
               return Center(child: CircularProgressIndicator());
-            }
-
-            if (controller.userResponse.value == null) {
-              return Center(child: Text('No user data available'));
             }
 
             return RefreshIndicator(

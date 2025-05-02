@@ -77,16 +77,13 @@ flutter:
     - assets/images/Motivasi1.png
     - assets/images/Pengingat1.png
     - assets/images/crown.png
-    - assets/images/hati.png
     - assets/images/hati_edge.png
     - assets/images/Watermark.png
     - assets/images/shield_check.png
-    - assets/images/caret.png
     - assets/images/screen_news.png
-    - assets/images/screen_view.png
-    - assets/images/Abu_gradasi.png
     - assets/images/watermark_icon.png
     - assets/images/Template.png
+    - assets/images/logo_white.png
 
     #load icons assets
     - assets/icons/crown_icon.png
@@ -100,49 +97,38 @@ flutter:
 
     # Audio
     - assets/audio/PenyejukHati1.mp3
-    - assets/audio/PenyejukHati2.mp3
-    - assets/audio/PenyejukHati3.mp3
-    - assets/audio/PenyejukHati4.mp3
-    - assets/audio/PenyejukHati5.mp3
-    - assets/audio/PenyejukHati6.mp3
-    - assets/audio/PenyejukHati7.mp3
-    - assets/audio/PenyejukHati8.mp3
-    - assets/audio/PenyejukHati9.mp3
-    - assets/audio/PenyejukHati10.mp3
-
-    #GIF
-    # - assets/gif/ocean-diver.gif
-    # - assets/gif/Wallpaper01.gif
-    # - assets/gif/Wallpaper02.gif
-    # - assets/gif/Wallpaper03.gif
-    # - assets/gif/Wallpaper04.gif
-    # - assets/gif/Wallpaper05.gif
-    # - assets/gif/Wallpaper06.gif
-    # - assets/gif/Wallpaper07.gif
-    # - assets/gif/Wallpaper08.gif
-    # - assets/gif/Wallpaper09.gif
+    # - assets/audio/PenyejukHati2.mp3
+    # - assets/audio/PenyejukHati3.mp3
+    # - assets/audio/PenyejukHati4.mp3
+    # - assets/audio/PenyejukHati5.mp3
+    # - assets/audio/PenyejukHati6.mp3
+    # - assets/audio/PenyejukHati7.mp3
+    # - assets/audio/PenyejukHati8.mp3
+    # - assets/audio/PenyejukHati9.mp3
+    # - assets/audio/PenyejukHati10.mp3
 
     #Video
-    - assets/videos/Wallpaper01.mp4
-    - assets/videos/Wallpaper02.mp4
-    - assets/videos/Wallpaper03.mp4
-    - assets/videos/Wallpaper04.mp4
-    - assets/videos/Wallpaper05.mp4
-    - assets/videos/Wallpaper06.mp4
-    - assets/videos/Wallpaper07.mp4
-    - assets/videos/Wallpaper08.mp4
-    - assets/videos/Wallpaper09.mp4
+    # - assets/videos/Wallpaper01.mp4
+    # - assets/videos/Wallpaper02.mp4
+    # - assets/videos/Wallpaper03.mp4
+    # - assets/videos/Wallpaper04.mp4
+    # - assets/videos/Wallpaper05.mp4
+    # - assets/videos/Wallpaper06.mp4
+    # - assets/videos/Wallpaper07.mp4
+    # - assets/videos/Wallpaper08.mp4
+    # - assets/videos/Wallpaper09.mp4
 
     #Pitcure
-    - assets/pictures/Wallpaper_img_01.jpg
-    - assets/pictures/Wallpaper_img_02.jpg
-    - assets/pictures/Wallpaper_img_03.jpg
-    - assets/pictures/Wallpaper_img_04.jpg
-    - assets/pictures/Wallpaper_img_05.jpg
-    - assets/pictures/Wallpaper_img_06.jpg
-    - assets/pictures/Wallpaper_img_07.jpg
-    - assets/pictures/Wallpaper_img_08.jpg
+    # - assets/pictures/Wallpaper_img_01.jpg
+    # - assets/pictures/Wallpaper_img_02.jpg
+    # - assets/pictures/Wallpaper_img_03.jpg
+    # - assets/pictures/Wallpaper_img_04.jpg
+    # - assets/pictures/Wallpaper_img_05.jpg
+    # - assets/pictures/Wallpaper_img_06.jpg
+    # - assets/pictures/Wallpaper_img_07.jpg
+    # - assets/pictures/Wallpaper_img_08.jpg
     - assets/pictures/Wallpaper_img_09.jpg
+
   # To add assets to your application, add an assets section, like this:
   # assets:
   #   - images/a_dot_burr.jpeg
