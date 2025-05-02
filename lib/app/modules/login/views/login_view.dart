@@ -17,7 +17,7 @@ class LoginView extends GetView<LoginController> {
       body: Container(
         decoration: BoxDecoration(
           image: DecorationImage(
-            image: AssetImage('assets/images/Watermark.png'),
+            image: AssetImage("assets/images/Template.png"),
             fit: BoxFit.cover,
           ),
         ),
@@ -41,7 +41,7 @@ class LoginView extends GetView<LoginController> {
                 style: GoogleFonts.leagueSpartan(
                   fontSize: 24,
                   fontWeight: FontWeight.bold,
-                  color: Colors.black,
+                  color: Colors.white,
                 ),
               ),
             ),
@@ -53,6 +53,7 @@ class LoginView extends GetView<LoginController> {
               style: GoogleFonts.leagueSpartan(
                 fontSize: 16,
                 fontWeight: FontWeight.normal,
+                color: Colors.white,
               ),
             ),
             SizedBox(height: 5),
@@ -67,21 +68,34 @@ class LoginView extends GetView<LoginController> {
                     onChanged: (value) {
                       controller.resetErrorState();
                     },
+                    style: TextStyle(
+                      color: Colors.white,
+                      fontSize: 16,
+                    ),
                     decoration: InputDecoration(
                       contentPadding: EdgeInsets.symmetric(horizontal: 18),
                       floatingLabelBehavior: FloatingLabelBehavior.never,
                       labelText: 'Email',
                       labelStyle: TextStyle(
                           fontSize: 12,
-                          color: Colors.black.withValues(alpha: 0.3)),
+                          color: Colors.white.withValues(alpha: 0.5)),
                       errorText: controller.isEmailError.value
                           ? 'Kredensial tidak valid'
                           : null,
-                      border: OutlineInputBorder(
+                      focusedBorder: OutlineInputBorder(
                         borderRadius: BorderRadius.circular(30),
                         borderSide: BorderSide(
-                            color: Colors.black.withValues(alpha: 0.3),
-                            width: 1),
+                            color: Colors.white.withValues(alpha: 0.5),
+                            width: 1.0),
+                      ),
+                      enabledBorder: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(30),
+                        borderSide: BorderSide(
+                            color: Colors.white.withValues(alpha: 0.5),
+                            width: 1.0),
+                      ),
+                      border: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(30),
                       ),
                     ),
                   ),
@@ -96,6 +110,7 @@ class LoginView extends GetView<LoginController> {
               style: GoogleFonts.leagueSpartan(
                 fontSize: 16,
                 fontWeight: FontWeight.normal,
+                color: Colors.white,
               ),
             ),
             SizedBox(height: 5),
@@ -111,27 +126,42 @@ class LoginView extends GetView<LoginController> {
                     onChanged: (value) {
                       controller.resetErrorState();
                     },
+                    style: TextStyle(
+                      color: Colors.white,
+                    ),
                     decoration: InputDecoration(
                       contentPadding: EdgeInsets.symmetric(horizontal: 18),
                       floatingLabelBehavior: FloatingLabelBehavior.never,
                       labelText: 'Kata sandi',
                       labelStyle: TextStyle(
                           fontSize: 12,
-                          color: Colors.black.withValues(alpha: 0.3)),
-                      border: OutlineInputBorder(
+                          color: Colors.white.withValues(alpha: 0.5)),
+                      focusedBorder: OutlineInputBorder(
                         borderRadius: BorderRadius.circular(30),
                         borderSide: BorderSide(
-                            color: Colors.black.withValues(alpha: 0.3),
-                            width: 1),
+                            color: Colors.white.withValues(alpha: 0.5),
+                            width: 1.0),
+                      ),
+                      enabledBorder: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(30),
+                        borderSide: BorderSide(
+                            color: Colors.white.withValues(alpha: 0.5),
+                            width: 1.0),
+                      ),
+                      border: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(30),
                       ),
                       suffixIcon: IconButton(
                         onPressed: () {
                           controller.isHidden.value =
                               !controller.isHidden.value;
                         },
-                        icon: Icon(controller.isHidden.value
-                            ? Icons.visibility
-                            : Icons.visibility_off),
+                        icon: Icon(
+                          controller.isHidden.value
+                              ? Icons.visibility_off
+                              : Icons.visibility,
+                          color: Colors.white.withValues(alpha: 0.5),
+                        ),
                       ),
                     ),
                   ),
@@ -203,7 +233,7 @@ class LoginView extends GetView<LoginController> {
               child: Text(
                 'Lupa kata sandi?',
                 style: GoogleFonts.leagueSpartan(
-                    color: Colors.black, fontWeight: FontWeight.bold),
+                    color: Colors.white, fontWeight: FontWeight.bold),
               ),
             ),
 
@@ -217,11 +247,12 @@ class LoginView extends GetView<LoginController> {
                   text: TextSpan(children: [
                     TextSpan(
                       text: 'Belum punya akun? ',
-                      style: GoogleFonts.leagueSpartan(color: Colors.black87),
+                      style: GoogleFonts.leagueSpartan(color: Colors.white),
                     ),
                     TextSpan(
                       text: 'Daftar sekarang',
-                      style: GoogleFonts.leagueSpartan(color: Colors.blue),
+                      style: GoogleFonts.leagueSpartan(
+                          color: Colors.blue, fontWeight: FontWeight.bold),
                     ),
                   ]),
                 ),

@@ -98,15 +98,19 @@ class WallpaperMusicView extends GetView<WallpaperMusicController> {
               }
             },
             style: ElevatedButton.styleFrom(
-              minimumSize: Size(screenWidth, 50),
+              minimumSize: Size(180, 40),
               backgroundColor: colorBackground,
             ),
-            child: Obx(() {
-              return Text(
-                controller.currentIndex.value == 1 ? 'Selesai' : 'Selanjutnya',
-                style: const TextStyle(color: Colors.white),
-              );
-            }),
+            child: Padding(
+                padding: EdgeInsets.symmetric(horizontal: 26),
+                child: Obx(() {
+                  return Text(
+                    controller.currentIndex.value == 1
+                        ? 'Selesai'
+                        : 'Selanjutnya',
+                    style: const TextStyle(color: Colors.white),
+                  );
+                })),
           ),
         ));
   }
@@ -121,17 +125,12 @@ class WallpaperMusicView extends GetView<WallpaperMusicController> {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
-                  'Pilih Wallpapermu!',
+                  'Wallpapernya bisa milih loh!',
                   style: GoogleFonts.leagueSpartan(
                       fontSize: 34,
                       fontWeight: FontWeight.bold,
-                      color: Colors.white),
-                  textAlign: TextAlign.left,
-                ),
-                Text(
-                  'Kamu bisa memilih wallpaper yang paling kamu suka loh.\nagar menambah pengalamanmu saat membaca',
-                  style: GoogleFonts.leagueSpartan(
-                      fontSize: 14, color: Colors.white),
+                      color: Colors.white,
+                      height: 1),
                   textAlign: TextAlign.left,
                 ),
               ],
@@ -189,20 +188,12 @@ class WallpaperMusicView extends GetView<WallpaperMusicController> {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Text(
-          'Ayo pilih lagumu!',
+          'Backsoundnya juga bisa milih…',
           style: GoogleFonts.leagueSpartan(
-            fontSize: 34,
-            fontWeight: FontWeight.w700,
-            color: Colors.white,
-          ),
-        ),
-        Text(
-          'Musik ini akan diputar saat kamu sedang membuka bacaan jadi pilih sesuai mood mu ya!',
-          style: GoogleFonts.leagueSpartan(
-            fontSize: 14,
-            color: Colors.white,
-            fontWeight: FontWeight.w400,
-          ),
+              fontSize: 34,
+              fontWeight: FontWeight.w700,
+              color: Colors.white,
+              height: 1),
         ),
       ],
     );

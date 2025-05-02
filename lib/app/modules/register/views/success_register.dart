@@ -1,5 +1,4 @@
 import 'package:ebookapp/app/routes/app_pages.dart';
-import 'package:ebookapp/core/constants/constant.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:ebookapp/app/modules/register/controllers/register_controller.dart';
@@ -15,7 +14,7 @@ class SuccessRegister extends GetView<RegisterController> {
       body: Container(
         decoration: BoxDecoration(
           image: DecorationImage(
-            image: AssetImage('assets/images/Watermark.png'),
+            image: AssetImage("assets/images/Template.png"),
             fit: BoxFit.cover, // Mengatur gambar agar menutupi seluruh area
           ),
         ),
@@ -33,12 +32,13 @@ class SuccessRegister extends GetView<RegisterController> {
                 ),
               ),
               const SizedBox(height: 20),
-              // Teks "Akun Berhasil Dibuat"
               Text(
-                'Akun Berhasil Dibuat',
+                'Alhamdulillah\nakun sudah berhasil dibuat.',
+                textAlign: TextAlign.center,
                 style: GoogleFonts.leagueSpartan(
                   fontSize: 24,
                   fontWeight: FontWeight.bold,
+                  color: Colors.white,
                 ),
               ),
               const SizedBox(height: 10),
@@ -47,7 +47,7 @@ class SuccessRegister extends GetView<RegisterController> {
                 'Lakukan masuk kembali',
                 style: GoogleFonts.leagueSpartan(
                   fontSize: 16,
-                  color: Colors.black54,
+                  color: Colors.white.withValues(alpha: 0.7),
                 ),
               ),
               const SizedBox(height: 40),
@@ -58,8 +58,8 @@ class SuccessRegister extends GetView<RegisterController> {
                   Get.offNamed(Routes.login); // Ganti dengan rute yang sesuai
                 },
                 style: ElevatedButton.styleFrom(
-                  backgroundColor:
-                      colorBackground, // Warna latar belakang tombol
+                  backgroundColor: Colors.white
+                      .withValues(alpha: 0.3), // Warna latar belakang tombol
                   padding:
                       const EdgeInsets.symmetric(horizontal: 40, vertical: 12),
                   shape: RoundedRectangleBorder(
@@ -67,7 +67,7 @@ class SuccessRegister extends GetView<RegisterController> {
                   ),
                 ),
                 child: Text(
-                  'Kembali ke Masuk',
+                  'Login',
                   style: GoogleFonts.leagueSpartan(
                     color: Colors.white,
                     fontSize: 16,

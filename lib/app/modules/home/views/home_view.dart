@@ -44,7 +44,7 @@ class HomeView extends GetView<HomeController> {
         body: Container(
           decoration: BoxDecoration(
             image: DecorationImage(
-              image: AssetImage('assets/images/Watermark.png'),
+              image: AssetImage("assets/images/Template.png"),
               fit: BoxFit.cover,
             ),
           ),
@@ -72,13 +72,14 @@ class HomeView extends GetView<HomeController> {
                       text: TextSpan(
                         text:
                             'Assalamualaikum, ${controller.userResponse.value?.user.name} \n\n',
-                        style: _getTextStyle(fontSize: 24, color: Colors.black),
+                        style: _getTextStyle(fontSize: 24, color: Colors.white),
                         children: <TextSpan>[
                           TextSpan(
                             text:
                                 'Terima kasih sudah mendaftar kesini.\nOya, buku ini berisi motivasi yang menyejukkan hati, serta pengingat yang berpedoman kepada Al-Qur\'an. Semoga dapat bermanfaat dan menambah semangat dalam kehidupan sehari-hari ya.... Aamiin Ya Robbal Alamin.',
                             style: _getTextStyle(
-                                fontSize: 13, color: Colors.black54),
+                                fontSize: 13,
+                                color: Colors.white.withValues(alpha: 0.8)),
                           ),
                         ],
                       ),
@@ -107,9 +108,9 @@ class HomeView extends GetView<HomeController> {
                             left: 16,
                             bottom: 16,
                             child: Text(
-                              'Motivasi',
+                              'MOTIVASI',
                               style: _getTextStyle(
-                                fontSize: 18,
+                                fontSize: 24,
                                 color: Colors.white,
                                 shadows: [
                                   Shadow(
@@ -157,9 +158,9 @@ class HomeView extends GetView<HomeController> {
                             left: 16,
                             bottom: 10,
                             child: Text(
-                              'Pengingat',
+                              'PENGINGAT',
                               style: _getTextStyle(
-                                fontSize: 18,
+                                fontSize: 24,
                                 color: Colors.white,
                                 shadows: [
                                   Shadow(
@@ -200,7 +201,7 @@ class HomeView extends GetView<HomeController> {
                         label: Text(
                           'Coba Premium!',
                           style:
-                              _getTextStyle(fontSize: 16, color: appBarColor),
+                              _getTextStyle(fontSize: 16, color: Colors.white),
                         ),
                         style: OutlinedButton.styleFrom(
                           padding: const EdgeInsets.symmetric(

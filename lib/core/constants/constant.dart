@@ -2,8 +2,8 @@ import 'package:flutter/material.dart';
 
 const String imageDirectory = 'assets/images/';
 const String imageURL = 'https://trustcollect.qrbdl.com/';
-const String baseUrl = 'https://motivasiislami.com'; // Prod
-// const String baseUrl = 'https://ebook.dev.whatthefun.id'; // Dev
+// const String baseUrl = 'https://motivasiislami.com'; // Prod
+const String baseUrl = 'https://ebook.dev.whatthefun.id'; // Dev
 const String kBase64Extend = 'data:image/jpeg;base64,';
 const String kBase64ExtendVideo = 'data:video/mp4;base64,';
 const String kBase64ExtendAudio = 'data:audio/mp3;base64,';
