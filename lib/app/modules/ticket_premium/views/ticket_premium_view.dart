@@ -147,10 +147,11 @@ class TicketPremiumView extends GetView<TicketPremiumController> {
                   ),
                   GestureDetector(
                     onTap: () {
-                      // Menunda navigasi hingga fase build selesai
-                      WidgetsBinding.instance.addPostFrameCallback((_) {
-                        Get.toNamed(Routes.home);
-                      });
+                      // WidgetsBinding.instance.addPostFrameCallback((_) {
+                      //   Get.toNamed(Routes.home);
+                      // });
+
+                      Get.offAllNamed(Routes.home);
                     },
                     child: Text(
                       'Kembali ke halaman sebelumnya',
