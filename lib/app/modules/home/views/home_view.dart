@@ -1,13 +1,13 @@
 import 'dart:ui';
 import 'package:ebookapp/app/modules/content/controllers/subcategory_controller.dart';
 import 'package:ebookapp/app/modules/content/enums/category.dart';
+import 'package:ebookapp/app/modules/home/controllers/home_controller.dart';
 import 'package:ebookapp/app/modules/settings/controllers/setting_theme_controller.dart';
 import 'package:ebookapp/app/routes/app_pages.dart';
 import 'package:ebookapp/core/constants/constant.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
-import '../controllers/home_controller.dart';
 
 class HomeView extends GetView<HomeController> {
   const HomeView({super.key});
@@ -273,193 +273,194 @@ class HomeView extends GetView<HomeController> {
             shape: RoundedRectangleBorder(
               borderRadius: BorderRadius.circular(16),
             ),
-            child: Column(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                Container(
-                  decoration: BoxDecoration(
-                    color: colorBackground,
-                    borderRadius: const BorderRadius.only(
-                      topLeft: Radius.circular(16),
-                      topRight: Radius.circular(16),
-                    ),
-                  ),
-                  child: Padding(
-                    padding: const EdgeInsets.all(8.0),
-                    child: Row(
-                      children: [
-                        IconButton(
-                          icon: Icon(Icons.arrow_back, color: Colors.white),
-                          onPressed: () => Navigator.of(context).pop(),
-                        ),
-                        const SizedBox(width: 8),
-                        Text(
-                          category == Category.motivasi
-                              ? 'Motivasi'
-                              : 'Pengingat',
-                          style: TextStyle(
-                            fontSize: 20,
-                            fontWeight: FontWeight.bold,
-                            color: Colors.white,
-                          ),
-                        ),
-                        const Spacer(),
-                        IconButton(
-                          icon: Icon(Icons.search, color: Colors.white),
-                          onPressed: () {
-                            isSearching.value = !isSearching.value;
-                          },
-                        ),
-                      ],
-                    ),
+            child: Container(
+                decoration: BoxDecoration(
+                  image: DecorationImage(
+                    image: AssetImage("assets/images/Template.png"),
+                    fit: BoxFit.cover,
                   ),
                 ),
-
-                // Search TextField
-                ValueListenableBuilder<bool>(
-                  valueListenable: isSearching,
-                  builder: (context, value, child) {
-                    return value
-                        ? Padding(
-                            padding: const EdgeInsets.all(8.0),
-                            child: Row(
-                              children: [
-                                const Icon(Icons.search, color: Colors.grey),
-                                const SizedBox(width: 8),
-                                Expanded(
-                                  child: TextField(
-                                    controller: searchController,
-                                    decoration: InputDecoration(
-                                      hintText: 'Cari...',
-                                      border: OutlineInputBorder(
-                                        borderRadius: BorderRadius.circular(10),
-                                      ),
-                                    ),
-                                    onChanged: (text) {
-                                      subcategoryController.searchQuery.value =
-                                          text;
-                                    },
-                                  ),
-                                ),
-                                IconButton(
-                                  icon: const Icon(Icons.clear,
-                                      color: Colors.black),
-                                  onPressed: () {
-                                    searchController.clear();
-                                    subcategoryController.searchQuery.value =
-                                        '';
-                                  },
-                                ),
-                              ],
-                            ),
-                          )
-                        : SizedBox();
-                  },
-                ),
-
-                // Motivasi List
-                Flexible(
-                  child: Obx(() {
-                    if (subcategoryController.gettingData.value) {
-                      return Center(
-                        child: Text(
-                          "Loading...",
-                          style: TextStyle(color: Colors.grey),
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    Container(
+                      decoration: BoxDecoration(
+                        color: colorBackground,
+                        borderRadius: const BorderRadius.only(
+                          topLeft: Radius.circular(16),
+                          topRight: Radius.circular(16),
                         ),
-                      );
-                    }
-
-                    final subcategories = category == Category.motivasi
-                        ? subcategoryController.motivationSubcategories
-                        : subcategoryController.reminderSubcategories;
-
-                    final filteredSubcategories = subcategories
-                        .where((subcategory) => subcategory.name
-                            .toLowerCase()
-                            .contains(subcategoryController.searchQuery.value
-                                .toLowerCase()))
-                        .toList();
-
-                    if (filteredSubcategories.isEmpty) {
-                      return Center(
-                        child: Text(
-                          category == Category.motivasi
-                              ? "Tidak ada motivasi ditemukan"
-                              : "Tidak ada pengingat ditemukan",
-                          style: TextStyle(color: Colors.grey),
-                        ),
-                      );
-                    }
-
-                    return GridView.builder(
-                      shrinkWrap: true,
-                      padding: EdgeInsets.all(8),
-                      gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                        crossAxisCount: 2,
-                        childAspectRatio: 1,
-                        crossAxisSpacing: 10,
-                        mainAxisSpacing: 10,
                       ),
-                      itemCount: filteredSubcategories.length,
-                      itemBuilder: (context, index) {
-                        final subcategory = filteredSubcategories[index];
-
-                        return GestureDetector(
-                          onTap: () {
-                            // if (category == Category.motivasi) {
-                            //   Get.offNamed('/motivation/contents',
-                            //       arguments: subcategory);
-                            // } else {
-                            //   Get.offNamed('/reminders/contents',
-                            //       arguments: subcategory);
-                            // }
-                            Get.offNamed('/contents', arguments: subcategory);
-                          },
-                          child: Container(
-                            decoration: BoxDecoration(
-                              borderRadius: BorderRadius.circular(15),
-                              image: DecorationImage(
-                                image: category == Category.motivasi
-                                    ? AssetImage('assets/images/Motivasi1.png')
-                                    : AssetImage(
-                                        'assets/images/Pengingat1.png'),
-                                fit: BoxFit.cover,
-                                colorFilter: ColorFilter.mode(
-                                    Colors.black45, BlendMode.darken),
+                      child: Padding(
+                        padding: const EdgeInsets.all(8.0),
+                        child: Row(
+                          children: [
+                            IconButton(
+                              icon: Icon(Icons.arrow_back, color: Colors.white),
+                              onPressed: () => Navigator.of(context).pop(),
+                            ),
+                            const SizedBox(width: 8),
+                            Text(
+                              category == Category.motivasi
+                                  ? 'MOTIVASI'
+                                  : 'PENGINGAT',
+                              style: TextStyle(
+                                fontSize: 20,
+                                fontWeight: FontWeight.bold,
+                                color: Colors.white,
                               ),
                             ),
-                            child: Center(
-                              child: Padding(
-                                padding: EdgeInsets.all(4),
-                                child: Column(
-                                  mainAxisAlignment: MainAxisAlignment.center,
+                            const Spacer(),
+                            IconButton(
+                              icon: Icon(Icons.search, color: Colors.white),
+                              onPressed: () {
+                                isSearching.value = !isSearching.value;
+                              },
+                            ),
+                          ],
+                        ),
+                      ),
+                    ),
+
+                    // Search TextField
+                    ValueListenableBuilder<bool>(
+                      valueListenable: isSearching,
+                      builder: (context, value, child) {
+                        return value
+                            ? Padding(
+                                padding: const EdgeInsets.all(8.0),
+                                child: Row(
                                   children: [
-                                    Text(
-                                      subcategory.name,
-                                      style: TextStyle(
-                                        color: Colors.white,
-                                        fontWeight: FontWeight.bold,
+                                    const Icon(Icons.search,
+                                        color: Colors.grey),
+                                    const SizedBox(width: 8),
+                                    Expanded(
+                                      child: TextField(
+                                        controller: searchController,
+                                        decoration: InputDecoration(
+                                          hintText: 'Cari...',
+                                          border: OutlineInputBorder(
+                                            borderRadius:
+                                                BorderRadius.circular(10),
+                                          ),
+                                        ),
+                                        onChanged: (text) {
+                                          subcategoryController
+                                              .searchQuery.value = text;
+                                        },
                                       ),
-                                      textAlign: TextAlign.center,
                                     ),
-                                    Text(
-                                      "Page: ${subcategory.contentsCount}",
-                                      style: TextStyle(
-                                        color: Colors.white70,
-                                      ),
+                                    IconButton(
+                                      icon: const Icon(Icons.clear,
+                                          color: Colors.black),
+                                      onPressed: () {
+                                        searchController.clear();
+                                        subcategoryController
+                                            .searchQuery.value = '';
+                                      },
                                     ),
                                   ],
                                 ),
-                              ),
-                            ),
-                          ),
-                        );
+                              )
+                            : SizedBox();
                       },
-                    );
-                  }),
-                ),
-              ],
-            ),
+                    ),
+
+                    // Motivasi List
+                    Flexible(
+                      child: Obx(() {
+                        if (subcategoryController.gettingData.value) {
+                          return Center(
+                            child: Text(
+                              "Loading...",
+                              style: TextStyle(color: Colors.grey),
+                            ),
+                          );
+                        }
+
+                        final subcategories = category == Category.motivasi
+                            ? subcategoryController.motivationSubcategories
+                            : subcategoryController.reminderSubcategories;
+
+                        final filteredSubcategories = subcategories
+                            .where((subcategory) => subcategory.name
+                                .toLowerCase()
+                                .contains(subcategoryController
+                                    .searchQuery.value
+                                    .toLowerCase()))
+                            .toList();
+
+                        if (filteredSubcategories.isEmpty) {
+                          return Center(
+                            child: Text(
+                              category == Category.motivasi
+                                  ? "Tidak ada motivasi ditemukan"
+                                  : "Tidak ada pengingat ditemukan",
+                              style: TextStyle(color: Colors.grey),
+                            ),
+                          );
+                        }
+
+                        return GridView.builder(
+                          shrinkWrap: true,
+                          padding: EdgeInsets.all(8),
+                          gridDelegate:
+                              SliverGridDelegateWithFixedCrossAxisCount(
+                            crossAxisCount: 2,
+                            childAspectRatio: 1,
+                            crossAxisSpacing: 10,
+                            mainAxisSpacing: 10,
+                          ),
+                          itemCount: filteredSubcategories.length,
+                          itemBuilder: (context, index) {
+                            final subcategory = filteredSubcategories[index];
+
+                            return GestureDetector(
+                              onTap: () {
+                                Get.offNamed('/contents',
+                                    arguments: subcategory);
+                              },
+                              child: Container(
+                                decoration: BoxDecoration(
+                                  borderRadius: BorderRadius.circular(15),
+                                  image: DecorationImage(
+                                    image: category == Category.motivasi
+                                        ? AssetImage(
+                                            'assets/images/Motivasi1.png')
+                                        : AssetImage(
+                                            'assets/images/Pengingat1.png'),
+                                    fit: BoxFit.cover,
+                                    colorFilter: ColorFilter.mode(
+                                        Colors.black45, BlendMode.darken),
+                                  ),
+                                ),
+                                child: Center(
+                                  child: Padding(
+                                    padding: EdgeInsets.all(4),
+                                    child: Column(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.center,
+                                      children: [
+                                        Text(
+                                          subcategory.name,
+                                          style: TextStyle(
+                                            color: Colors.white,
+                                            fontWeight: FontWeight.bold,
+                                          ),
+                                          textAlign: TextAlign.center,
+                                        ),
+                                      ],
+                                    ),
+                                  ),
+                                ),
+                              ),
+                            );
+                          },
+                        );
+                      }),
+                    ),
+                  ],
+                )),
           ),
         );
       },
