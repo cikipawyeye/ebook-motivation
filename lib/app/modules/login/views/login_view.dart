@@ -9,6 +9,7 @@ class LoginView extends GetView<LoginController> {
 
   final TextEditingController emailC = TextEditingController();
   final TextEditingController passC = TextEditingController();
+  final isSubmitting = RxBool(false);
 
   @override
   Widget build(BuildContext context) {
@@ -181,6 +182,9 @@ class LoginView extends GetView<LoginController> {
             // Login Button
             ElevatedButton(
               onPressed: () async {
+                if (isSubmitting.value) return; // Prevent multiple submissions
+
+                isSubmitting.value = true;
                 // Update controller values
                 controller.emailController.text = emailC.text;
                 controller.passController.text = passC.text;
@@ -205,6 +209,7 @@ class LoginView extends GetView<LoginController> {
                 } else {
                   controller.setErrorState();
                 }
+                isSubmitting.value = false;
               },
               style: ElevatedButton.styleFrom(
                 padding: EdgeInsets.symmetric(vertical: 10),
@@ -213,15 +218,15 @@ class LoginView extends GetView<LoginController> {
                 ),
                 backgroundColor: Color(0xFF32497B),
               ),
-              child: Text(
-                'Masuk',
-                style: GoogleFonts.leagueSpartan(
-                  textStyle: TextStyle(
-                    color: Colors.white,
-                    fontSize: 16,
-                  ),
-                ),
-              ),
+              child: Obx(() => Text(
+                    isSubmitting.value ? 'Loading...' : 'Masuk',
+                    style: GoogleFonts.leagueSpartan(
+                      textStyle: TextStyle(
+                        color: Colors.white,
+                        fontSize: 16,
+                      ),
+                    ),
+                  )),
             ),
             const SizedBox(height: 50),
 

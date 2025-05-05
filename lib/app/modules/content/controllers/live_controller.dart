@@ -43,8 +43,6 @@ class LiveWallpaperController extends GetxController {
         }
         await _initializeWallpaperImage(wallpaperData.wallpaperId!);
       }
-
-      update();
     });
   }
 
@@ -65,15 +63,29 @@ class LiveWallpaperController extends GetxController {
       if (!(await permFile.exists())) {
         debugPrint('File tidak ditemukan, mendownload wallpaper...');
         await _downloadWallpaper(wallpaperId, permFile);
+      } else {
+        final controller = VideoPlayerController.file(permFile,
+            videoPlayerOptions: VideoPlayerOptions(mixWithOthers: true));
+        await controller.initialize();
+
+        if (controller.value.isInitialized) {
+          controller.setLooping(true);
+          controller.setVolume(0);
+          _videoController.value = controller;
+          _videoController.value!.play();
+          return;
+        } else {
+          await _downloadWallpaper(wallpaperId, permFile);
+        }
       }
 
       _videoController.value = VideoPlayerController.file(permFile,
           videoPlayerOptions: VideoPlayerOptions(mixWithOthers: true));
-      _videoController.value!.initialize().then((_) {
-        _videoController.value!.setLooping(true);
-        _videoController.value!.setVolume(0);
-        _videoController.value!.play();
-      });
+      await _videoController.value!.initialize();
+
+      _videoController.value!.setLooping(true);
+      _videoController.value!.setVolume(0);
+      _videoController.value!.play();
     } catch (e) {
       debugPrint('Error inisialisasi video: $e');
     }
@@ -133,12 +145,10 @@ class LiveWallpaperController extends GetxController {
 
   void toggleWallpaperVisibility() {
     _isWallpaperVisible.value = !_isWallpaperVisible.value;
-    update();
   }
 
   void setWallpaperOpacity(double opacity) {
     _wallpaperOpacity.value = opacity.clamp(0.0, 1.0);
-    update();
   }
 
   Widget renderWallpaper() {

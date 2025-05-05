@@ -41,13 +41,15 @@ class ContentView extends GetView<ContentController> {
             );
           }),
           Positioned.fill(
-            child: _buildBody(
-              subcategory,
-              themeController,
-              userController,
-              audioController,
-              liveWallpaperController,
-            ),
+            child: Padding(
+                padding: EdgeInsets.symmetric(vertical: 20),
+                child: _buildBody(
+                  subcategory,
+                  themeController,
+                  userController,
+                  audioController,
+                  liveWallpaperController,
+                )),
           ),
           _buildWallpaperControls(liveWallpaperController, audioController),
         ],
