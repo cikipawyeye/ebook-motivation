@@ -18,9 +18,7 @@ class HomeView extends GetView<HomeController> {
   Widget build(BuildContext context) {
     final ThemeController themeController = Get.find<ThemeController>();
 
-    WidgetsBinding.instance.addPostFrameCallback((_) {
-      controller.fetchUserProfile();
-    });
+    controller.fetchUserProfile();
 
     return Obx(
       () => Scaffold(
