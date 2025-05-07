@@ -50,7 +50,6 @@ class LoginController extends GetxController {
           final SharedPreferences prefs = await _prefs;
           await prefs.setString('token', token);
           isLoggedIn.value = true;
-          Get.offAllNamed('/home');
           return true;
         } else {
           setErrorState();

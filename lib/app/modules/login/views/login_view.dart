@@ -199,12 +199,12 @@ class LoginView extends GetView<LoginController> {
 
                   if (isNewUser) {
                     // Jika pengguna baru, arahkan ke wallpaper-music
-                    Get.offNamed('/wallpaper-music');
+                    Get.offAllNamed('/wallpaper-music');
                     // Set status pengguna baru menjadi false
                     prefs.setBool('isNewUser', false);
                   } else {
                     // Jika bukan pengguna baru, arahkan ke halaman utama
-                    Get.offNamed('/home');
+                    Get.offAllNamed('/home');
                   }
                 } else {
                   controller.setErrorState();
