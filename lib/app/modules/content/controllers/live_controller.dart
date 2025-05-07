@@ -71,8 +71,8 @@ class LiveWallpaperController extends GetxController {
         if (controller.value.isInitialized) {
           controller.setLooping(true);
           controller.setVolume(0);
+          controller.play();
           _videoController.value = controller;
-          _videoController.value!.play();
           return;
         } else {
           await _downloadWallpaper(wallpaperId, permFile);
@@ -130,7 +130,7 @@ class LiveWallpaperController extends GetxController {
 
     final dio = Dio();
     await dio.download(
-      jsonResponse['file_url'],
+      jsonResponse['data']['file_url'],
       saveAs.path,
       options: Options(
         headers: {
