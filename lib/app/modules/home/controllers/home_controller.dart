@@ -57,6 +57,7 @@ class HomeController extends GetxController {
         final jsonResponse = json.decode(response.body);
         if (jsonResponse['data'] != null) {
           userResponse.value = UserResponse.fromJson(jsonResponse);
+          _saveIsPremium(userResponse.value!.user.isPremium).then((_) => {});
         } else {
           Get.snackbar('Kesalahan', 'Data profil pengguna tidak ditemukan.');
         }
@@ -71,5 +72,10 @@ class HomeController extends GetxController {
     } finally {
       isLoading.value = false;
     }
+  }
+
+  Future<void> _saveIsPremium(bool isPremium) async {
+    final prefs = await SharedPreferences.getInstance();
+    await prefs.setBool('isPremium', isPremium);
   }
 }

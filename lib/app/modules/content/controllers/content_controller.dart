@@ -1,239 +1,126 @@
 import 'dart:convert';
-import 'dart:typed_data';
+
 import 'package:ebookapp/app/data/models/content_model.dart';
 import 'package:ebookapp/app/data/models/cursor_pagination_model.dart';
 import 'package:ebookapp/app/modules/content/repositories/content_repository.dart';
-import 'package:ebookapp/app/modules/content/controllers/audio_controller.dart';
-import 'package:flutter/foundation.dart' show kDebugMode;
+import 'package:ebookapp/app/modules/settings/controllers/user_controller.dart';
+import 'package:ebookapp/app/routes/app_pages.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:http/http.dart' as http;
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:image/image.dart' as img;
 
-class ContentController extends GetxController with WidgetsBindingObserver {
-  final contents = <Content>[].obs;
-  final imageBytesList = <Rx<Uint8List?>>[].obs;
-  final isLoading = RxBool(false);
-  final nextCursor = RxnString();
-  final ContentRepository contentRepository = ContentRepository();
+class ContentController extends GetxController {
+  final ContentRepository _contentRepository = ContentRepository();
+
+  final images = <Content>[].obs;
+  final currentPage = 0.obs;
+  final isLoading = true.obs;
+  final isFetchingData = false.obs;
+  String? nextCursor;
+
+  final int fetchThreshold = 4;
+
+  final token = RxnString();
+  late SharedPreferences _prefs;
+  final UserController userController = Get.find<UserController>();
 
   @override
   void onInit() {
-    debugPrint("ContentController initialized");
-    WidgetsBinding.instance.addObserver(this);
     super.onInit();
-  }
 
-  @override
-  void onClose() {
-    debugPrint("ContentController closed");
-    WidgetsBinding.instance.removeObserver(this);
-    contents.clear();
-    imageBytesList.clear();
-    isLoading.value = false;
-    nextCursor.value = null;
-    super.onClose();
-  }
+    getSharedPreferenceInstance().then((prefs) {
+      _prefs = prefs;
 
-  @override
-  void didChangeAppLifecycleState(AppLifecycleState state) {
-    final audioController = Get.find<AudioController>();
-    // 🛑 Pause audio jika app masuk background
-    if (state == AppLifecycleState.paused ||
-        state == AppLifecycleState.inactive ||
-        state == AppLifecycleState.hidden) {
-      audioController.pause();
-    } else {
-      audioController.play();
-    }
-  }
-
-  Future<String?> getToken() async {
-    final prefs = await SharedPreferences.getInstance();
-    return prefs.getString('token');
-  }
-
-  Future<void> fetchContents({required int subcategoryId}) async {
-    if (isLoading.value) return;
-    isLoading.value = true;
-    update();
-
-    try {
-      final token = await getToken();
-      if (token == null) {
-        Get.snackbar('Error', 'User not authenticated!');
+      if (!userController.isPremium.value &&
+          (_prefs.getStringList('contentViewed') ?? []).length >= 3) {
+        Future.microtask(() => Get.offNamed(Routes.ticketPremium));
         return;
       }
 
-      final response =
-          await contentRepository.get(subcategoryId, nextCursor.value);
-
-      if (response == null || response.statusCode != 200) {
-        Get.snackbar('Error', 'Failed to load motivasi');
-        return;
-      }
-
-      final jsonResponse = json.decode(response.body);
-
-      if (jsonResponse['data'] == null || jsonResponse['data'].isEmpty) {
-        Get.snackbar('No Data', 'Data motivasi tidak ditemukan.');
-        return;
-      }
-
-      await fetchImages(jsonResponse['data']);
-
-      if (jsonResponse['meta'] != null) {
-        nextCursor.value =
-            CursorPagination.fromJson(jsonResponse['meta']).nextCursor;
-      } else {
-        nextCursor.value = null;
-      }
-
-      _logDebug('✅ Motivasi data fetched successfully');
-    } catch (e) {
-      Get.snackbar('Error', 'An error occurred while fetching motivasi.');
-      _logDebug("Error fetching motivasi: $e");
-    } finally {
+      token.value = _prefs.getString('token');
       isLoading.value = false;
-      update();
+    });
+  }
+
+  Future<void> fetchImages(
+      {required int subcategoryId, bool reset = false}) async {
+    if (isFetchingData.value) return;
+    isFetchingData.value = true;
+
+    final response = await fetchApi(
+        subcategoryId: subcategoryId, cursor: reset ? null : nextCursor);
+
+    if (reset) {
+      images.clear();
+
+      if (!response['images'].isEmpty) {
+        addSlideCount(response['images'][0]);
+      }
+    }
+
+    images.addAll(response['images']);
+
+    nextCursor = response['nextCursor'];
+    isFetchingData.value = false;
+  }
+
+  void handlePageChanged(int subcategoryId, int index) {
+    currentPage.value = index;
+
+    if (images.length - index <= fetchThreshold && nextCursor != null) {
+      fetchImages(subcategoryId: subcategoryId);
+    }
+
+    if (index < 3) {
+      addSlideCount(images[index]);
     }
   }
 
-  Future<void> fetchImages(List rawContentsData) async {
-    List<Future<void>> downloadTasks = [];
+  Future<Map<String, dynamic>> fetchApi(
+      {required int subcategoryId, String? cursor}) async {
+    final response = await _contentRepository.get(subcategoryId, cursor);
 
-    for (var element in rawContentsData) {
-      Content content = Content.fromJson(element);
-      Rx<Uint8List?> imageRx = Rx<Uint8List?>(null);
-      String imageUrl = content.imageUrls.optimized.isNotEmpty
-          ? content.imageUrls.optimized
-          : content.imageUrls.original;
-
-      // Tambahkan konten baru ke dalam daftar yang sudah ada
-      contents.add(content);
-      imageBytesList.add(imageRx);
-
-      downloadTasks.add(downloadAndConvertImage(imageUrl, imageRx));
+    if (response == null) {
+      return {
+        'images': [],
+        'nextCursor': null,
+      };
     }
 
-    await Future.wait(downloadTasks);
+    final jsonResponse = json.decode(response.body);
+
+    return {
+      'images': jsonResponse['data'].map<Content>((item) {
+        return Content.fromJson(item);
+      }).toList(),
+      'nextCursor': jsonResponse['meta'] != null
+          ? CursorPagination.fromJson(jsonResponse['meta']).nextCursor
+          : null,
+    };
   }
 
-  Future<void> downloadAndConvertImage(
-      String imageUrl, Rx<Uint8List?> imageRx) async {
-    if (imageUrl.isEmpty) {
-      _logDebug("Invalid image URL: $imageUrl");
-      imageRx.value = null;
-      return;
-    }
+  Future<SharedPreferences> getSharedPreferenceInstance() async {
+    return await SharedPreferences.getInstance();
+  }
 
-    final token = await getToken();
-    if (token == null) {
-      Get.snackbar('Error', 'User not authenticated!');
-      return;
-    }
+  void addSlideCount(Content content) {
+    if (!userController.isPremium.value) {
+      final current = _prefs.getStringList('contentViewed') ?? [];
+      final Set<String> uniqueSet = Set<String>.from(current);
 
-    try {
-      _logDebug("Downloading image: $imageUrl");
+      uniqueSet.add(content.id.toString());
 
-      final response = await http.get(
-        Uri.parse(imageUrl),
-        headers: {
-          'Authorization': 'Bearer $token',
-          'Accept': 'application/json',
-        },
-      );
-
-      if (response.statusCode == 200 && response.bodyBytes.isNotEmpty) {
-        // Validasi gambar sebelum menyimpan
-        final validatedImage =
-            await _validateAndProcessImage(response.bodyBytes);
-
-        if (validatedImage != null) {
-          imageRx.value = validatedImage;
-          _logDebug("✅ Image downloaded and validated successfully: $imageUrl");
-        } else {
-          imageRx.value = null;
-          _logDebug("❌ Image validation failed: $imageUrl");
+      _prefs.setStringList('contentViewed', uniqueSet.toList()).then((_) {
+        if (uniqueSet.length > 3) {
+          Future.microtask(() => Get.offNamed(Routes.ticketPremium));
         }
-      } else {
-        imageRx.value = null;
-        _logDebug(
-            "❌ Failed to download image, Status Code: ${response.statusCode}");
-      }
-    } catch (e) {
-      imageRx.value = null;
-      _logDebug("⚠️ Error saat mengunduh gambar: $e");
-    }
-  }
 
-  // Fungsi validasi dan pemrosesan gambar
-  Future<Uint8List?> _validateAndProcessImage(Uint8List imageBytes) async {
-    try {
-      // Validasi header gambar
-      if (!_isValidImageHeader(imageBytes)) {
-        _logDebug('Invalid image header');
-        return null;
-      }
-
-      // Coba decode gambar
-      final image = img.decodeImage(imageBytes);
-      if (image == null) {
-        _logDebug('Failed to decode image');
-        return null;
-      }
-
-      // Validasi dimensi gambar
-      if (image.width <= 0 || image.height <= 0) {
-        _logDebug('Invalid image dimensions');
-        return null;
-      }
-
-      // Optional: Resize gambar jika terlalu besar
-      if (image.width > 800 || image.height > 800) {
-        final resizedImage = img.copyResize(image, width: 800);
-        return Uint8List.fromList(img.encodePng(resizedImage));
-      }
-
-      return imageBytes;
-    } catch (e) {
-      _logDebug('Image processing error: $e');
-      return null;
-    }
-  }
-
-  // Fungsi untuk memeriksa header gambar
-  bool _isValidImageHeader(Uint8List imageBytes) {
-    if (imageBytes.length < 4) return false;
-
-    // Tanda header untuk JPEG
-    bool isJpeg =
-        imageBytes[0] == 0xFF && imageBytes[1] == 0xD8 && imageBytes[2] == 0xFF;
-
-    // Tanda header untuk PNG
-    bool isPng = imageBytes[0] == 0x89 &&
-        imageBytes[1] == 0x50 &&
-        imageBytes[2] == 0x4E &&
-        imageBytes[3] == 0x47;
-
-    // Tanda header untuk WebP
-    bool isWebp = imageBytes[0] == 0x52 && // 'R'
-        imageBytes[1] == 0x49 && // 'I'
-        imageBytes[2] == 0x46 && // 'F'
-        imageBytes[3] == 0x46 && // 'F'
-        imageBytes[8] == 0x57 && // 'W'
-        imageBytes[9] == 0x45 && // 'E'
-        imageBytes[10] == 0x42 && // 'B'
-        imageBytes[11] == 0x50; // 'P'
-
-    return isJpeg || isPng || isWebp;
-  }
-
-  // Fungsi debug yang dapat dikontrol
-  void _logDebug(String message) {
-    if (kDebugMode) {
-      debugPrint(message);
+        debugPrint('Slide count: ${uniqueSet.length}');
+      });
+    } else {
+      _prefs.setStringList('contentViewed', []);
     }
   }
 }
+
+// Simulasi API dummy

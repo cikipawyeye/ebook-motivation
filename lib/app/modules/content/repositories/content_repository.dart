@@ -5,13 +5,12 @@ import 'package:http/http.dart' as http;
 
 class ContentRepository extends Repository {
   Future<http.Response?> get(int subcategoryId, String? cursor) async {
-    debugPrint('🔄 Fetching motivasi data for subcategoryId: $subcategoryId');
-    debugPrint(
-        '🔄 $baseUrl/api/v1/contents?subcategory_id=$subcategoryId&cursor=${cursor ?? ''}&limit=3');
-
     final token = await getToken();
     final url =
-        '$baseUrl/api/v1/contents?subcategory_id=$subcategoryId&cursor=${cursor ?? ''}&limit=3';
+        '$baseUrl/api/v1/contents?subcategory_id=$subcategoryId&cursor=${cursor ?? ''}&limit=5';
+
+    debugPrint('🔄 Fetching motivasi data for subcategoryId: $subcategoryId');
+    debugPrint('🔄 $url');
 
     if (token == null) {
       throw Exception('User not authenticated!');

@@ -17,8 +17,8 @@ class UserController extends GetxController {
   @override
   void onInit() {
     super.onInit();
-    _loadIsPremium(); // Muat isPremium dari SharedPreferences saat controller diinisialisasi
     fetchUserProfile(); // Ambil data profil user saat controller diinisialisasi
+    _loadIsPremium(); // Muat isPremium dari SharedPreferences saat controller diinisialisasi
   }
 
   @override
@@ -100,8 +100,7 @@ class UserController extends GetxController {
         debugPrint('✅ Diperbarui isPremium: ${isPremium.value}');
       }
 
-      debugPrint(
-          '✅ Data profil pengguna berhasil diambil: ${userResponse.value}');
+      debugPrint('✅ Data profil pengguna berhasil diambil');
     } catch (e) {
       Get.snackbar(
           'Kesalahan', 'Terjadi kesalahan saat mengambil profil pengguna.');
@@ -239,7 +238,7 @@ class UserController extends GetxController {
       debugPrint('🔄 Keluar');
       debugPrint('🔄 $baseUrl/api/v1/logout');
 
-      final response = await http.post(
+      http.post(
         Uri.parse('$baseUrl/api/v1/logout'),
         headers: {
           'Authorization': 'Bearer $token',
@@ -247,12 +246,6 @@ class UserController extends GetxController {
           'Accept': 'application/json',
         },
       );
-
-      // if (response.statusCode != 200) {
-      //   Get.snackbar('Kesalahan', 'Gagal untuk keluar');
-      //   debugPrint('Respon kesalahan: ${response.body}');
-      //   return;
-      // }
 
       // Hapus token dan semua data pembayaran dari SharedPreferences
       final prefs = await SharedPreferences.getInstance();
