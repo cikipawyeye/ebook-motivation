@@ -41,15 +41,13 @@ class ContentView extends GetView<ContentController> {
             );
           }),
           Positioned.fill(
-            child: Padding(
-                padding: EdgeInsets.symmetric(vertical: 20),
-                child: _buildBody(
-                  subcategory,
-                  themeController,
-                  userController,
-                  audioController,
-                  liveWallpaperController,
-                )),
+            child: _buildBody(
+              subcategory,
+              themeController,
+              userController,
+              audioController,
+              liveWallpaperController,
+            ),
           ),
           _buildWallpaperControls(liveWallpaperController, audioController),
         ],
@@ -286,7 +284,9 @@ class ContentView extends GetView<ContentController> {
         children: [
           // Gambar utama
           Container(
+            // padding: const EdgeInsets.all(24),
             constraints: BoxConstraints(
+              maxHeight: Get.height * 0.65, // Mengatur tinggi maksimal
               maxWidth: double.infinity, // Mengikuti lebar maksimal
             ),
             child: ClipRRect(
