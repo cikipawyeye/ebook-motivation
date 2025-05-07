@@ -90,13 +90,12 @@ class WallpaperMusicController extends GetxController {
     int? selectedWallpaperId = prefs.getInt('selectedWallpaperId');
     int? selectedMusicId = prefs.getInt('selectedMusicId');
     if (selectedWallpaperId != null) {
-      selectedWallpaperId = wallpapers
-          .firstWhere((wallpaper) => wallpaper.id == selectedWallpaperId)
-          .id;
+      selectedWallpaper.value = wallpapers
+          .firstWhere((wallpaper) => wallpaper.id == selectedWallpaperId);
     }
     if (selectedMusicId != null) {
-      selectedMusicId =
-          musicPlaylist.firstWhere((music) => music.id == selectedMusicId).id;
+      selectedMusic.value =
+          musicPlaylist.firstWhere((music) => music.id == selectedMusicId);
     }
     debugPrint(
         'Dimuat - Wallpaper: ${selectedWallpaper.value}, Musik: ${selectedMusic.value}');
