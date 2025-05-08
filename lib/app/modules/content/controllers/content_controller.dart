@@ -71,7 +71,7 @@ class ContentController extends GetxController {
       fetchImages(subcategoryId: subcategoryId);
     }
 
-    if (index < 3) {
+    if (index < 3 && index < images.length) {
       addSlideCount(images[index]);
     }
   }

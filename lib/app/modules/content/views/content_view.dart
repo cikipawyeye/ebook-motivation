@@ -22,7 +22,25 @@ class ContentView extends GetView<ContentController> {
       );
     }
 
-    controller.fetchImages(subcategoryId: subcategory.id, reset: true);
+    controller
+        .fetchImages(subcategoryId: subcategory.id, reset: true)
+        .then((_) {
+      // Preload next 2 images (eager load)
+      for (int i = 1; i <= 2; i++) {
+        final nextIndex = i;
+        if (nextIndex < controller.images.length && context.mounted) {
+          precacheImage(
+            NetworkImage(controller.images[nextIndex].imageUrls.optimized,
+                headers: {
+                  'Content-Type': 'application/json',
+                  'Accept': 'application/json',
+                  'Authorization': 'Bearer ${controller.token.value}',
+                }),
+            context,
+          );
+        }
+      }
+    });
 
     final liveWallpaperController = Get.find<LiveWallpaperController>();
     final audioController = Get.find<AudioController>();
@@ -30,11 +48,6 @@ class ContentView extends GetView<ContentController> {
     return Scaffold(
       backgroundColor: Colors.black,
       body: Obx(() {
-        if (controller.isLoading.value ||
-            (controller.isFetchingData.value && controller.images.isEmpty)) {
-          return Center(child: CircularProgressIndicator());
-        }
-
         return Stack(
           children: [
             //  Background wallpaper
@@ -44,26 +57,50 @@ class ContentView extends GetView<ContentController> {
                   : const SizedBox.shrink(),
             ),
             // Konten utama
-            GestureDetector(
-                onTap: audioController.togglePlayPause,
-                onLongPress: liveWallpaperController.toggleWallpaperVisibility,
-                child: PageView.builder(
-                  controller: _pageController,
-                  scrollDirection: Axis.vertical,
-                  itemCount: subcategory.contentsCount + 1,
-                  onPageChanged: (index) {
-                    controller.handlePageChanged(subcategory.id, index);
+            !(controller.isLoading.value ||
+                    (controller.isFetchingData.value &&
+                        controller.images.isEmpty))
+                ? GestureDetector(
+                    onTap: audioController.togglePlayPause,
+                    onLongPress:
+                        liveWallpaperController.toggleWallpaperVisibility,
+                    child: PageView.builder(
+                      controller: _pageController,
+                      scrollDirection: Axis.vertical,
+                      itemCount: subcategory.contentsCount + 1,
+                      onPageChanged: (index) {
+                        controller.handlePageChanged(subcategory.id, index);
 
-                    // Loop ke awal jika sudah di akhir dan nextCursor == null
-                    if (index >= controller.images.length &&
-                        controller.nextCursor == null) {
-                      Future.delayed(Duration(milliseconds: 230), () {
-                        _pageController.jumpToPage(0);
-                      });
-                    }
-                  },
-                  itemBuilder: (context, index) => _buildContentItem(index),
-                )),
+                        // Preload next 2 images (eager load)
+                        for (int i = 1; i <= 2; i++) {
+                          final nextIndex = index + i;
+                          if (nextIndex < controller.images.length) {
+                            precacheImage(
+                              NetworkImage(
+                                  controller
+                                      .images[nextIndex].imageUrls.optimized,
+                                  headers: {
+                                    'Content-Type': 'application/json',
+                                    'Accept': 'application/json',
+                                    'Authorization':
+                                        'Bearer ${controller.token.value}',
+                                  }),
+                              context,
+                            );
+                          }
+                        }
+
+                        // Loop ke awal jika sudah di akhir dan nextCursor == null
+                        if (index >= controller.images.length &&
+                            controller.nextCursor == null) {
+                          Future.delayed(Duration(milliseconds: 230), () {
+                            _pageController.jumpToPage(0);
+                          });
+                        }
+                      },
+                      itemBuilder: (context, index) => _buildContentItem(index),
+                    ))
+                : Center(child: CircularProgressIndicator()),
             // Wallpaper & audio controls
             _buildWallpaperControls(liveWallpaperController, audioController),
           ],
