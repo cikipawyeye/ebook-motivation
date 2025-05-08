@@ -17,7 +17,7 @@ class LoginView extends GetView<LoginController> {
       backgroundColor: Colors.white,
       body: Stack(children: [
         Image.asset(
-          'assets/images/background.gif',
+          "assets/images/Template.png",
           fit: BoxFit.cover,
           width: double.infinity,
           height: double.infinity,
