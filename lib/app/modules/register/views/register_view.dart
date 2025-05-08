@@ -133,16 +133,15 @@ class RegisterPage extends GetView<RegisterController> {
   Widget _buildNameStep() {
     return _buildScrollableColumn(child: [
       Text(
-        'Assalamualaikum,\nKenalan dulu yuk!',
+        'Silahkan tulis nama lengkap…',
         style: GoogleFonts.leagueSpartan(
-          fontSize: 30,
-          fontWeight: FontWeight.bold,
+          fontSize: 24,
           color: Colors.white,
         ),
       ),
-      SizedBox(height: 50),
+      SizedBox(height: 80),
       Text(
-        'Silahkan tulis nama lengkap…',
+        'Nama lengkap',
         style: GoogleFonts.leagueSpartan(
           fontSize: 16,
           fontWeight: FontWeight.normal,
@@ -230,17 +229,16 @@ class RegisterPage extends GetView<RegisterController> {
       child: [
         Obx(
           () => Text(
-            'Terima kasih, ${controller.firstName.value}...',
+            'Terima kasih, ${controller.firstName.value}.\nTolong tuliskan alamat emailnya',
             style: GoogleFonts.leagueSpartan(
-              fontSize: 30,
-              fontWeight: FontWeight.bold,
+              fontSize: 24,
               color: Colors.white,
             ),
           ),
         ),
-        SizedBox(height: 40),
+        SizedBox(height: 80),
         Text(
-          'Tolong tuliskan alamat emailnya yaa…',
+          'Alamat email',
           style: GoogleFonts.leagueSpartan(
             fontSize: 16,
             fontWeight: FontWeight.normal,
@@ -288,13 +286,20 @@ class RegisterPage extends GetView<RegisterController> {
       Text(
         'Silahkan tulis juga\nnomor teleponnya…',
         style: GoogleFonts.leagueSpartan(
-          fontSize: 30,
-          fontWeight: FontWeight.bold,
-          height: 0.95,
+          fontSize: 24,
           color: Colors.white,
         ),
       ),
-      SizedBox(height: 40),
+      SizedBox(height: 80),
+      Text(
+        'Nomor telepon',
+        style: GoogleFonts.leagueSpartan(
+          fontSize: 16,
+          fontWeight: FontWeight.normal,
+          color: Colors.white,
+        ),
+      ),
+      SizedBox(height: 5),
       Obx(() => TextField(
             controller: controller.phoneNumberController,
             style: TextStyle(
@@ -335,12 +340,9 @@ class RegisterPage extends GetView<RegisterController> {
       Text(
         'Tolong isikan gendernya donk…!',
         style: GoogleFonts.leagueSpartan(
-            fontSize: 30,
-            fontWeight: FontWeight.bold,
-            height: 0.95,
-            color: Colors.white),
+            fontSize: 24, height: 0.95, color: Colors.white),
       ),
-      SizedBox(height: 40),
+      SizedBox(height: 80),
       Obx(() => Column(
             children: [
               GestureDetector(
@@ -407,11 +409,19 @@ class RegisterPage extends GetView<RegisterController> {
   Widget _buildDobStep() {
     return _buildScrollableColumn(child: [
       Text(
-        'Tanggal lahirnya kapan…?',
-        style: GoogleFonts.leagueSpartan(
-            fontSize: 30, fontWeight: FontWeight.bold, color: Colors.white),
+        'Tanggal lahirnya kapan…?\nTolong kasih tahu yaa…',
+        style: GoogleFonts.leagueSpartan(fontSize: 24, color: Colors.white),
       ),
-      SizedBox(height: 40),
+      SizedBox(height: 80),
+      Text(
+        'Tanggal lahir',
+        style: GoogleFonts.leagueSpartan(
+          fontSize: 16,
+          fontWeight: FontWeight.normal,
+          color: Colors.white,
+        ),
+      ),
+      SizedBox(height: 5),
       TextField(
         controller: controller.dobController,
         style: TextStyle(
@@ -463,13 +473,9 @@ class RegisterPage extends GetView<RegisterController> {
     return _buildScrollableColumn(child: [
       Text(
         'Sekarang tinggal dimana…?',
-        style: GoogleFonts.leagueSpartan(
-            fontSize: 30,
-            fontWeight: FontWeight.bold,
-            height: 0.95,
-            color: Colors.white),
+        style: GoogleFonts.leagueSpartan(fontSize: 24, color: Colors.white),
       ),
-      SizedBox(height: 40),
+      SizedBox(height: 80),
       Text(
         'Domisili (Kota/Kabupaten)',
         style: GoogleFonts.leagueSpartan(
@@ -551,8 +557,7 @@ class RegisterPage extends GetView<RegisterController> {
       child: [
         Text(
           'Saat ini pekerjaannya apa…?',
-          style: GoogleFonts.leagueSpartan(
-              fontSize: 28, fontWeight: FontWeight.bold, color: Colors.white),
+          style: GoogleFonts.leagueSpartan(fontSize: 24, color: Colors.white),
         ),
         SizedBox(height: 20),
         Obx(() => Column(
@@ -641,13 +646,9 @@ class RegisterPage extends GetView<RegisterController> {
       child: [
         Text(
           'Silahkan atur kata sandi…',
-          style: GoogleFonts.leagueSpartan(
-              fontSize: 30,
-              fontWeight: FontWeight.bold,
-              color: Colors.white,
-              height: 0.95),
+          style: GoogleFonts.leagueSpartan(fontSize: 24, color: Colors.white),
         ),
-        SizedBox(height: 40),
+        SizedBox(height: 80),
         Obx(
           () => Column(
             crossAxisAlignment: CrossAxisAlignment.start,
@@ -677,9 +678,11 @@ class RegisterPage extends GetView<RegisterController> {
                       ? 'Password minimal 8 karakter, huruf kapital dan angka'
                       : null,
                   suffixIcon: IconButton(
-                    icon: Icon(controller.isPasswordVisible.value
-                        ? Icons.visibility
-                        : Icons.visibility_off),
+                    icon: Icon(
+                        controller.isPasswordVisible.value
+                            ? Icons.visibility
+                            : Icons.visibility_off,
+                        color: Colors.white.withValues(alpha: 0.5)),
                     onPressed: controller.togglePasswordVisibility,
                   ),
                   focusedBorder: OutlineInputBorder(
@@ -724,9 +727,11 @@ class RegisterPage extends GetView<RegisterController> {
                       ? 'Konfirmasi password tidak cocok'
                       : null,
                   suffixIcon: IconButton(
-                    icon: Icon(controller.isConfirmPasswordVisible.value
-                        ? Icons.visibility
-                        : Icons.visibility_off),
+                    icon: Icon(
+                        controller.isConfirmPasswordVisible.value
+                            ? Icons.visibility
+                            : Icons.visibility_off,
+                        color: Colors.white.withValues(alpha: 0.5)),
                     onPressed: controller.toggleConfirmPasswordVisibility,
                   ),
                   focusedBorder: OutlineInputBorder(
@@ -752,6 +757,12 @@ class RegisterPage extends GetView<RegisterController> {
                 () => Row(
                   children: [
                     Checkbox(
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(4),
+                      ),
+                      side: BorderSide(
+                        color: Colors.white.withValues(alpha: 0.7),
+                      ),
                       value: controller.isAgreed.value,
                       activeColor: colorBackground,
                       onChanged: (value) {
