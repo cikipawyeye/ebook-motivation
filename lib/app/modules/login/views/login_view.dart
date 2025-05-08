@@ -180,7 +180,8 @@ class LoginView extends GetView<LoginController> {
             const SizedBox(height: 40),
 
             // Login Button
-            ElevatedButton(
+            Center(
+                child: ElevatedButton(
               onPressed: () async {
                 if (isSubmitting.value) return; // Prevent multiple submissions
 
@@ -212,11 +213,8 @@ class LoginView extends GetView<LoginController> {
                 isSubmitting.value = false;
               },
               style: ElevatedButton.styleFrom(
-                padding: EdgeInsets.symmetric(vertical: 10),
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(30),
-                ),
-                backgroundColor: Color(0xFF32497B),
+                minimumSize: Size(180, 40),
+                backgroundColor: Color(0xFF32497B).withValues(alpha: 0.7),
               ),
               child: Obx(() => Text(
                     isSubmitting.value ? 'Loading...' : 'Masuk',
@@ -227,7 +225,7 @@ class LoginView extends GetView<LoginController> {
                       ),
                     ),
                   )),
-            ),
+            )),
             const SizedBox(height: 50),
 
             // Link Lupa Kata Sandi
@@ -257,7 +255,7 @@ class LoginView extends GetView<LoginController> {
                     TextSpan(
                       text: 'Daftar sekarang',
                       style: GoogleFonts.leagueSpartan(
-                          color: Colors.blue, fontWeight: FontWeight.bold),
+                          color: Colors.white, fontWeight: FontWeight.bold),
                     ),
                   ]),
                 ),
