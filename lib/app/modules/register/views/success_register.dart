@@ -33,7 +33,7 @@ class SuccessRegister extends GetView<RegisterController> {
               ),
               const SizedBox(height: 20),
               Text(
-                'Alhamdulillah\nakun sudah berhasil dibuat.',
+                'Alhamdulillah\nakun sudah berhasil dibuat',
                 textAlign: TextAlign.center,
                 style: GoogleFonts.leagueSpartan(
                   fontSize: 24,
@@ -42,9 +42,8 @@ class SuccessRegister extends GetView<RegisterController> {
                 ),
               ),
               const SizedBox(height: 10),
-              // Teks "Lakukan masuk kembali"
               Text(
-                'Lakukan masuk kembali',
+                'Silahkan Login',
                 style: GoogleFonts.leagueSpartan(
                   fontSize: 16,
                   color: Colors.white.withValues(alpha: 0.7),
