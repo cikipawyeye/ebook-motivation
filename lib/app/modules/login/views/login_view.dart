@@ -1,8 +1,8 @@
+import 'package:ebookapp/app/modules/login/controllers/login_controller.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:shared_preferences/shared_preferences.dart'; // Import SharedPreferences
-import '../controllers/login_controller.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class LoginView extends GetView<LoginController> {
   LoginView({super.key});
@@ -15,14 +15,14 @@ class LoginView extends GetView<LoginController> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.white,
-      body: Container(
-        decoration: BoxDecoration(
-          image: DecorationImage(
-            image: AssetImage("assets/images/Template.png"),
-            fit: BoxFit.cover,
-          ),
+      body: Stack(children: [
+        Image.asset(
+          'assets/images/background.gif',
+          fit: BoxFit.cover,
+          width: double.infinity,
+          height: double.infinity,
         ),
-        child: ListView(
+        ListView(
           padding: const EdgeInsets.all(20),
           children: [
             SizedBox(height: 50),
@@ -264,8 +264,8 @@ class LoginView extends GetView<LoginController> {
               ),
             ),
           ],
-        ),
-      ),
+        )
+      ]),
     );
   }
 }

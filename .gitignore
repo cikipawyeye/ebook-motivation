@@ -2,7 +2,8 @@
 *.class
 *.log
 *.pyc
-*.gif  
+*.gif
+!assets/images/background.gif  
 *.swp
 .DS_Store
 .atom/
