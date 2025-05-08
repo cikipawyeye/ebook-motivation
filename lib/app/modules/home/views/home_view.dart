@@ -24,6 +24,7 @@ class HomeView extends GetView<HomeController> {
 
     return Obx(
       () => Scaffold(
+        resizeToAvoidBottomInset: false,
         backgroundColor: Colors.white,
         appBar: AppBar(
           title: Text(
@@ -64,22 +65,10 @@ class HomeView extends GetView<HomeController> {
                 children: [
                   Container(
                     padding: EdgeInsets.all(10),
-                    child: RichText(
-                      textAlign: TextAlign.left,
-                      text: TextSpan(
-                        text:
-                            'Assalamualaikum, ${controller.userResponse.value?.user.name} \n\n',
-                        style: _getTextStyle(fontSize: 24, color: Colors.white),
-                        children: <TextSpan>[
-                          TextSpan(
-                            text:
-                                'Terima kasih sudah mendaftar kesini.\nOya, buku ini berisi motivasi yang menyejukkan hati, serta pengingat yang berpedoman kepada Al-Qur\'an. Semoga dapat bermanfaat dan menambah semangat dalam kehidupan sehari-hari ya.... Aamiin Ya Robbal Alamin.',
-                            style: _getTextStyle(
-                                fontSize: 13,
-                                color: Colors.white.withValues(alpha: 0.8)),
-                          ),
-                        ],
-                      ),
+                    child: Text(
+                      "Terima kasih.\nSemoga bermanfaat.",
+                      style: GoogleFonts.leagueSpartan(
+                          fontSize: 24, color: Colors.white),
                     ),
                   ),
                   const SizedBox(height: 20),
@@ -276,6 +265,7 @@ class HomeView extends GetView<HomeController> {
             child: Container(
                 decoration: BoxDecoration(
                   image: DecorationImage(
+                    alignment: Alignment.topCenter,
                     image: AssetImage("assets/images/Template.png"),
                     fit: BoxFit.cover,
                   ),
@@ -331,17 +321,46 @@ class HomeView extends GetView<HomeController> {
                                 padding: const EdgeInsets.all(8.0),
                                 child: Row(
                                   children: [
-                                    const Icon(Icons.search,
-                                        color: Colors.grey),
+                                    Icon(Icons.search,
+                                        color: Colors.white
+                                            .withValues(alpha: 0.7)),
                                     const SizedBox(width: 8),
                                     Expanded(
                                       child: TextField(
                                         controller: searchController,
+                                        style: TextStyle(
+                                          color: Colors.white,
+                                        ),
                                         decoration: InputDecoration(
+                                          contentPadding: EdgeInsets.symmetric(
+                                              horizontal: 18),
+                                          floatingLabelBehavior:
+                                              FloatingLabelBehavior.never,
                                           hintText: 'Cari...',
+                                          hintStyle: TextStyle(
+                                            fontSize: 12,
+                                            color: Colors.white
+                                                .withValues(alpha: 0.5),
+                                          ),
+                                          focusedBorder: OutlineInputBorder(
+                                            borderRadius:
+                                                BorderRadius.circular(30),
+                                            borderSide: BorderSide(
+                                                color: Colors.white
+                                                    .withValues(alpha: 0.5),
+                                                width: 1.0),
+                                          ),
+                                          enabledBorder: OutlineInputBorder(
+                                            borderRadius:
+                                                BorderRadius.circular(30),
+                                            borderSide: BorderSide(
+                                                color: Colors.white
+                                                    .withValues(alpha: 0.5),
+                                                width: 1.0),
+                                          ),
                                           border: OutlineInputBorder(
                                             borderRadius:
-                                                BorderRadius.circular(10),
+                                                BorderRadius.circular(30),
                                           ),
                                         ),
                                         onChanged: (text) {
@@ -351,12 +370,14 @@ class HomeView extends GetView<HomeController> {
                                       ),
                                     ),
                                     IconButton(
-                                      icon: const Icon(Icons.clear,
-                                          color: Colors.black),
+                                      icon: Icon(Icons.clear,
+                                          color: Colors.white
+                                              .withValues(alpha: 0.7)),
                                       onPressed: () {
                                         searchController.clear();
                                         subcategoryController
                                             .searchQuery.value = '';
+                                        isSearching.value = false;
                                       },
                                     ),
                                   ],
@@ -392,11 +413,34 @@ class HomeView extends GetView<HomeController> {
 
                         if (filteredSubcategories.isEmpty) {
                           return Center(
-                            child: Text(
-                              category == Category.motivasi
-                                  ? "Tidak ada motivasi ditemukan"
-                                  : "Tidak ada pengingat ditemukan",
-                              style: TextStyle(color: Colors.grey),
+                            child: Column(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                Text(
+                                  category == Category.motivasi
+                                      ? "Tidak ada motivasi ditemukan"
+                                      : "Tidak ada pengingat ditemukan",
+                                  style: TextStyle(
+                                      color:
+                                          Colors.white.withValues(alpha: 0.6)),
+                                ),
+                                SizedBox(height: 20),
+                                ElevatedButton(
+                                    style: ElevatedButton.styleFrom(
+                                      backgroundColor:
+                                          Colors.white.withValues(alpha: 0.3),
+                                    ),
+                                    onPressed: () =>
+                                        category == Category.motivasi
+                                            ? subcategoryController
+                                                .fetchMotivationSubcategories()
+                                            : subcategoryController
+                                                .fetchReminderSubcategories(),
+                                    child: Text(
+                                      "Refresh",
+                                      style: TextStyle(color: Colors.white),
+                                    ))
+                              ],
                             ),
                           );
                         }
