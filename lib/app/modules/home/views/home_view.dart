@@ -111,10 +111,10 @@ class HomeView extends GetView<HomeController> {
                           Positioned(
                             right: 16,
                             bottom: 16,
-                            child: Text(
-                              '>',
-                              style: _getTextStyle(
-                                  fontSize: 24, color: Colors.white),
+                            child: const Icon(
+                              Icons.east,
+                              color: Colors.white,
+                              size: 34,
                             ),
                           ),
                         ],
@@ -161,10 +161,10 @@ class HomeView extends GetView<HomeController> {
                           Positioned(
                             right: 16,
                             bottom: 16,
-                            child: Text(
-                              '>',
-                              style: _getTextStyle(
-                                  fontSize: 24, color: Colors.white),
+                            child: const Icon(
+                              Icons.east,
+                              color: Colors.white,
+                              size: 34,
                             ),
                           ),
                         ],
