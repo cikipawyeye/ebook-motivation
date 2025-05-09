@@ -71,6 +71,9 @@ class AudioController extends GetxController {
       _audioPlayer.setVolume(audioVolume.value),
       _audioPlayer.setReleaseMode(ReleaseMode.loop),
     ]);
+
+    await _audioPlayer.resume();
+    isPlaying.value = true;
   }
 
   Future<String> _getLocalAudioPath(int musicId) async {
