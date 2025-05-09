@@ -8,6 +8,7 @@ import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:intl/intl.dart'; // Untuk memformat tanggal
 
+// ignore: must_be_immutable
 class AccountSettings extends GetView<SettingsController> {
   AccountSettings({super.key}) {
     userController.fetchUserProfile(); // Fetch data saat widget dibuat
@@ -27,7 +28,7 @@ class AccountSettings extends GetView<SettingsController> {
   final _job = ''.obs; // Untuk menyimpan pekerjaan
 
   // Daftar pilihan gender
-  final Map<String, String> GenderOptions = {
+  final Map<String, String> genderOptions = {
     'M': 'Pria',
     'F': 'Wanita',
   };
@@ -84,12 +85,15 @@ class AccountSettings extends GetView<SettingsController> {
           ),
           centerTitle: true,
           backgroundColor: themeController.currentColor,
+          iconTheme: const IconThemeData(
+            color: Colors.white,
+          ),
         ),
         body: Container(
           decoration: BoxDecoration(
             image: DecorationImage(
-              image: AssetImage('assets/images/Watermark.png'),
-              fit: BoxFit.cover, // Mengatur gambar agar menutupi seluruh area
+              image: AssetImage("assets/images/Template.png"),
+              fit: BoxFit.cover,
             ),
           ),
           child: Obx(() {
@@ -126,189 +130,214 @@ class AccountSettings extends GetView<SettingsController> {
                       '';
             }
 
-            return Padding(
-              padding: const EdgeInsets.all(16.0),
-              child: Form(
-                key: _formKey,
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    const SizedBox(height: 20),
-                    _buildTextField(
-                      label: 'Nama',
-                      controller: _nameController,
-                      isEditing: isEditing.value,
-                    ),
-                    const SizedBox(height: 20),
-                    _buildTextField(
-                      label: 'Email',
-                      controller: _emailController,
-                      isEditing: isEditing.value,
-                    ),
-                    const SizedBox(height: 20),
-                    // Field Gender (Dropdown)
-                    DropdownButtonFormField<String>(
-                      value: _gender.value.isNotEmpty ? _gender.value : null,
-                      decoration: InputDecoration(
-                        labelText: 'Pilih Gender',
-                        border: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(20),
-                        ),
-                        filled: true,
-                        fillColor: Colors.white.withValues(alpha: 0.7),
-                      ),
-                      items: GenderOptions.entries.map((entry) {
-                        return DropdownMenuItem(
-                          value: entry.key,
-                          child: Text(entry.value),
-                        );
-                      }).toList(),
-                      onChanged: isEditing.value
-                          ? (value) {
-                              _gender.value = value!;
-                            }
-                          : null, // Nonaktifkan jika tidak dalam mode edit
-                      validator: (value) {
-                        if (value == null || value.isEmpty) {
-                          return 'Gender wajib diisi.';
+            return Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Expanded(
+                    child: SingleChildScrollView(
+                        padding: EdgeInsets.all(12),
+                        child: Form(
+                            key: _formKey,
+                            child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  const SizedBox(height: 20),
+                                  _buildTextField(
+                                    label: 'Nama',
+                                    controller: _nameController,
+                                    isEditing: isEditing.value,
+                                  ),
+                                  const SizedBox(height: 20),
+                                  _buildTextField(
+                                    label: 'Email',
+                                    controller: _emailController,
+                                    isEditing: isEditing.value,
+                                  ),
+                                  const SizedBox(height: 20),
+                                  // Field Gender (Dropdown)
+                                  DropdownButtonFormField<String>(
+                                    value: _gender.value.isNotEmpty
+                                        ? _gender.value
+                                        : null,
+                                    decoration: InputDecoration(
+                                      labelText: 'Pilih Gender',
+                                      labelStyle: TextStyle(
+                                        color:
+                                            Colors.white.withValues(alpha: 0.7),
+                                      ),
+                                      border: OutlineInputBorder(
+                                        borderRadius: BorderRadius.circular(20),
+                                      ),
+                                    ),
+                                    items: genderOptions.entries.map((entry) {
+                                      return DropdownMenuItem(
+                                        value: entry.key,
+                                        child: Text(entry.value,
+                                            style:
+                                                TextStyle(color: Colors.white)),
+                                      );
+                                    }).toList(),
+                                    onChanged: isEditing.value
+                                        ? (value) {
+                                            _gender.value = value!;
+                                          }
+                                        : null, // Nonaktifkan jika tidak dalam mode edit
+                                    validator: (value) {
+                                      if (value == null || value.isEmpty) {
+                                        return 'Gender wajib diisi.';
+                                      }
+                                      return null;
+                                    },
+                                    dropdownColor:
+                                        Colors.black.withValues(alpha: 0.7),
+                                  ),
+                                  const SizedBox(height: 20),
+                                  // Field Nomor Telepon
+                                  _buildTextField(
+                                    label: 'Nomor Telepon',
+                                    controller: _phoneController,
+                                    isEditing: isEditing.value,
+                                    validator: (value) {
+                                      if (value == null || value.isEmpty) {
+                                        return 'Nomor Telepon wajib diisi.';
+                                      }
+                                      return null;
+                                    },
+                                  ),
+                                  const SizedBox(height: 20),
+                                  // Field Tanggal Lahir
+                                  GestureDetector(
+                                    onTap: isEditing.value
+                                        ? () => _selectBirthDate(
+                                            context) // Pilih tanggal lahir
+                                        : null, // Nonaktifkan jika tidak dalam mode edit
+                                    child: AbsorbPointer(
+                                      absorbing: !isEditing
+                                          .value, // Nonaktifkan interaksi jika tidak dalam mode edit
+                                      child: TextFormField(
+                                        controller: _birthDateController,
+                                        decoration: InputDecoration(
+                                          labelText: 'Tanggal Lahir',
+                                          border: OutlineInputBorder(
+                                            borderRadius:
+                                                BorderRadius.circular(20),
+                                          ),
+                                          labelStyle: TextStyle(
+                                            color: Colors.white
+                                                .withValues(alpha: 0.7),
+                                          ),
+                                        ),
+                                        style: TextStyle(
+                                          color: Colors.white,
+                                        ),
+                                        validator: (value) {
+                                          if (value == null || value.isEmpty) {
+                                            return 'Tanggal Lahir wajib diisi.';
+                                          }
+                                          return null;
+                                        },
+                                      ),
+                                    ),
+                                  ),
+                                  const SizedBox(height: 20),
+                                  // Widget Pencarian Kota
+                                  CitySearchWidget(
+                                    onCitySelected: (cityCode, cityName) {
+                                      _cityCode.value =
+                                          cityCode; // Simpan city_code
+                                      _cityController.text =
+                                          cityName; // Tampilkan nama kota
+                                    },
+                                    cityController: _cityController,
+                                    isEditing: isEditing
+                                        .value, // Kirim status isEditing ke widget
+                                  ),
+                                  const SizedBox(height: 20),
+                                  // Dropdown Pekerjaan
+                                  DropdownButtonFormField<String>(
+                                    value: _job.value.isNotEmpty
+                                        ? _job.value
+                                        : null,
+                                    decoration: InputDecoration(
+                                      labelText: 'Pekerjaan',
+                                      labelStyle: TextStyle(
+                                        color:
+                                            Colors.white.withValues(alpha: 0.7),
+                                      ),
+                                      border: OutlineInputBorder(
+                                        borderRadius: BorderRadius.circular(20),
+                                      ),
+                                    ),
+                                    items: userJob.entries.map((entry) {
+                                      return DropdownMenuItem(
+                                        value: entry.key,
+                                        child: Text(entry.value,
+                                            style:
+                                                TextStyle(color: Colors.white)),
+                                      );
+                                    }).toList(),
+                                    onChanged: isEditing.value
+                                        ? (value) {
+                                            _job.value = value!;
+                                          }
+                                        : null, // Nonaktifkan jika tidak dalam mode edit
+                                    validator: (value) {
+                                      if (value == null || value.isEmpty) {
+                                        return 'Tipe Pekerjaan wajib diisi.';
+                                      }
+                                      return null;
+                                    },
+                                    dropdownColor:
+                                        Colors.black.withValues(alpha: 0.7),
+                                  ),
+                                ])))),
+                SizedBox(height: 8),
+                Center(
+                  child: ElevatedButton(
+                    onPressed: () {
+                      if (isEditing.value) {
+                        // Jika sedang dalam mode edit, simpan data
+                        if (_formKey.currentState!.validate()) {
+                          // Kirim data ke server
+                          userController.updateUserProfile({
+                            'name': _nameController.text,
+                            'email': _emailController.text,
+                            'phone_number': _phoneController
+                                .text, // Pastikan key-nya "phone_number"
+                            'birth_date': _birthDateController
+                                .text, // Pastikan key-nya "birth_date"
+                            'city_code':
+                                _cityCode.value, // Pastikan key-nya "city_code"
+                            'job_type':
+                                _job.value, // Pastikan key-nya "job_type"
+                            'job':
+                                _jobController.text, // Pastikan key-nya "job"
+                            'gender':
+                                _gender.value, // Pastikan key-nya "gender"
+                          });
+                          isEditing.value = false; // Keluar dari mode edit
                         }
-                        return null;
-                      },
+                      } else {
+                        // Jika tidak dalam mode edit, aktifkan mode edit
+                        isEditing.value = true;
+                      }
+                    },
+                    style: ElevatedButton.styleFrom(
+                      minimumSize: Size(180, 40),
+                      backgroundColor: Colors.white.withValues(alpha: 0.3),
                     ),
-                    const SizedBox(height: 20),
-                    // Field Nomor Telepon
-                    _buildTextField(
-                      label: 'Nomor Telepon',
-                      controller: _phoneController,
-                      isEditing: isEditing.value,
-                      validator: (value) {
-                        if (value == null || value.isEmpty) {
-                          return 'Nomor Telepon wajib diisi.';
-                        }
-                        return null;
-                      },
-                    ),
-                    const SizedBox(height: 20),
-                    // Field Tanggal Lahir
-                    GestureDetector(
-                      onTap: isEditing.value
-                          ? () =>
-                              _selectBirthDate(context) // Pilih tanggal lahir
-                          : null, // Nonaktifkan jika tidak dalam mode edit
-                      child: AbsorbPointer(
-                        absorbing: !isEditing
-                            .value, // Nonaktifkan interaksi jika tidak dalam mode edit
-                        child: TextFormField(
-                          controller: _birthDateController,
-                          decoration: InputDecoration(
-                            labelText: 'Tanggal Lahir',
-                            border: OutlineInputBorder(
-                              borderRadius: BorderRadius.circular(20),
-                            ),
-                            filled: true,
-                            fillColor: Colors.white.withValues(alpha: 0.7),
-                          ),
-                          validator: (value) {
-                            if (value == null || value.isEmpty) {
-                              return 'Tanggal Lahir wajib diisi.';
-                            }
-                            return null;
-                          },
-                        ),
+                    child: Text(
+                      isEditing.value ? 'Simpan' : 'Ubah Data',
+                      style: GoogleFonts.leagueSpartan(
+                        color: Colors.white,
+                        fontSize: 16,
+                        fontWeight: FontWeight.bold,
                       ),
                     ),
-                    const SizedBox(height: 20),
-                    // Widget Pencarian Kota
-                    CitySearchWidget(
-                      onCitySelected: (cityCode, cityName) {
-                        _cityCode.value = cityCode; // Simpan city_code
-                        _cityController.text = cityName; // Tampilkan nama kota
-                      },
-                      cityController: _cityController,
-                      isEditing:
-                          isEditing.value, // Kirim status isEditing ke widget
-                    ),
-                    const SizedBox(height: 20),
-                    // Dropdown Pekerjaan
-                    DropdownButtonFormField<String>(
-                      value: _job.value.isNotEmpty ? _job.value : null,
-                      decoration: InputDecoration(
-                        labelText: 'Pekerjaan',
-                        border: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(20),
-                        ),
-                        filled: true,
-                        fillColor: Colors.white.withValues(alpha: 0.7),
-                      ),
-                      items: userJob.entries.map((entry) {
-                        return DropdownMenuItem(
-                          value: entry.key,
-                          child: Text(entry.value),
-                        );
-                      }).toList(),
-                      onChanged: isEditing.value
-                          ? (value) {
-                              _job.value = value!;
-                            }
-                          : null, // Nonaktifkan jika tidak dalam mode edit
-                      validator: (value) {
-                        if (value == null || value.isEmpty) {
-                          return 'Tipe Pekerjaan wajib diisi.';
-                        }
-                        return null;
-                      },
-                    ),
-                    const Spacer(), // Mengisi ruang kosong agar tombol berada di bawah
-                    Center(
-                      child: ElevatedButton(
-                        onPressed: () {
-                          if (isEditing.value) {
-                            // Jika sedang dalam mode edit, simpan data
-                            if (_formKey.currentState!.validate()) {
-                              // Kirim data ke server
-                              userController.updateUserProfile({
-                                'name': _nameController.text,
-                                'email': _emailController.text,
-                                'phone_number': _phoneController
-                                    .text, // Pastikan key-nya "phone_number"
-                                'birth_date': _birthDateController
-                                    .text, // Pastikan key-nya "birth_date"
-                                'city_code': _cityCode
-                                    .value, // Pastikan key-nya "city_code"
-                                'job_type':
-                                    _job.value, // Pastikan key-nya "job_type"
-                                'job': _jobController
-                                    .text, // Pastikan key-nya "job"
-                                'gender':
-                                    _gender.value, // Pastikan key-nya "gender"
-                              });
-                              isEditing.value = false; // Keluar dari mode edit
-                            }
-                          } else {
-                            // Jika tidak dalam mode edit, aktifkan mode edit
-                            isEditing.value = true;
-                          }
-                        },
-                        style: ElevatedButton.styleFrom(
-                          minimumSize:
-                              const Size(344, 50), // Lebar 344, tinggi 50
-                          backgroundColor:
-                              themeController.currentColor, // Warna tombol
-                        ),
-                        child: Text(
-                          isEditing.value ? 'Simpan' : 'Ubah Data',
-                          style: GoogleFonts.leagueSpartan(
-                            color: Colors.white,
-                            fontSize: 16,
-                            fontWeight: FontWeight.bold,
-                          ),
-                        ),
-                      ),
-                    ),
-                    const SizedBox(height: 20), // Jarak di bawah tombol
-                  ],
+                  ),
                 ),
-              ),
+                const SizedBox(height: 20), // Jarak di bawah tombol
+              ],
             );
           }),
         ),
@@ -327,16 +356,15 @@ class AccountSettings extends GetView<SettingsController> {
       readOnly: !isEditing, // Hanya bisa diubah jika dalam mode edit
       decoration: InputDecoration(
         labelText: label,
+        labelStyle: TextStyle(
+          color: Colors.white.withValues(alpha: 0.7), // Warna label
+        ),
         border: OutlineInputBorder(
           borderRadius: BorderRadius.circular(20), // Border radius 20
-        ),
-        filled: true,
-        fillColor: Colors.white
-            .withValues(alpha: 0.7), // Warna latar belakang dengan transparansi
+        ), // Warna latar belakang dengan transparansi
       ),
       style: TextStyle(
-        color: Colors.black
-            .withValues(alpha: 0.7), // Warna teks dengan transparansi
+        color: Colors.white, // Warna teks dengan transparansi
       ),
       validator: validator,
     );

@@ -90,12 +90,15 @@ class _CitySearchWidgetState extends State<CitySearchWidget> {
                   : null, // Nonaktifkan jika tidak dalam mode edit
               readOnly:
                   !widget.isEditing, // Hanya bisa diedit jika dalam mode edit
+              style: const TextStyle(color: Colors.white),
               decoration: InputDecoration(
-                labelText: 'Domisili',
+                labelStyle:
+                    TextStyle(color: Colors.white.withValues(alpha: 0.7)),
+                labelText: 'Domisili (Kota/Kabupaten)',
                 hintText: 'Cari kota...',
                 border: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(20)
-                ), // Hilangkan border default TextField
+                    borderRadius: BorderRadius.circular(
+                        20)), // Hilangkan border default TextField
                 contentPadding:
                     const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
               ),
