@@ -4,7 +4,6 @@ import 'package:intl/intl.dart';
 import 'package:intl/date_symbol_data_local.dart';
 import 'package:ebookapp/app/modules/account_upgrade/controllers/payment_detail_controller.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:ebookapp/core/constants/constant.dart';
@@ -280,31 +279,48 @@ class PaymentDetailView extends GetView<PaymentDetailController> {
                                         child: Column(
                                           crossAxisAlignment:
                                               CrossAxisAlignment.start,
-                                          children: [
-                                            Text(
-                                              '1. Pilih m-Transfer > BCA Virtual Account',
-                                              style: GoogleFonts.leagueSpartan(
-                                                  fontSize: 14),
-                                            ),
-                                            const SizedBox(height: 8),
-                                            Text(
-                                              '2. Masukkan nomor Virtual Account ${controller.virtualAccount.value?.channelProperties.virtualAccountNumber ?? ""} dan pilih send.',
-                                              style: GoogleFonts.leagueSpartan(
-                                                  fontSize: 14),
-                                            ),
-                                            const SizedBox(height: 8),
-                                            Text(
-                                              '3. Periksa informasi yang tertera di layar. Pastikan tagihan dan merchant sudah sesuai.',
-                                              style: GoogleFonts.leagueSpartan(
-                                                  fontSize: 14),
-                                            ),
-                                            const SizedBox(height: 8),
-                                            Text(
-                                              '4. Masukkan pin-BCA anda dan klik OK.',
-                                              style: GoogleFonts.leagueSpartan(
-                                                  fontSize: 14),
-                                            ),
-                                          ],
+                                          children: controller
+                                                  .getPaymentInstructions()
+                                                  ?.expand((instruction) {
+                                                return [
+                                                  // Title
+                                                  if (instruction.title != null)
+                                                    Text(
+                                                      instruction.title!,
+                                                      style: GoogleFonts
+                                                          .leagueSpartan(
+                                                              fontSize: 14,
+                                                              fontWeight:
+                                                                  FontWeight
+                                                                      .bold),
+                                                    ),
+                                                  const SizedBox(height: 8),
+                                                  // Instruction list
+                                                  ...?instruction.instruction
+                                                      ?.map((text) => Column(
+                                                            crossAxisAlignment:
+                                                                CrossAxisAlignment
+                                                                    .start,
+                                                            children: [
+                                                              Text(
+                                                                text,
+                                                                style: GoogleFonts
+                                                                    .leagueSpartan(
+                                                                        fontSize:
+                                                                            14),
+                                                              ),
+                                                              const SizedBox(
+                                                                  height: 8),
+                                                            ],
+                                                          )),
+                                                  const SizedBox(height: 16),
+                                                ];
+                                              }).toList() ??
+                                              [
+                                                Center(
+                                                    child:
+                                                        CircularProgressIndicator())
+                                              ],
                                         ),
                                       ),
                                     ],

@@ -136,4 +136,187 @@ class PaymentDetailController extends GetxController {
       }
     });
   }
+
+  List<PaymentInstruction>? getPaymentInstructions() {
+    if (payment.value?.paymentMethod.type == PaymentMethodType.virtualAccount &&
+        payment.value?.paymentMethod.virtualAccount != null) {
+      if (payment.value?.paymentMethod.virtualAccount!.channelCode ==
+          VirtualAccountChannel.bri) {
+        return [
+          PaymentInstruction(title: '1. Melalui ATM BRI:', instruction: [
+            '- Masukan kartu ATM BRI dan PIN Anda.',
+            '- Pilih menu "Transaksi Lain".',
+            '- Pilih menu "Pembayaran".',
+            '- Pilih menu "Lainnya".',
+            '- Pilih menu "BRIVA".',
+            '- Masukkan nomor Virtual Account (BRIVA).',
+            '- Konfirmasi data pembayaran dan lanjutkan transaksi.'
+          ]),
+          PaymentInstruction(
+              title: '2. Melalui BRImo (Mobile Banking):',
+              instruction: [
+                '- Login ke aplikasi BRImo.',
+                '- Pilih menu "Pembayaran".',
+                '- Pilih menu "BRIVA".',
+                '- Masukkan nomor Virtual Account.',
+                '- Konfirmasi transaksi dan bayar.'
+              ]),
+        ];
+      }
+
+      if (payment.value?.paymentMethod.virtualAccount!.channelCode ==
+          VirtualAccountChannel.bni) {
+        return [
+          PaymentInstruction(title: '1. Melalui ATM BNI:', instruction: [
+            '- Masukkan kartu ATM dan PIN Anda.',
+            '- Pilih menu "Lainnya", lalu "Transfer".',
+            '- Pilih jenis rekening yang akan digunakan (misalnya, Tabungan).',
+            '- Pilih "Virtual Account Billing".',
+            '- Masukkan nomor Virtual Account (VA).',
+            '- Tagihan akan ditampilkan, konfirmasi jika sesuai dan lanjutkan transaksi.'
+          ]),
+          PaymentInstruction(
+              title: '2. Melalui BNI Mobile Banking:',
+              instruction: [
+                '- Buka aplikasi BNI Mobile Banking dan login.',
+                '- Pilih menu "Transfer", lalu "Virtual Account Billing".',
+                '- Pilih rekening yang akan digunakan.',
+                '- Masukkan nomor Virtual Account (VA).',
+                '- Tagihan akan ditampilkan, konfirmasi jika sesuai dan masukkan PIN transaksi.'
+              ]),
+        ];
+      }
+
+      if (payment.value?.paymentMethod.virtualAccount!.channelCode ==
+          VirtualAccountChannel.mandiri) {
+        return [
+          PaymentInstruction(title: '1. Melalui ATM Mandiri:', instruction: [
+            '- Masukkan kartu ATM dan PIN Anda.',
+            '- Pilih menu "Bayar/Beli".',
+            '- Pilih "Multi Payment".',
+            '- Masukkan nomor Virtual Account (VA).',
+            '- Masukkan nominal pembayaran.',
+            '- Konfirmasikan dan simpan struk.'
+          ]),
+          PaymentInstruction(
+              title: '2. Melalui Livin\' by Mandiri:',
+              instruction: [
+                '- Login ke aplikasi Livin\' by Mandiri.',
+                '- Pilih menu "Bayar/VA".',
+                '- Masukkan nomor Virtual Account (VA).',
+                '- Pilih sumber dana.',
+                '- Konfirmasi dan masukkan PIN.'
+              ]),
+        ];
+      }
+
+      if (payment.value?.paymentMethod.virtualAccount!.channelCode ==
+          VirtualAccountChannel.bsi) {
+        return [
+          PaymentInstruction(title: '1. Melalui ATM BSI:', instruction: [
+            '- Masukkan kartu ATM dan PIN Anda.',
+            '- Pilih menu "Transfer".',
+            '- Pilih "Virtual Account Billing".',
+            '- Masukkan nomor Virtual Account (VA).',
+            '- Konfirmasi detail transaksi dan masukkan PIN.'
+          ]),
+          PaymentInstruction(title: '2. Melalui BSI Mobile:', instruction: [
+            '- Buka aplikasi BSI Mobile dan login.',
+            '- Pilih menu "Bayar".',
+            '- Pilih "Akademik" (atau menu terkait, seperti "Institusi").',
+            '- Masukkan kode institusi (jika ada).',
+            '- Masukkan nomor VA tanpa kode institusi (jika ada).',
+            '- Konfirmasi detail transaksi dan masukkan PIN.'
+          ]),
+        ];
+      }
+
+      if (payment.value?.paymentMethod.virtualAccount!.channelCode ==
+          VirtualAccountChannel.bjb) {
+        return [
+          PaymentInstruction(
+              title: '1. Melalui Aplikasi DIGI bank bjb:',
+              instruction: [
+                '- Login ke aplikasi DIGI bank bjb.',
+                '- Pilih menu "Transfer".',
+                '- Pilih "Virtual Account" atau "Transfer Antar Bank".',
+                '- Masukkan nomor Virtual Account yang akan dibayarkan.',
+                '- Konfirmasi pembayaran dan masukkan m-PIN.',
+                '- Transaksi selesai.'
+              ]),
+          PaymentInstruction(title: '2. Melalui ATM Bank bjb:', instruction: [
+            '- Masukkan kartu ATM dan PIN.',
+            '- Pilih menu "Transaksi Lainnya" > "Virtual Account".',
+            '- Pilih jenis rekening (Tabungan atau Giro).',
+            '- Masukkan nomor Virtual Account.',
+            '- Konfirmasi pembayaran dan pilih "Ya".',
+            '- Struk pembayaran akan keluar.'
+          ]),
+        ];
+      }
+
+      if (payment.value?.paymentMethod.virtualAccount!.channelCode ==
+          VirtualAccountChannel.cimb) {
+        return [
+          PaymentInstruction(title: '1. Melalui ATM CIMB Niaga:', instruction: [
+            '- Masukkan kartu ATM CIMB Niaga dan PIN.',
+            '- Pilih menu "Pembayaran" lalu "Virtual Account".',
+            '- Masukkan nomor VA yang diberikan.',
+            '- Konfirmasi data pembayaran, lalu pilih "Proses" atau "Lanjut".',
+            '- Ambil bukti pembayaran.'
+          ]),
+          PaymentInstruction(
+              title: '2. Melalui CIMB Clicks atau OCTO Mobile:',
+              instruction: [
+                '- Login ke CIMB Clicks atau OCTO Mobile.',
+                '- Pilih menu "Transfer" atau "Bayar Tagihan" - lalu "Virtual Account".',
+                '- Pilih rekening sumber dana.',
+                '- Masukkan nomor VA dan jumlah pembayaran.',
+                '- Konfirmasi data pembayaran, lalu masukkan mPIN atau PIN Mobile.',
+                '- Pembayaran selesai, bukti pembayaran akan dikirim via SMS.'
+              ]),
+        ];
+      }
+
+      return [
+        PaymentInstruction(title: '1. Melalui ATM:', instruction: [
+          '- Masukkan kartu ATM dan PIN Anda.',
+          '- Pilih menu "Transfer".',
+          '- Pilih "Virtual Account".',
+          '- Masukkan nomor Virtual Account (VA).',
+          '- Konfirmasi pembayaran dan simpan struk.'
+        ]),
+        PaymentInstruction(title: '2. Melalui Mobile Banking:', instruction: [
+          '- Buka aplikasi mobile banking dan login.',
+          '- Pilih menu "Transfer".',
+          '- Pilih menu "Virtual Account".',
+          '- Masukkan nomor Virtual Account (VA).',
+          '- Konfirmasi pembayaran dan masukkan PIN.'
+        ])
+      ];
+    }
+
+    if (payment.value?.paymentMethod.type == PaymentMethodType.qrCode &&
+        payment.value?.paymentMethod.qrCode != null) {
+      return [
+        PaymentInstruction(title: null, instruction: [
+          '- Screenshoot kode QR pada aplikasi.',
+          '- Login ke aplikasi mobile banking atau dompet digital Anda.',
+          '- Pilih menu QR.',
+          '- Lalu upload hasil foto screenshoot dari aplikasi dan jumlah pembayaran (jika ada).',
+          '- Masukan pin Anda.',
+          '- Pembayaran selesai.'
+        ])
+      ];
+    }
+
+    return null;
+  }
+}
+
+final class PaymentInstruction {
+  String? title;
+  List<String>? instruction;
+
+  PaymentInstruction({this.title, this.instruction});
 }
