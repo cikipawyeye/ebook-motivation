@@ -29,12 +29,15 @@ class AccountStatusView extends GetView<AccountStatusController> {
             ),
           ),
           centerTitle: true,
-          backgroundColor: themeController.currentColor, // Warna biru gelap
+          backgroundColor: themeController.currentColor,
+          iconTheme: const IconThemeData(
+            color: Colors.white, // Ubah warna ikon menjadi putih
+          ),
         ),
         body: Container(
           decoration: BoxDecoration(
             image: DecorationImage(
-              image: AssetImage('assets/images/Watermark.png'),
+              image: AssetImage('assets/images/Template.png'),
               fit: BoxFit.cover, // Mengatur gambar agar menutupi seluruh area
             ),
           ),
@@ -53,60 +56,49 @@ class AccountStatusView extends GetView<AccountStatusController> {
                       AccountUpgradeStatus.premium) {
                 return Column(
                   children: [
-                    SizedBox(
-                      child: Card(
-                        color: Colors.white,
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(12),
-                          side: BorderSide(
-                            color: Colors.grey.withValues(alpha: 0.4),
-                          ),
+                    Card(
+                      color: Colors.transparent,
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(12),
+                        side: BorderSide(
+                          color: Colors.grey.withValues(alpha: 0.4),
                         ),
-                        elevation: 0,
-                        child: Padding(
-                          padding: const EdgeInsets.all(20),
-                          child: Column(
-                            mainAxisAlignment: MainAxisAlignment.start,
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Row(
-                                mainAxisAlignment: MainAxisAlignment.start,
-                                children: [
-                                  Image.asset(
-                                    'assets/images/hati_edge.png',
-                                    height: 30,
-                                    width: 30,
-                                  ),
-                                  const SizedBox(width: 12),
-                                  Text(
-                                    'Premium',
-                                    style: GoogleFonts.leagueSpartan(
-                                        fontSize: 14,
-                                        color: colorBackground,
-                                        fontWeight: FontWeight.bold),
-                                  ),
-                                ],
-                              ),
-                              const SizedBox(height: 15),
-                              Text(
-                                'Akun Anda sudah \nPremium',
-                                style: GoogleFonts.leagueSpartan(
-                                  fontSize: 30,
-                                  fontWeight: FontWeight.bold,
-                                  height: 0.95,
+                      ),
+                      elevation: 0,
+                      child: Padding(
+                        padding: const EdgeInsets.all(20),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Row(
+                              children: [
+                                Image.asset(
+                                  'assets/images/logo_white.png',
+                                  height: 60,
+                                  width: 60,
                                 ),
+                              ],
+                            ),
+                            const SizedBox(height: 15),
+                            Text(
+                              'Akun Anda sudah \nPremium',
+                              style: GoogleFonts.leagueSpartan(
+                                fontSize: 30,
+                                fontWeight: FontWeight.bold,
+                                height: 0.95,
+                                color: Colors.white,
                               ),
-                              const SizedBox(height: 8),
-                              Text(
-                                'Selamat menikmati fitur tanpa batas!',
-                                style: GoogleFonts.leagueSpartan(
-                                  fontSize: 14,
-                                  color: Colors.black,
-                                ),
+                            ),
+                            const SizedBox(height: 8),
+                            Text(
+                              'Selamat menikmati fitur tanpa batas!',
+                              style: GoogleFonts.leagueSpartan(
+                                fontSize: 14,
+                                color: Colors.white,
                               ),
-                              const SizedBox(height: 8),
-                            ],
-                          ),
+                            ),
+                            const SizedBox(height: 8),
+                          ],
                         ),
                       ),
                     )
@@ -119,7 +111,7 @@ class AccountStatusView extends GetView<AccountStatusController> {
                 children: [
                   SizedBox(
                     child: Card(
-                      color: Colors.white,
+                      color: Colors.transparent,
                       shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(12),
                         side: BorderSide(
@@ -136,17 +128,9 @@ class AccountStatusView extends GetView<AccountStatusController> {
                               mainAxisAlignment: MainAxisAlignment.start,
                               children: [
                                 Image.asset(
-                                  'assets/images/hati_edge.png',
-                                  height: 30,
-                                  width: 30,
-                                ),
-                                const SizedBox(width: 12),
-                                Text(
-                                  'Premium',
-                                  style: GoogleFonts.leagueSpartan(
-                                      fontSize: 14,
-                                      color: colorBackground,
-                                      fontWeight: FontWeight.bold),
+                                  'assets/images/logo_white.png',
+                                  height: 60,
+                                  width: 60,
                                 ),
                               ],
                             ),
@@ -154,31 +138,33 @@ class AccountStatusView extends GetView<AccountStatusController> {
                             Text(
                               'Nikmati fitur baca\ntanpa batas',
                               style: GoogleFonts.leagueSpartan(
-                                  fontSize: 30,
-                                  fontWeight: FontWeight.bold,
-                                  height: 0.95),
+                                fontSize: 30,
+                                fontWeight: FontWeight.bold,
+                                height: 0.95,
+                                color: Colors.white,
+                              ),
                             ),
                             const SizedBox(height: 10),
                             Text(
                               'Hanya Rp29.900 untuk selamanya!',
                               style: GoogleFonts.leagueSpartan(
                                 fontSize: 16,
-                                color: Colors.black,
+                                color: Colors.white,
                               ),
                             ),
                             const SizedBox(height: 10),
                             Text(
-                              '• Semua halaman terbuka',
+                              '• Semua konten dapat diakses',
                               style: GoogleFonts.leagueSpartan(
                                 fontSize: 16,
-                                color: Colors.black54,
+                                color: Colors.white.withValues(alpha: 0.9),
                               ),
                             ),
                             Text(
-                              '• Tidak ada iklan',
+                              '• Dapat menikmati fasilitas update selamanya',
                               style: GoogleFonts.leagueSpartan(
                                 fontSize: 16,
-                                color: Colors.black54,
+                                color: Colors.white.withValues(alpha: 0.9),
                               ),
                             ),
                             const SizedBox(height: 30),
