@@ -1,6 +1,5 @@
 import 'package:ebookapp/app/modules/settings/controllers/change_password_controller.dart';
 import 'package:ebookapp/app/modules/settings/controllers/setting_theme_controller.dart';
-import 'package:ebookapp/core/constants/constant.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -61,99 +60,107 @@ class _ChangePasswordState extends State<ChangePassword> {
           ),
         ),
         centerTitle: true,
-        backgroundColor: themeController.currentColor, // Warna biru gelap
+        backgroundColor: themeController.currentColor,
+        iconTheme: const IconThemeData(
+          color: Colors.white,
+        ),
       ),
       body: Container(
         decoration: BoxDecoration(
           image: DecorationImage(
-            image: AssetImage('assets/images/Watermark.png'),
-            fit: BoxFit.cover, // Mengatur gambar agar menutupi seluruh area
+            image: AssetImage("assets/images/Template.png"),
+            fit: BoxFit.cover,
           ),
         ),
-        child: Padding(
-          padding: const EdgeInsets.all(16.0),
-          child: Form(
-            key: _formKey,
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Center(
+        child: Column(
+          children: [
+            Expanded(
+                child: Form(
+              key: _formKey,
+              child: SingleChildScrollView(
+                  padding: EdgeInsets.all(12),
                   child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      SizedBox(height: 12),
-                      Text(
-                        'Atur ulang kata sandi',
-                        style: GoogleFonts.leagueSpartan(
-                          fontSize: 25,
-                          fontWeight: FontWeight.bold,
+                      Center(
+                        child: Column(
+                          children: [
+                            SizedBox(height: 12),
+                            Text(
+                              'Atur ulang kata sandi',
+                              style: GoogleFonts.leagueSpartan(
+                                fontSize: 25,
+                                fontWeight: FontWeight.bold,
+                                color: Colors.white,
+                              ),
+                            ),
+                            SizedBox(height: 8),
+                            Text(
+                              'Anda hanya dapat mengubah kata sandi \nsebanyak 2 kali dalam 30 hari',
+                              textAlign: TextAlign.center,
+                              style: TextStyle(
+                                fontSize: 12,
+                                color: Colors.white,
+                              ),
+                            ),
+                          ],
                         ),
                       ),
-                      SizedBox(height: 8),
-                      Text(
-                        'Anda hanya dapat mengubah kata sandi \nsebanyak 2 kali dalam 30 hari',
-                        textAlign: TextAlign.center,
-                        style: TextStyle(
-                          fontSize: 12,
-                          color: Colors.black,
-                        ),
+                      SizedBox(height: 20),
+                      _buildTextField(
+                        label: 'Kata sandi saat ini',
+                        controller: _currentPasswordController,
+                        obscureText: _obscureCurrentPassword,
+                        toggleObscureText: () {
+                          setState(() {
+                            _obscureCurrentPassword = !_obscureCurrentPassword;
+                          });
+                        },
+                      ),
+                      SizedBox(height: 20),
+                      _buildTextField(
+                        label: 'Kata sandi baru',
+                        controller: _newPasswordController,
+                        obscureText: _obscureNewPassword,
+                        toggleObscureText: () {
+                          setState(() {
+                            _obscureNewPassword = !_obscureNewPassword;
+                          });
+                        },
+                      ),
+                      SizedBox(height: 20),
+                      _buildTextField(
+                        label: 'Masukkan kembali kata sandi baru',
+                        controller: _confirmPasswordController,
+                        obscureText: _obscureConfirmPassword,
+                        toggleObscureText: () {
+                          setState(() {
+                            _obscureConfirmPassword = !_obscureConfirmPassword;
+                          });
+                        },
                       ),
                     ],
+                  )),
+            )),
+            Padding(
+                padding: EdgeInsets.all(12),
+                child: Center(
+                    child: ElevatedButton(
+                  onPressed: _submit,
+                  style: ElevatedButton.styleFrom(
+                    minimumSize: Size(180, 40),
+                    backgroundColor: Colors.white.withValues(alpha: 0.3),
                   ),
-                ),
-                SizedBox(height: 20),
-                _buildTextField(
-                  label: 'Kata sandi saat ini',
-                  controller: _currentPasswordController,
-                  obscureText: _obscureCurrentPassword,
-                  toggleObscureText: () {
-                    setState(() {
-                      _obscureCurrentPassword = !_obscureCurrentPassword;
-                    });
-                  },
-                ),
-                SizedBox(height: 20),
-                _buildTextField(
-                  label: 'Kata sandi baru',
-                  controller: _newPasswordController,
-                  obscureText: _obscureNewPassword,
-                  toggleObscureText: () {
-                    setState(() {
-                      _obscureNewPassword = !_obscureNewPassword;
-                    });
-                  },
-                ),
-                SizedBox(height: 20),
-                _buildTextField(
-                  label: 'Masukkan kembali kata sandi baru',
-                  controller: _confirmPasswordController,
-                  obscureText: _obscureConfirmPassword,
-                  toggleObscureText: () {
-                    setState(() {
-                      _obscureConfirmPassword = !_obscureConfirmPassword;
-                    });
-                  },
-                ),
-                Spacer(), // Mengisi ruang kosong agar tombol berada di bawah
-                Center(
-                  child: ElevatedButton(
-                    onPressed: _submit,
-                    style: ElevatedButton.styleFrom(
-                      minimumSize: Size(344, 50),
-                      backgroundColor: themeController.currentColor,
-                    ),
-                    child: Text(
-                      'Simpan',
-                      style: GoogleFonts.leagueSpartan(
-                        color: Colors.white,
-                        fontSize: 16,
-                        fontWeight: FontWeight.bold,
-                      ),
+                  child: Text(
+                    'Simpan',
+                    style: GoogleFonts.leagueSpartan(
+                      color: Colors.white,
+                      fontSize: 16,
+                      fontWeight: FontWeight.bold,
                     ),
                   ),
-                ),
-              ],
-            ),
-          ),
+                )))
+          ],
         ),
       ),
     );
@@ -168,16 +175,20 @@ class _ChangePasswordState extends State<ChangePassword> {
     return TextFormField(
       controller: controller,
       obscureText: obscureText,
+      style: TextStyle(
+        color: Colors.white, // Warna teks dengan transparansi
+      ),
       decoration: InputDecoration(
         labelText: label,
+        labelStyle: TextStyle(
+          color: Colors.white.withValues(alpha: 0.7),
+        ),
         border: OutlineInputBorder(
           borderRadius: BorderRadius.circular(20),
         ),
-        filled: true,
-        fillColor: Colors.white.withOpacity(0.7),
         suffixIcon: IconButton(
           icon: Icon(
-            obscureText ? Icons.visibility : Icons.visibility_off,
+            obscureText ? Icons.visibility_off : Icons.visibility,
             color: Colors.grey,
           ),
           onPressed: toggleObscureText,
