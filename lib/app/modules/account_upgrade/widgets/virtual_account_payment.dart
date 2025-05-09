@@ -16,7 +16,7 @@ class VirtualAccountPayment extends StatelessWidget {
   Widget build(BuildContext context) {
     return SizedBox(
       child: Card(
-        color: Colors.white,
+        color: Colors.transparent,
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(16),
           side: BorderSide(
@@ -34,12 +34,16 @@ class VirtualAccountPayment extends StatelessWidget {
                 style: GoogleFonts.leagueSpartan(
                   fontSize: 18,
                   fontWeight: FontWeight.bold,
+                  color: Colors.white,
                 ),
               ),
               const SizedBox(height: 8),
               Text(
                 'No Virtual Account',
-                style: GoogleFonts.leagueSpartan(fontSize: 16),
+                style: GoogleFonts.leagueSpartan(
+                  fontSize: 16,
+                  color: Colors.white,
+                ),
               ),
               const SizedBox(height: 8),
               Container(
@@ -48,7 +52,7 @@ class VirtualAccountPayment extends StatelessWidget {
                 padding:
                     const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
                 decoration: BoxDecoration(
-                  color: Colors.grey.withValues(alpha: 0.1),
+                  color: Colors.white.withValues(alpha: 0.1),
                   borderRadius: BorderRadius.circular(8),
                 ),
                 child: Row(
@@ -56,7 +60,10 @@ class VirtualAccountPayment extends StatelessWidget {
                   children: [
                     Text(
                       va.channelProperties.virtualAccountNumber,
-                      style: GoogleFonts.leagueSpartan(fontSize: 16),
+                      style: GoogleFonts.leagueSpartan(
+                        fontSize: 18,
+                        color: Colors.white,
+                      ),
                     ),
                     TextButton(
                       onPressed: () {

@@ -2,7 +2,6 @@ import 'package:ebookapp/app/modules/account_upgrade/models/account_status/accou
 import 'package:ebookapp/app/modules/account_upgrade/controllers/account_status_controller.dart';
 import 'package:ebookapp/app/modules/settings/controllers/setting_theme_controller.dart';
 import 'package:ebookapp/app/routes/app_pages.dart';
-import 'package:ebookapp/core/constants/constant.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';

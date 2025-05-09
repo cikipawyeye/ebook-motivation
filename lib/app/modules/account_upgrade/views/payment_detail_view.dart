@@ -6,7 +6,6 @@ import 'package:ebookapp/app/modules/account_upgrade/controllers/payment_detail_
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:ebookapp/core/constants/constant.dart';
 
 class PaymentDetailView extends GetView<PaymentDetailController> {
   const PaymentDetailView({super.key});
@@ -42,7 +41,7 @@ class PaymentDetailView extends GetView<PaymentDetailController> {
         body: Container(
           decoration: BoxDecoration(
             image: DecorationImage(
-              image: AssetImage('assets/images/Watermark.png'),
+              image: AssetImage('assets/images/Template.png'),
               fit: BoxFit.cover, // Mengatur gambar agar menutupi seluruh area
             ),
           ),
@@ -59,7 +58,7 @@ class PaymentDetailView extends GetView<PaymentDetailController> {
                           // Rincian Pembelian
                           SizedBox(
                             child: Card(
-                              color: Colors.white,
+                              color: Colors.transparent,
                               shape: RoundedRectangleBorder(
                                 borderRadius: BorderRadius.circular(16),
                                 side: BorderSide(
@@ -75,14 +74,17 @@ class PaymentDetailView extends GetView<PaymentDetailController> {
                                     children: [
                                       Row(
                                         children: [
-                                          const Icon(Icons.paid,
-                                              color: Color(0xFF32497B)),
+                                          const Icon(
+                                            Icons.paid,
+                                            color: Colors.white,
+                                          ),
                                           const SizedBox(width: 8),
                                           Text(
                                             'Rincian Pembelian',
                                             style: GoogleFonts.leagueSpartan(
                                               fontSize: 18,
                                               fontWeight: FontWeight.bold,
+                                              color: Colors.white,
                                             ),
                                           ),
                                         ],
@@ -95,12 +97,16 @@ class PaymentDetailView extends GetView<PaymentDetailController> {
                                           Text(
                                             '1x Premium App',
                                             style: GoogleFonts.leagueSpartan(
-                                                fontSize: 16),
+                                              fontSize: 16,
+                                              color: Colors.white,
+                                            ),
                                           ),
                                           Text(
                                             'Rp 29.000,00',
                                             style: GoogleFonts.leagueSpartan(
-                                                fontSize: 16),
+                                              fontSize: 16,
+                                              color: Colors.white,
+                                            ),
                                           ),
                                         ],
                                       ),
@@ -112,12 +118,16 @@ class PaymentDetailView extends GetView<PaymentDetailController> {
                                           Text(
                                             'Biaya Admin',
                                             style: GoogleFonts.leagueSpartan(
-                                                fontSize: 16),
+                                              color: Colors.white,
+                                              fontSize: 16,
+                                            ),
                                           ),
                                           Text(
                                             'Rp 0,00',
                                             style: GoogleFonts.leagueSpartan(
-                                                fontSize: 16),
+                                              color: Colors.white,
+                                              fontSize: 16,
+                                            ),
                                           ),
                                         ],
                                       ),
@@ -133,6 +143,7 @@ class PaymentDetailView extends GetView<PaymentDetailController> {
                                             style: GoogleFonts.leagueSpartan(
                                               fontSize: 18,
                                               fontWeight: FontWeight.bold,
+                                              color: Colors.white,
                                             ),
                                           ),
                                           Text(
@@ -140,6 +151,7 @@ class PaymentDetailView extends GetView<PaymentDetailController> {
                                             style: GoogleFonts.leagueSpartan(
                                               fontSize: 18,
                                               fontWeight: FontWeight.bold,
+                                              color: Colors.white,
                                             ),
                                           ),
                                         ],
@@ -154,7 +166,7 @@ class PaymentDetailView extends GetView<PaymentDetailController> {
                           if (controller.expiresAt.value != null)
                             SizedBox(
                               child: Card(
-                                color: Colors.white,
+                                color: Colors.transparent,
                                 shape: RoundedRectangleBorder(
                                   borderRadius: BorderRadius.circular(16),
                                   side: BorderSide(
@@ -176,6 +188,7 @@ class PaymentDetailView extends GetView<PaymentDetailController> {
                                               'Bayar Dalam',
                                               style: GoogleFonts.leagueSpartan(
                                                 fontSize: 16,
+                                                color: Colors.white,
                                               ),
                                             ),
                                             Obx(() {
@@ -202,10 +215,10 @@ class PaymentDetailView extends GetView<PaymentDetailController> {
                                                 '$hours jam $minutes menit $seconds detik',
                                                 style:
                                                     GoogleFonts.leagueSpartan(
-                                                        fontWeight:
-                                                            FontWeight.bold,
-                                                        fontSize: 16,
-                                                        color: colorBackground),
+                                                  fontWeight: FontWeight.bold,
+                                                  fontSize: 16,
+                                                  color: Colors.white,
+                                                ),
                                               );
                                             }),
                                           ],
@@ -218,7 +231,10 @@ class PaymentDetailView extends GetView<PaymentDetailController> {
                                             Text(
                                               'Jatuh tempo ${controller.expiresAt.value != null ? DateFormat("dd MMM yyyy, HH:mm", "id_ID").format(controller.expiresAt.value!.toLocal()) : "-"}',
                                               style: GoogleFonts.leagueSpartan(
-                                                  fontSize: 14),
+                                                fontSize: 14,
+                                                color: Colors.white
+                                                    .withValues(alpha: 0.8),
+                                              ),
                                             )
                                           ],
                                         )
@@ -243,7 +259,7 @@ class PaymentDetailView extends GetView<PaymentDetailController> {
                           // Petunjuk Pembayaran Dropdown
                           SizedBox(
                             child: Card(
-                              color: Colors.white,
+                              color: Colors.transparent,
                               shape: RoundedRectangleBorder(
                                 borderRadius: BorderRadius.circular(16),
                                 side: BorderSide(
@@ -261,13 +277,14 @@ class PaymentDetailView extends GetView<PaymentDetailController> {
                                       style: GoogleFonts.leagueSpartan(
                                         fontSize: 16,
                                         fontWeight: FontWeight.bold,
+                                        color: Colors.white,
                                       ),
                                     ),
                                     trailing: Obx(() => Icon(
                                           controller.isExpanded.value
                                               ? Icons.arrow_drop_up
                                               : Icons.arrow_drop_down,
-                                          color: Colors.black,
+                                          color: Colors.white,
                                         )),
                                     onExpansionChanged: (expanded) {
                                       controller.isExpanded.value = expanded;
@@ -289,10 +306,11 @@ class PaymentDetailView extends GetView<PaymentDetailController> {
                                                       instruction.title!,
                                                       style: GoogleFonts
                                                           .leagueSpartan(
-                                                              fontSize: 14,
-                                                              fontWeight:
-                                                                  FontWeight
-                                                                      .bold),
+                                                        fontSize: 14,
+                                                        fontWeight:
+                                                            FontWeight.bold,
+                                                        color: Colors.white,
+                                                      ),
                                                     ),
                                                   const SizedBox(height: 8),
                                                   // Instruction list
@@ -306,8 +324,10 @@ class PaymentDetailView extends GetView<PaymentDetailController> {
                                                                 text,
                                                                 style: GoogleFonts
                                                                     .leagueSpartan(
-                                                                        fontSize:
-                                                                            14),
+                                                                  fontSize: 14,
+                                                                  color: Colors
+                                                                      .white,
+                                                                ),
                                                               ),
                                                               const SizedBox(
                                                                   height: 8),
