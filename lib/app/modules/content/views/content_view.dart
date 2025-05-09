@@ -46,7 +46,7 @@ class ContentView extends GetView<ContentController> {
     final audioController = Get.find<AudioController>();
 
     return Scaffold(
-      backgroundColor: Colors.black,
+      backgroundColor: Color.fromARGB(255, 23, 37, 67),
       body: Obx(() {
         return Stack(
           children: [

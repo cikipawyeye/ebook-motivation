@@ -13,7 +13,7 @@ class LiveWallpaperController extends GetxController {
   // Observable untuk wallpaper saat ini
   final _videoController = Rxn<VideoPlayerController>();
   final wallpaperImagePath = RxnString();
-  final RxDouble _wallpaperOpacity = RxDouble(0.5);
+  final RxDouble _wallpaperOpacity = RxDouble(0.8);
   final RxBool _isWallpaperVisible = RxBool(true);
 
   bool get isWallpaperVisible => _isWallpaperVisible.value;
