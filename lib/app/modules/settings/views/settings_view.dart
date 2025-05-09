@@ -42,11 +42,15 @@ class SettingsView extends GetView<SettingsController> {
           ),
           centerTitle: true,
           backgroundColor: themeController.currentColor,
+          iconTheme: const IconThemeData(
+            color: Colors.white,
+          ),
         ),
         body: Container(
+          padding: const EdgeInsets.symmetric(horizontal: 8.0),
           decoration: BoxDecoration(
             image: DecorationImage(
-              image: AssetImage('assets/images/Watermark.png'),
+              image: AssetImage("assets/images/Template.png"),
               fit: BoxFit.cover,
             ),
           ),
@@ -60,7 +64,7 @@ class SettingsView extends GetView<SettingsController> {
                   Get.toNamed(Routes.myAccount);
                 },
               ),
-              const Divider(),
+              const SizedBox(height: 8),
               _buildSettingItem(
                 image: 'assets/icons/pencil_icon.png',
                 title: 'Ganti Wallpaper dan Musik',
@@ -68,7 +72,7 @@ class SettingsView extends GetView<SettingsController> {
                   Get.offNamed(Routes.wallpaperMusic);
                 },
               ),
-              const Divider(),
+              const SizedBox(height: 8),
               _buildSettingItem(
                 image: 'assets/icons/key_icon.png',
                 title: 'Ganti Kata Sandi',
@@ -76,7 +80,7 @@ class SettingsView extends GetView<SettingsController> {
                   Get.toNamed(Routes.changePass);
                 },
               ),
-              const Divider(),
+              const SizedBox(height: 8),
               _buildSettingItem(
                 image: 'assets/icons/crown_icon.png',
                 title: 'Tingkatkan Akun',
@@ -84,7 +88,7 @@ class SettingsView extends GetView<SettingsController> {
                   Get.toNamed(Routes.accountStatus);
                 },
               ),
-              const Divider(),
+              const SizedBox(height: 8),
               _buildSettingItem(
                 image: 'assets/icons/message.png',
                 title: 'Pusat Bantuan',
@@ -133,7 +137,7 @@ class SettingsView extends GetView<SettingsController> {
                   }
                 },
               ),
-              const Divider(),
+              const SizedBox(height: 8),
               _buildSettingItem(
                 image: 'assets/icons/exit_icon.png',
                 title: 'Keluar',
@@ -141,7 +145,7 @@ class SettingsView extends GetView<SettingsController> {
                   _showLogoutDialog(context);
                 },
               ),
-              const Divider(),
+              const SizedBox(height: 8),
             ],
           ),
         ),
@@ -154,34 +158,46 @@ class SettingsView extends GetView<SettingsController> {
     required String title,
     required VoidCallback onTap,
   }) {
-    return ListTile(
-      leading: Container(
-        width: 30,
-        height: 30,
+    return Container(
         decoration: BoxDecoration(
-          color: const Color(0xFFE9E9E9),
-          shape: BoxShape.circle,
-        ),
-        child: Center(
-          child: SizedBox(
-            width: 18,
-            height: 18,
-            child: Image.asset(
-              image,
-              fit: BoxFit.cover,
-            ),
+          gradient: LinearGradient(
+            colors: [
+              Colors.white.withValues(alpha: 0.3),
+              Colors.white.withValues(alpha: 0.3)
+            ],
+          ),
+          borderRadius: BorderRadius.circular(20),
+          border: Border.all(
+            color: Colors.black.withValues(alpha: 0.3),
+            width: 1.5,
           ),
         ),
-      ),
-      title: Text(
-        title,
-        style: GoogleFonts.leagueSpartan(
-          fontSize: 20,
-          fontWeight: FontWeight.w600,
-        ),
-      ),
-      onTap: onTap,
-    );
+        child: ListTile(
+          leading: Container(
+            width: 30,
+            height: 30,
+            decoration: BoxDecoration(
+              color: Color(0xFFE9E9E9).withValues(alpha: 0.8),
+              shape: BoxShape.circle,
+            ),
+            child: Center(
+              child: SizedBox(
+                width: 18,
+                height: 18,
+                child: Image.asset(
+                  image,
+                  fit: BoxFit.cover,
+                ),
+              ),
+            ),
+          ),
+          title: Text(
+            title,
+            style: GoogleFonts.leagueSpartan(
+                fontSize: 20, fontWeight: FontWeight.w600, color: Colors.white),
+          ),
+          onTap: onTap,
+        ));
   }
 
   void _showLogoutDialog(BuildContext context) {
