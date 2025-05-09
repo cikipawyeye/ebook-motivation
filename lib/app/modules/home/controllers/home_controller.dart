@@ -7,6 +7,11 @@ import 'package:http/http.dart' as http;
 import 'package:shared_preferences/shared_preferences.dart';
 
 class HomeController extends GetxController {
+  final ScrollController scrollController = ScrollController();
+
+  var canScrollUp = false.obs;
+  var canScrollDown = false.obs;
+
   var isLoading = false.obs;
   var userResponse = Rxn<UserResponse>();
 
@@ -14,12 +19,30 @@ class HomeController extends GetxController {
   void onInit() {
     fetchUserProfile();
     super.onInit();
+
+    scrollController.addListener(_scrollListener);
+  }
+
+  void determineIsCanScroll() {
+    canScrollUp.value = false;
+    canScrollDown.value = false;
+    _scrollListener();
+  }
+
+  void _scrollListener() {
+    final maxScroll = scrollController.position.maxScrollExtent;
+    final currentScroll = scrollController.offset;
+    final minScroll = scrollController.position.minScrollExtent;
+
+    canScrollUp.value = currentScroll > minScroll;
+    canScrollDown.value = currentScroll < maxScroll;
   }
 
   @override
   void onClose() {
     userResponse.value = null;
     isLoading.value = false;
+    scrollController.dispose();
     super.onClose();
   }
 

@@ -111,10 +111,10 @@ class HomeView extends GetView<HomeController> {
                           Positioned(
                             right: 16,
                             bottom: 16,
-                            child: const Icon(
+                            child: Icon(
                               Icons.east,
-                              color: Colors.white,
-                              size: 34,
+                              color: Colors.white.withValues(alpha: 0.5),
+                              size: 36,
                             ),
                           ),
                         ],
@@ -161,10 +161,10 @@ class HomeView extends GetView<HomeController> {
                           Positioned(
                             right: 16,
                             bottom: 16,
-                            child: const Icon(
+                            child: Icon(
                               Icons.east,
-                              color: Colors.white,
-                              size: 34,
+                              color: Colors.white.withValues(alpha: 0.5),
+                              size: 36,
                             ),
                           ),
                         ],
@@ -247,265 +247,304 @@ class HomeView extends GetView<HomeController> {
 
         if (category == Category.motivasi) {
           if (subcategoryController.motivationSubcategories.isEmpty) {
-            subcategoryController.fetchMotivationSubcategories();
+            subcategoryController.fetchMotivationSubcategories().then((_) {
+              if (context.mounted) {
+                controller.determineIsCanScroll();
+              }
+            });
           }
         } else {
           if (subcategoryController.reminderSubcategories.isEmpty) {
-            subcategoryController.fetchReminderSubcategories();
+            subcategoryController.fetchReminderSubcategories().then((_) {
+              if (context.mounted) {
+                controller.determineIsCanScroll();
+              }
+            });
           }
         }
 
-        return BackdropFilter(
-          filter: ImageFilter.blur(sigmaX: 5, sigmaY: 5),
-          child: Dialog(
-            backgroundColor: Colors.white.withValues(alpha: 0.9),
-            shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(16),
-            ),
-            child: Container(
-                decoration: BoxDecoration(
-                  image: DecorationImage(
-                    alignment: Alignment.topCenter,
-                    image: AssetImage("assets/images/Template.png"),
-                    fit: BoxFit.cover,
-                  ),
+        WidgetsBinding.instance.addPostFrameCallback((_) {
+          controller.determineIsCanScroll();
+        });
+
+        return Stack(
+          children: [
+            BackdropFilter(
+              filter: ImageFilter.blur(sigmaX: 5, sigmaY: 5),
+              child: Dialog(
+                backgroundColor: Colors.white.withValues(alpha: 0.9),
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(16),
                 ),
-                child: Column(
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    Container(
-                      decoration: BoxDecoration(
-                        color: colorBackground,
-                        borderRadius: const BorderRadius.only(
-                          topLeft: Radius.circular(16),
-                          topRight: Radius.circular(16),
-                        ),
-                      ),
-                      child: Padding(
-                        padding: const EdgeInsets.all(8.0),
-                        child: Row(
-                          children: [
-                            IconButton(
-                              icon: Icon(Icons.arrow_back, color: Colors.white),
-                              onPressed: () => Navigator.of(context).pop(),
-                            ),
-                            const SizedBox(width: 8),
-                            Text(
-                              category == Category.motivasi
-                                  ? 'MOTIVASI'
-                                  : 'PENGINGAT',
-                              style: TextStyle(
-                                fontSize: 20,
-                                fontWeight: FontWeight.bold,
-                                color: Colors.white,
-                              ),
-                            ),
-                            const Spacer(),
-                            IconButton(
-                              icon: Icon(Icons.search, color: Colors.white),
-                              onPressed: () {
-                                isSearching.value = !isSearching.value;
-                              },
-                            ),
-                          ],
-                        ),
+                child: Container(
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(16),
+                      image: DecorationImage(
+                        alignment: Alignment.topCenter,
+                        image: AssetImage("assets/images/Template.png"),
+                        fit: BoxFit.cover,
                       ),
                     ),
-
-                    // Search TextField
-                    ValueListenableBuilder<bool>(
-                      valueListenable: isSearching,
-                      builder: (context, value, child) {
-                        return value
-                            ? Padding(
-                                padding: const EdgeInsets.all(8.0),
-                                child: Row(
-                                  children: [
-                                    Icon(Icons.search,
-                                        color: Colors.white
-                                            .withValues(alpha: 0.7)),
-                                    const SizedBox(width: 8),
-                                    Expanded(
-                                      child: TextField(
-                                        controller: searchController,
-                                        style: TextStyle(
-                                          color: Colors.white,
-                                        ),
-                                        decoration: InputDecoration(
-                                          contentPadding: EdgeInsets.symmetric(
-                                              horizontal: 18),
-                                          floatingLabelBehavior:
-                                              FloatingLabelBehavior.never,
-                                          hintText: 'Cari...',
-                                          hintStyle: TextStyle(
-                                            fontSize: 12,
-                                            color: Colors.white
-                                                .withValues(alpha: 0.5),
-                                          ),
-                                          focusedBorder: OutlineInputBorder(
-                                            borderRadius:
-                                                BorderRadius.circular(30),
-                                            borderSide: BorderSide(
-                                                color: Colors.white
-                                                    .withValues(alpha: 0.5),
-                                                width: 1.0),
-                                          ),
-                                          enabledBorder: OutlineInputBorder(
-                                            borderRadius:
-                                                BorderRadius.circular(30),
-                                            borderSide: BorderSide(
-                                                color: Colors.white
-                                                    .withValues(alpha: 0.5),
-                                                width: 1.0),
-                                          ),
-                                          border: OutlineInputBorder(
-                                            borderRadius:
-                                                BorderRadius.circular(30),
-                                          ),
-                                        ),
-                                        onChanged: (text) {
-                                          subcategoryController
-                                              .searchQuery.value = text;
-                                        },
-                                      ),
-                                    ),
-                                    IconButton(
-                                      icon: Icon(Icons.clear,
-                                          color: Colors.white
-                                              .withValues(alpha: 0.7)),
-                                      onPressed: () {
-                                        searchController.clear();
-                                        subcategoryController
-                                            .searchQuery.value = '';
-                                        isSearching.value = false;
-                                      },
-                                    ),
-                                  ],
-                                ),
-                              )
-                            : SizedBox();
-                      },
-                    ),
-
-                    // Motivasi List
-                    Flexible(
-                      child: Obx(() {
-                        if (subcategoryController.gettingData.value) {
-                          return Center(
-                            child: Text(
-                              "Loading...",
-                              style: TextStyle(color: Colors.grey),
+                    child: Column(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        // AppBar
+                        Container(
+                          decoration: BoxDecoration(
+                            color: colorBackground,
+                            borderRadius: const BorderRadius.only(
+                              topLeft: Radius.circular(16),
+                              topRight: Radius.circular(16),
                             ),
-                          );
-                        }
-
-                        final subcategories = category == Category.motivasi
-                            ? subcategoryController.motivationSubcategories
-                            : subcategoryController.reminderSubcategories;
-
-                        final filteredSubcategories = subcategories
-                            .where((subcategory) => subcategory.name
-                                .toLowerCase()
-                                .contains(subcategoryController
-                                    .searchQuery.value
-                                    .toLowerCase()))
-                            .toList();
-
-                        if (filteredSubcategories.isEmpty) {
-                          return Center(
-                            child: Column(
-                              mainAxisAlignment: MainAxisAlignment.center,
+                          ),
+                          child: Padding(
+                            padding: const EdgeInsets.all(8.0),
+                            child: Row(
                               children: [
+                                IconButton(
+                                  icon: Icon(Icons.arrow_back,
+                                      color: Colors.white),
+                                  onPressed: () => Navigator.of(context).pop(),
+                                ),
+                                const SizedBox(width: 8),
                                 Text(
                                   category == Category.motivasi
-                                      ? "Tidak ada motivasi ditemukan"
-                                      : "Tidak ada pengingat ditemukan",
+                                      ? 'MOTIVASI'
+                                      : 'PENGINGAT',
                                   style: TextStyle(
-                                      color:
-                                          Colors.white.withValues(alpha: 0.6)),
+                                    fontSize: 20,
+                                    fontWeight: FontWeight.bold,
+                                    color: Colors.white,
+                                  ),
                                 ),
-                                SizedBox(height: 20),
-                                ElevatedButton(
-                                    style: ElevatedButton.styleFrom(
-                                      backgroundColor:
-                                          Colors.white.withValues(alpha: 0.3),
+                                const Spacer(),
+                                IconButton(
+                                  icon: Icon(Icons.search, color: Colors.white),
+                                  onPressed: () {
+                                    isSearching.value = !isSearching.value;
+                                  },
+                                ),
+                              ],
+                            ),
+                          ),
+                        ),
+
+                        // Search TextField
+                        ValueListenableBuilder<bool>(
+                          valueListenable: isSearching,
+                          builder: (context, value, child) {
+                            return value
+                                ? Padding(
+                                    padding: const EdgeInsets.all(8.0),
+                                    child: Row(
+                                      children: [
+                                        Icon(Icons.search,
+                                            color: Colors.white
+                                                .withValues(alpha: 0.7)),
+                                        const SizedBox(width: 8),
+                                        Expanded(
+                                          child: TextField(
+                                            controller: searchController,
+                                            style: TextStyle(
+                                              color: Colors.white,
+                                            ),
+                                            decoration: InputDecoration(
+                                              contentPadding:
+                                                  EdgeInsets.symmetric(
+                                                      horizontal: 18),
+                                              floatingLabelBehavior:
+                                                  FloatingLabelBehavior.never,
+                                              hintText: 'Cari...',
+                                              hintStyle: TextStyle(
+                                                fontSize: 12,
+                                                color: Colors.white
+                                                    .withValues(alpha: 0.5),
+                                              ),
+                                              focusedBorder: OutlineInputBorder(
+                                                borderRadius:
+                                                    BorderRadius.circular(30),
+                                                borderSide: BorderSide(
+                                                    color: Colors.white
+                                                        .withValues(alpha: 0.5),
+                                                    width: 1.0),
+                                              ),
+                                              enabledBorder: OutlineInputBorder(
+                                                borderRadius:
+                                                    BorderRadius.circular(30),
+                                                borderSide: BorderSide(
+                                                    color: Colors.white
+                                                        .withValues(alpha: 0.5),
+                                                    width: 1.0),
+                                              ),
+                                              border: OutlineInputBorder(
+                                                borderRadius:
+                                                    BorderRadius.circular(30),
+                                              ),
+                                            ),
+                                            onChanged: (text) {
+                                              subcategoryController
+                                                  .searchQuery.value = text;
+                                            },
+                                          ),
+                                        ),
+                                        IconButton(
+                                          icon: Icon(Icons.clear,
+                                              color: Colors.white
+                                                  .withValues(alpha: 0.7)),
+                                          onPressed: () {
+                                            searchController.clear();
+                                            subcategoryController
+                                                .searchQuery.value = '';
+                                            isSearching.value = false;
+                                          },
+                                        ),
+                                      ],
                                     ),
-                                    onPressed: () =>
-                                        category == Category.motivasi
+                                  )
+                                : SizedBox();
+                          },
+                        ),
+
+                        // Motivasi List
+                        Flexible(
+                          child: Obx(() {
+                            if (subcategoryController.gettingData.value) {
+                              return Center(
+                                child: Text(
+                                  "Loading...",
+                                  style: TextStyle(color: Colors.grey),
+                                ),
+                              );
+                            }
+
+                            final subcategories = category == Category.motivasi
+                                ? subcategoryController.motivationSubcategories
+                                : subcategoryController.reminderSubcategories;
+
+                            final filteredSubcategories = subcategories
+                                .where((subcategory) => subcategory.name
+                                    .toLowerCase()
+                                    .contains(subcategoryController
+                                        .searchQuery.value
+                                        .toLowerCase()))
+                                .toList();
+
+                            // empty state
+                            if (filteredSubcategories.isEmpty) {
+                              return Center(
+                                child: Column(
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  children: [
+                                    Text(
+                                      category == Category.motivasi
+                                          ? "Tidak ada motivasi ditemukan"
+                                          : "Tidak ada pengingat ditemukan",
+                                      style: TextStyle(
+                                          color: Colors.white
+                                              .withValues(alpha: 0.6)),
+                                    ),
+                                    SizedBox(height: 20),
+                                    ElevatedButton(
+                                        style: ElevatedButton.styleFrom(
+                                          backgroundColor: Colors.white
+                                              .withValues(alpha: 0.3),
+                                        ),
+                                        onPressed: () => category ==
+                                                Category.motivasi
                                             ? subcategoryController
                                                 .fetchMotivationSubcategories()
                                             : subcategoryController
                                                 .fetchReminderSubcategories(),
-                                    child: Text(
-                                      "Refresh",
-                                      style: TextStyle(color: Colors.white),
-                                    ))
-                              ],
-                            ),
-                          );
-                        }
-
-                        return GridView.builder(
-                          shrinkWrap: true,
-                          padding: EdgeInsets.all(8),
-                          gridDelegate:
-                              SliverGridDelegateWithFixedCrossAxisCount(
-                            crossAxisCount: 2,
-                            childAspectRatio: 1,
-                            crossAxisSpacing: 10,
-                            mainAxisSpacing: 10,
-                          ),
-                          itemCount: filteredSubcategories.length,
-                          itemBuilder: (context, index) {
-                            final subcategory = filteredSubcategories[index];
-
-                            return GestureDetector(
-                              onTap: () {
-                                Get.offNamed('/contents',
-                                    arguments: subcategory);
-                              },
-                              child: Container(
-                                decoration: BoxDecoration(
-                                  borderRadius: BorderRadius.circular(15),
-                                  image: DecorationImage(
-                                    image: category == Category.motivasi
-                                        ? AssetImage(
-                                            'assets/images/Motivasi1.png')
-                                        : AssetImage(
-                                            'assets/images/Pengingat1.png'),
-                                    fit: BoxFit.cover,
-                                    colorFilter: ColorFilter.mode(
-                                        Colors.black45, BlendMode.darken),
-                                  ),
+                                        child: Text(
+                                          "Refresh",
+                                          style: TextStyle(color: Colors.white),
+                                        ))
+                                  ],
                                 ),
-                                child: Center(
-                                  child: Padding(
-                                    padding: EdgeInsets.all(4),
-                                    child: Column(
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.center,
-                                      children: [
-                                        Text(
-                                          subcategory.name,
-                                          style: TextStyle(
-                                            color: Colors.white,
-                                            fontWeight: FontWeight.bold,
-                                          ),
-                                          textAlign: TextAlign.center,
+                              );
+                            }
+
+                            return GridView.builder(
+                              controller: controller.scrollController,
+                              shrinkWrap: true,
+                              padding: EdgeInsets.all(12),
+                              gridDelegate:
+                                  SliverGridDelegateWithFixedCrossAxisCount(
+                                crossAxisCount: 2,
+                                childAspectRatio: 1,
+                                crossAxisSpacing: 10,
+                                mainAxisSpacing: 10,
+                              ),
+                              itemCount: filteredSubcategories.length,
+                              itemBuilder: (context, index) {
+                                final subcategory =
+                                    filteredSubcategories[index];
+
+                                return GestureDetector(
+                                  onTap: () {
+                                    Get.offNamed('/contents',
+                                        arguments: subcategory);
+                                  },
+                                  child: Container(
+                                    decoration: BoxDecoration(
+                                      borderRadius: BorderRadius.circular(16),
+                                      image: DecorationImage(
+                                        opacity: 0.5,
+                                        image: category == Category.motivasi
+                                            ? AssetImage(
+                                                'assets/images/Motivasi1.png')
+                                            : AssetImage(
+                                                'assets/images/Pengingat1.png'),
+                                        fit: BoxFit.cover,
+                                        colorFilter: ColorFilter.mode(
+                                            Colors.black45, BlendMode.darken),
+                                      ),
+                                    ),
+                                    child: Center(
+                                      child: Padding(
+                                        padding: EdgeInsets.all(4),
+                                        child: Column(
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.center,
+                                          children: [
+                                            Text(
+                                              subcategory.name,
+                                              style: TextStyle(
+                                                color: Colors.white,
+                                                fontWeight: FontWeight.bold,
+                                              ),
+                                              textAlign: TextAlign.center,
+                                            ),
+                                          ],
                                         ),
-                                      ],
+                                      ),
                                     ),
                                   ),
-                                ),
-                              ),
+                                );
+                              },
                             );
-                          },
-                        );
-                      }),
-                    ),
-                  ],
-                )),
-          ),
+                          }),
+                        ),
+                      ],
+                    )),
+              ),
+            ),
+
+            // Scroll Down Indicator
+            Obx(() =>
+                controller.canScrollDown.value || controller.canScrollUp.value
+                    ? Positioned(
+                        bottom: 16,
+                        right: 16,
+                        child: Icon(
+                            controller.canScrollDown.value
+                                ? Icons.arrow_downward
+                                : Icons.arrow_upward,
+                            color: Colors.white.withValues(alpha: 0.3),
+                            size: 36),
+                      )
+                    : SizedBox.shrink()),
+          ],
         );
       },
     );
