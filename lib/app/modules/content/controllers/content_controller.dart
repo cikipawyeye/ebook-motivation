@@ -5,7 +5,6 @@ import 'package:ebookapp/app/data/models/cursor_pagination_model.dart';
 import 'package:ebookapp/app/modules/content/repositories/content_repository.dart';
 import 'package:ebookapp/app/modules/settings/controllers/user_controller.dart';
 import 'package:ebookapp/app/routes/app_pages.dart';
-import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -114,8 +113,6 @@ class ContentController extends GetxController {
         if (uniqueSet.length > 3) {
           Future.microtask(() => Get.offNamed(Routes.ticketPremium));
         }
-
-        debugPrint('Slide count: ${uniqueSet.length}');
       });
     } else {
       _prefs.setStringList('contentViewed', []);

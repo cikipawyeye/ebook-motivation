@@ -76,6 +76,7 @@ class Subcategory {
   final String category;
   final String categoryName;
   final bool isActive;
+  final bool premium;
   final int contentsCount;
 
   Subcategory({
@@ -84,6 +85,7 @@ class Subcategory {
     required this.category,
     required this.categoryName,
     required this.isActive,
+    required this.premium,
     required this.contentsCount,
   });
 
@@ -94,6 +96,7 @@ class Subcategory {
       category: json['category'] ?? '',
       categoryName: json['category_name'] ?? '',
       isActive: json['is_active'] ?? false,
+      premium: json['premium'] ?? true,
       contentsCount: json['contents_count'] ?? 0,
     );
   }

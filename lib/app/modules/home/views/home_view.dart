@@ -58,6 +58,12 @@ class HomeView extends GetView<HomeController> {
             return RefreshIndicator(
               onRefresh: () async {
                 await controller.fetchUserProfile();
+
+                final SubcategoryController subcategoryController =
+                    Get.find<SubcategoryController>();
+
+                subcategoryController.motivationSubcategories.clear();
+                subcategoryController.reminderSubcategories.clear();
               },
               child: ListView(
                 padding:
@@ -491,8 +497,18 @@ class HomeView extends GetView<HomeController> {
 
                                 return GestureDetector(
                                   onTap: () {
-                                    Get.offNamed('/contents',
-                                        arguments: subcategory);
+                                    if (controller.userResponse.value == null) {
+                                      return;
+                                    }
+
+                                    if (subcategory.premium &&
+                                        !controller.userResponse.value!.user
+                                            .isPremium) {
+                                      Get.toNamed(Routes.ticketPremium);
+                                    } else {
+                                      Get.offNamed('/contents',
+                                          arguments: subcategory);
+                                    }
                                   },
                                   child: Container(
                                     decoration: BoxDecoration(
@@ -509,25 +525,38 @@ class HomeView extends GetView<HomeController> {
                                             Colors.black45, BlendMode.darken),
                                       ),
                                     ),
-                                    child: Center(
-                                      child: Padding(
-                                        padding: EdgeInsets.all(4),
-                                        child: Column(
-                                          mainAxisAlignment:
-                                              MainAxisAlignment.center,
-                                          children: [
-                                            Text(
-                                              subcategory.name,
-                                              style: TextStyle(
-                                                color: Colors.white,
-                                                fontWeight: FontWeight.bold,
+                                    child: Stack(children: [
+                                      Center(
+                                        child: Padding(
+                                          padding: EdgeInsets.all(4),
+                                          child: Column(
+                                            mainAxisAlignment:
+                                                MainAxisAlignment.center,
+                                            children: [
+                                              Text(
+                                                subcategory.name,
+                                                style: TextStyle(
+                                                  color: Colors.white,
+                                                  fontWeight: FontWeight.bold,
+                                                ),
+                                                textAlign: TextAlign.center,
                                               ),
-                                              textAlign: TextAlign.center,
-                                            ),
-                                          ],
+                                            ],
+                                          ),
                                         ),
                                       ),
-                                    ),
+                                      if (subcategory.premium &&
+                                          !controller.userResponse.value!.user
+                                              .isPremium)
+                                        Center(
+                                          child: Icon(
+                                            Icons.lock,
+                                            color: Colors.white
+                                                .withValues(alpha: 0.8),
+                                            size: 48,
+                                          ),
+                                        ),
+                                    ]),
                                   ),
                                 );
                               },
