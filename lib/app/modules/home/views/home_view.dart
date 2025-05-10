@@ -249,26 +249,31 @@ class HomeView extends GetView<HomeController> {
       builder: (BuildContext context) {
         debugPrint('Popup Opened');
 
-        if (category == Category.motivasi) {
-          if (subcategoryController.motivationSubcategories.isEmpty) {
-            subcategoryController.fetchMotivationSubcategories().then((_) {
-              if (context.mounted) {
-                controller.determineIsCanScroll();
-              }
-            });
-          }
-        } else {
-          if (subcategoryController.reminderSubcategories.isEmpty) {
-            subcategoryController.fetchReminderSubcategories().then((_) {
-              if (context.mounted) {
-                controller.determineIsCanScroll();
-              }
-            });
-          }
-        }
+        controller.canScrollUp.value = false;
+        controller.canScrollDown.value = false;
 
         WidgetsBinding.instance.addPostFrameCallback((_) {
-          controller.determineIsCanScroll();
+          if (category == Category.motivasi &&
+              subcategoryController.motivationSubcategories.isEmpty) {
+            subcategoryController.fetchMotivationSubcategories().then((_) {
+              WidgetsBinding.instance.addPostFrameCallback((_) {
+                if (context.mounted) {
+                  controller.determineIsCanScroll();
+                }
+              });
+            });
+          } else if (category == Category.pengingat &&
+              subcategoryController.reminderSubcategories.isEmpty) {
+            subcategoryController.fetchReminderSubcategories().then((_) {
+              WidgetsBinding.instance.addPostFrameCallback((_) {
+                if (context.mounted) {
+                  controller.determineIsCanScroll();
+                }
+              });
+            });
+          } else if (context.mounted) {
+            controller.determineIsCanScroll();
+          }
         });
 
         return Stack(

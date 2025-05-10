@@ -20,6 +20,8 @@ class HomeController extends GetxController {
     fetchUserProfile();
     super.onInit();
 
+    debugPrint("[home_controller] onInit");
+
     scrollController.addListener(_scrollListener);
   }
 
@@ -40,6 +42,8 @@ class HomeController extends GetxController {
 
   @override
   void onClose() {
+    debugPrint("[home_controller] onClose");
+
     userResponse.value = null;
     isLoading.value = false;
     scrollController.dispose();
