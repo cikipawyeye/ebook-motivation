@@ -229,7 +229,7 @@ class RegisterPage extends GetView<RegisterController> {
       child: [
         Obx(
           () => Text(
-            'Terima kasih, ${controller.firstName.value}.\nTolong tuliskan alamat emailnya',
+            'Terima kasih, ${controller.firstName.value}.\nTolong tuliskan alamat emailnya yaa...',
             style: GoogleFonts.leagueSpartan(
               fontSize: 24,
               color: Colors.white,
