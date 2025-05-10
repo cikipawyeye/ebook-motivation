@@ -102,7 +102,7 @@ class PaymentDetailView extends GetView<PaymentDetailController> {
                                             ),
                                           ),
                                           Text(
-                                            'Rp 29.000,00',
+                                            'Rp 29.900,00',
                                             style: GoogleFonts.leagueSpartan(
                                               fontSize: 16,
                                               color: Colors.white,
@@ -147,7 +147,7 @@ class PaymentDetailView extends GetView<PaymentDetailController> {
                                             ),
                                           ),
                                           Text(
-                                            'Rp 29.000,00',
+                                            'Rp 29.900,00',
                                             style: GoogleFonts.leagueSpartan(
                                               fontSize: 18,
                                               fontWeight: FontWeight.bold,
