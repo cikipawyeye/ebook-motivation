@@ -4,6 +4,7 @@ import 'package:ebookapp/app/data/models/motivasi_model.dart';
 import 'package:ebookapp/app/modules/content/controllers/audio_controller.dart';
 import 'package:ebookapp/app/modules/content/controllers/content_controller.dart';
 import 'package:ebookapp/app/modules/content/controllers/live_controller.dart';
+import 'package:ebookapp/app/routes/app_pages.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
@@ -103,6 +104,8 @@ class ContentView extends GetView<ContentController> {
                 : Center(child: CircularProgressIndicator()),
             // Wallpaper & audio controls
             _buildWallpaperControls(liveWallpaperController, audioController),
+            // Navigator icon
+            _buildNavigatorIcons(),
           ],
         );
       }),
@@ -114,9 +117,26 @@ class ContentView extends GetView<ContentController> {
       AudioController audioController) {
     return Positioned(
       top: 40,
-      right: 20,
+      width: Get.width,
       child: Row(
         children: [
+          Expanded(
+              child: Padding(
+                  padding: EdgeInsets.symmetric(horizontal: 16),
+                  child: ElevatedButton(
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: Colors.white.withValues(alpha: 0.3),
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(8),
+                      ),
+                      elevation: 0,
+                    ),
+                    child: Text(
+                      "Home",
+                      style: TextStyle(color: Colors.white, fontSize: 16),
+                    ),
+                    onPressed: () => {Get.offAllNamed(Routes.home)},
+                  ))),
           Obx(() => IconButton(
                 icon: Icon(
                   audioController.isPlaying.value
@@ -214,6 +234,53 @@ class ContentView extends GetView<ContentController> {
           )
         ],
       ),
+    );
+  }
+
+  Widget _buildNavigatorIcons() {
+    return Positioned(
+      bottom: 40,
+      width: Get.width,
+      child: Padding(
+          padding: EdgeInsets.symmetric(horizontal: 16),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              if (controller.currentPage.value > 0)
+                GestureDetector(
+                  onTap: () {
+                    _pageController.previousPage(
+                      duration: const Duration(milliseconds: 300),
+                      curve: Curves.easeInOut,
+                    );
+                  },
+                  child: Image.asset(
+                    'assets/icons/arrow_left.png',
+                    opacity: AlwaysStoppedAnimation(0.5),
+                    fit: BoxFit.contain,
+                    width: 40,
+                    height: 40,
+                  ),
+                ),
+              Expanded(child: const SizedBox.shrink()),
+              if (controller.currentPage.value < controller.images.length - 1)
+                GestureDetector(
+                  onTap: () {
+                    _pageController.nextPage(
+                      duration: const Duration(milliseconds: 300),
+                      curve: Curves.easeInOut,
+                    );
+                  },
+                  child: Image.asset(
+                    'assets/icons/arrow_right.png',
+                    opacity: AlwaysStoppedAnimation(0.5),
+                    fit: BoxFit.contain,
+                    width: 40,
+                    height: 40,
+                  ),
+                ),
+            ],
+          )),
     );
   }
 }
