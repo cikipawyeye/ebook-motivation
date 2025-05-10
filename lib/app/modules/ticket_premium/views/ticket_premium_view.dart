@@ -69,12 +69,6 @@ class TicketPremiumView extends GetView<TicketPremiumController> {
                           Row(
                             mainAxisAlignment: MainAxisAlignment.start,
                             children: [
-                              Image.asset(
-                                'assets/images/hati_edge.png',
-                                height: 30,
-                                width: 30,
-                              ),
-                              const SizedBox(width: 12),
                               Text(
                                 'Premium',
                                 style: GoogleFonts.leagueSpartan(
