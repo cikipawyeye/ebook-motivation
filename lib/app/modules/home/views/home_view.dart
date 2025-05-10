@@ -111,10 +111,12 @@ class HomeView extends GetView<HomeController> {
                           Positioned(
                             right: 16,
                             bottom: 16,
-                            child: Icon(
-                              Icons.east,
-                              color: Colors.white.withValues(alpha: 0.5),
-                              size: 36,
+                            child: Image.asset(
+                              'assets/icons/arrow_right.png',
+                              opacity: const AlwaysStoppedAnimation(0.5),
+                              fit: BoxFit.contain,
+                              width: 36,
+                              height: 36,
                             ),
                           ),
                         ],
@@ -161,10 +163,12 @@ class HomeView extends GetView<HomeController> {
                           Positioned(
                             right: 16,
                             bottom: 16,
-                            child: Icon(
-                              Icons.east,
-                              color: Colors.white.withValues(alpha: 0.5),
-                              size: 36,
+                            child: Image.asset(
+                              'assets/icons/arrow_right.png',
+                              opacity: const AlwaysStoppedAnimation(0.5),
+                              fit: BoxFit.contain,
+                              width: 36,
+                              height: 36,
                             ),
                           ),
                         ],
@@ -534,14 +538,17 @@ class HomeView extends GetView<HomeController> {
             Obx(() =>
                 controller.canScrollDown.value || controller.canScrollUp.value
                     ? Positioned(
-                        bottom: 16,
-                        right: 16,
-                        child: Icon(
-                            controller.canScrollDown.value
-                                ? Icons.arrow_downward
-                                : Icons.arrow_upward,
-                            color: Colors.white.withValues(alpha: 0.3),
-                            size: 36),
+                        bottom: 20,
+                        right: 20,
+                        child: Image.asset(
+                          controller.canScrollDown.value
+                              ? 'assets/icons/arrow_down.png'
+                              : 'assets/icons/arrow_top.png',
+                          opacity: const AlwaysStoppedAnimation(0.4),
+                          fit: BoxFit.contain,
+                          width: 40,
+                          height: 40,
+                        ),
                       )
                     : SizedBox.shrink()),
           ],
