@@ -1,6 +1,5 @@
 import 'package:ebookapp/app/modules/settings/controllers/setting_theme_controller.dart';
 import 'package:ebookapp/app/modules/settings/controllers/settings_controller.dart';
-import 'package:ebookapp/core/constants/constant.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -83,17 +82,17 @@ class SettingsTheme extends GetView<SettingsController> {
                             // Logic untuk menyimpan tema
                             Get.snackbar('Simpan', 'Tema berhasil disimpan.');
                           },
+                          style: ElevatedButton.styleFrom(
+                            minimumSize: Size(344, 50),
+                            backgroundColor: themeController
+                                .currentColor, // Menggunakan warna yang dipilih
+                          ),
                           child: Text(
                             'Simpan',
                             style: GoogleFonts.leagueSpartan(
                               fontSize: 16,
                               color: Colors.white,
                             ),
-                          ),
-                          style: ElevatedButton.styleFrom(
-                            minimumSize: Size(344, 50),
-                            backgroundColor: themeController
-                                .currentColor, // Menggunakan warna yang dipilih
                           ),
                         )),
                   ),
