@@ -1,8 +1,8 @@
 import 'package:ebookapp/app/modules/login/controllers/login_controller.dart';
+import 'package:ebookapp/app/routes/app_pages.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 
 class LoginView extends GetView<LoginController> {
   LoginView({super.key});
@@ -193,20 +193,7 @@ class LoginView extends GetView<LoginController> {
                 // Authenticate user
                 bool success = await controller.loginWithEmail();
                 if (success) {
-                  SharedPreferences prefs =
-                      await SharedPreferences.getInstance();
-                  // Cek apakah ini adalah pengguna baru
-                  bool isNewUser = prefs.getBool('isNewUser') ?? true;
-
-                  if (isNewUser) {
-                    // Jika pengguna baru, arahkan ke wallpaper-music
-                    Get.offAllNamed('/wallpaper-music');
-                    // Set status pengguna baru menjadi false
-                    prefs.setBool('isNewUser', false);
-                  } else {
-                    // Jika bukan pengguna baru, arahkan ke halaman utama
-                    Get.offAllNamed('/home');
-                  }
+                  Get.offAllNamed(Routes.welcomeBack);
                 } else {
                   controller.setErrorState();
                 }

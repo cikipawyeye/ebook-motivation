@@ -6,6 +6,7 @@ import 'package:ebookapp/app/modules/account_upgrade/views/create_payment_view.d
 import 'package:ebookapp/app/modules/account_upgrade/views/payment_detail_view.dart';
 import 'package:ebookapp/app/modules/login/views/forgot_password.dart';
 import 'package:ebookapp/app/modules/login/views/success_forgot.dart';
+import 'package:ebookapp/app/modules/login/views/welcome_back_view.dart';
 import 'package:get/get.dart';
 
 import '../modules/home/bindings/home_binding.dart';
@@ -121,6 +122,10 @@ class AppPages {
       name: _Paths.paymentInfo,
       page: () => PaymentDetailView(),
       binding: PaymentDetailBinding(),
+    ),
+    GetPage(
+      name: _Paths.welcomeBack,
+      page: () => WelcomeBackView(),
     ),
   ];
 }

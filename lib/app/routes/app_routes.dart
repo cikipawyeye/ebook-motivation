@@ -32,6 +32,7 @@ abstract class Routes {
   static const accountStatus = _Paths.accountStatus;
   static const createPayment = _Paths.createPayment;
   static const paymentInfo = _Paths.paymentInfo;
+  static const welcomeBack = _Paths.welcomeBack;
 }
 
 abstract class _Paths {
@@ -67,4 +68,5 @@ abstract class _Paths {
   static const accountStatus = '/upgrade/account-status';
   static const createPayment = '/upgrade/create-payment';
   static const paymentInfo = '/upgrade/payment-info';
+  static const welcomeBack = '/login/welcome';
 }
