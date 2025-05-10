@@ -25,12 +25,15 @@ class CreatePaymentView extends GetView<CreatePaymentController> {
           ),
         ),
         centerTitle: true,
-        backgroundColor: themeController.currentColor, // Warna biru gelap
+        backgroundColor: themeController.currentColor,
+        iconTheme: const IconThemeData(
+          color: Colors.white, // Warna ikon di AppBar
+        ),
       ),
       body: Container(
         decoration: BoxDecoration(
           image: DecorationImage(
-            image: AssetImage('assets/images/Watermark.png'),
+            image: AssetImage('assets/images/Template.png'),
             fit: BoxFit.cover, // Mengatur gambar agar menutupi seluruh area
           ),
         ),
@@ -44,26 +47,24 @@ class CreatePaymentView extends GetView<CreatePaymentController> {
                 Container(
                   padding: const EdgeInsets.all(20),
                   decoration: BoxDecoration(
-                    color: Colors.white,
                     borderRadius: BorderRadius.circular(16),
-                    boxShadow: [
-                      BoxShadow(
-                        color: Colors.grey.withValues(alpha: 0.2),
-                        spreadRadius: 2,
-                        blurRadius: 5,
-                        offset: const Offset(0, 3),
-                      ),
-                    ],
+                    border: Border.all(
+                      color: Colors.grey.withValues(alpha: 0.4),
+                      width: 1,
+                    ),
                   ),
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Row(
                         children: [
-                          Image.asset(
-                            'assets/icons/payment_logo_icon.png', // Ganti dengan path gambar yang sesuai
-                            width: 82,
-                            height: 82,
+                          Padding(
+                            padding: const EdgeInsets.only(left: 8, right: 8),
+                            child: Image.asset(
+                              'assets/images/logo_white.png',
+                              width: 73,
+                              height: 73,
+                            ),
                           ),
                           const SizedBox(width: 8),
                           Expanded(
@@ -83,7 +84,7 @@ class CreatePaymentView extends GetView<CreatePaymentController> {
                                       style: GoogleFonts.leagueSpartan(
                                         fontSize: 20,
                                         fontWeight: FontWeight.bold,
-                                        color: Colors.blue,
+                                        color: Colors.white,
                                       ),
                                     ),
                                   ],
@@ -93,6 +94,7 @@ class CreatePaymentView extends GetView<CreatePaymentController> {
                                   style: GoogleFonts.leagueSpartan(
                                     fontSize: 18,
                                     fontWeight: FontWeight.w500,
+                                    color: Colors.white,
                                   ),
                                 ),
                               ],
@@ -108,7 +110,7 @@ class CreatePaymentView extends GetView<CreatePaymentController> {
                             'Total',
                             style: GoogleFonts.leagueSpartan(
                               fontSize: 16,
-                              color: Colors.black54,
+                              color: Colors.white,
                             ),
                           ),
                           Text(
@@ -116,6 +118,7 @@ class CreatePaymentView extends GetView<CreatePaymentController> {
                             style: GoogleFonts.leagueSpartan(
                               fontSize: 20,
                               fontWeight: FontWeight.bold,
+                              color: Colors.white,
                             ),
                           ),
                         ],
@@ -129,16 +132,11 @@ class CreatePaymentView extends GetView<CreatePaymentController> {
                 Container(
                   padding: const EdgeInsets.all(20),
                   decoration: BoxDecoration(
-                    color: Colors.white,
                     borderRadius: BorderRadius.circular(16),
-                    boxShadow: [
-                      BoxShadow(
-                        color: Colors.grey.withValues(alpha: 0.2),
-                        spreadRadius: 2,
-                        blurRadius: 5,
-                        offset: const Offset(0, 3),
-                      ),
-                    ],
+                    border: Border.all(
+                      color: Colors.grey.withValues(alpha: 0.4),
+                      width: 1,
+                    ),
                   ),
                   child: Obx(() => Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
@@ -148,6 +146,7 @@ class CreatePaymentView extends GetView<CreatePaymentController> {
                             style: GoogleFonts.leagueSpartan(
                               fontSize: 18,
                               fontWeight: FontWeight.bold,
+                              color: Colors.white,
                             ),
                           ),
                           const SizedBox(height: 8),
@@ -155,23 +154,31 @@ class CreatePaymentView extends GetView<CreatePaymentController> {
                             'Pilih metode pembayaran',
                             style: GoogleFonts.leagueSpartan(
                               fontSize: 16,
-                              color: Colors.black54,
+                              color: Colors.white.withValues(alpha: 0.8),
                             ),
                           ),
                           const SizedBox(height: 16),
                           // ExpansionTile untuk kategori pembayaran
                           ExpansionTile(
+                            shape: RoundedRectangleBorder(
+                              side: BorderSide(
+                                color: Colors.transparent,
+                                // width: 0,
+                              ),
+                            ),
+                            iconColor: Colors.white,
+                            collapsedIconColor: Colors.white,
                             title: Text(
                               controller.selectedChannelCode.value ??
                                   'Pilih Metode Pembayaran',
                               style: GoogleFonts.leagueSpartan(
                                 fontSize: 16,
-                                color: Colors.black54,
+                                color: Colors.white,
                               ),
                             ),
                             children: PaymentType.values
                                 .where((val) => val != PaymentType.ewallet)
-                                .map((paymentType) {
+                                .map((PaymentType paymentType) {
                               return Container(
                                 margin: const EdgeInsets.symmetric(vertical: 4),
                                 decoration: BoxDecoration(
@@ -182,11 +189,20 @@ class CreatePaymentView extends GetView<CreatePaymentController> {
                                   borderRadius: BorderRadius.circular(8),
                                 ),
                                 child: ExpansionTile(
+                                  shape: RoundedRectangleBorder(
+                                    side: BorderSide(
+                                      color: Colors.transparent,
+                                      // width: 0,
+                                    ),
+                                  ),
+                                  iconColor: Colors.white,
+                                  collapsedIconColor: Colors.white,
                                   title: Text(
                                     paymentType.label,
                                     style: GoogleFonts.leagueSpartan(
                                       fontSize: 16,
-                                      fontWeight: FontWeight.w500,
+                                      fontWeight: FontWeight.bold,
+                                      color: Colors.white,
                                     ),
                                   ),
                                   children: [
@@ -205,11 +221,26 @@ class CreatePaymentView extends GetView<CreatePaymentController> {
                                             children: paymentType.channels
                                                 .map((channelCode) {
                                               return ListTile(
+                                                tileColor: Colors.transparent,
                                                 title: Text(
                                                   channelCode.label,
                                                   style:
                                                       GoogleFonts.leagueSpartan(
                                                     fontSize: 16,
+                                                    color: controller
+                                                                .selectedChannelCode
+                                                                .value ==
+                                                            channelCode.value
+                                                        ? Colors.white
+                                                        : Colors.white
+                                                            .withValues(
+                                                                alpha: 0.8),
+                                                    fontWeight: controller
+                                                                .selectedChannelCode
+                                                                .value ==
+                                                            channelCode.value
+                                                        ? FontWeight.bold
+                                                        : FontWeight.normal,
                                                   ),
                                                 ),
                                                 onTap: () {
@@ -234,20 +265,10 @@ class CreatePaymentView extends GetView<CreatePaymentController> {
                                                   borderRadius:
                                                       BorderRadius.circular(8),
                                                 ),
-                                                tileColor: controller
-                                                            .selectedChannelCode
-                                                            .value ==
-                                                        channelCode.value
-                                                    ? Colors.blue
-                                                        .withValues(alpha: 0.1)
-                                                    : Colors.white,
                                                 selected: controller
                                                         .selectedChannelCode
                                                         .value ==
                                                     channelCode.value,
-                                                selectedTileColor: Colors.blue
-                                                    .withValues(alpha: 0.1),
-                                                selectedColor: Colors.blue,
                                               );
                                             }).toList(),
                                           ),
@@ -268,16 +289,11 @@ class CreatePaymentView extends GetView<CreatePaymentController> {
                 Container(
                   padding: const EdgeInsets.all(20),
                   decoration: BoxDecoration(
-                    color: Colors.white,
                     borderRadius: BorderRadius.circular(16),
-                    boxShadow: [
-                      BoxShadow(
-                        color: Colors.grey.withValues(alpha: 0.2),
-                        spreadRadius: 2,
-                        blurRadius: 5,
-                        offset: const Offset(0, 3),
-                      ),
-                    ],
+                    border: Border.all(
+                      color: Colors.grey.withValues(alpha: 0.4),
+                      width: 1,
+                    ),
                   ),
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
@@ -287,6 +303,7 @@ class CreatePaymentView extends GetView<CreatePaymentController> {
                         style: GoogleFonts.leagueSpartan(
                           fontSize: 18,
                           fontWeight: FontWeight.bold,
+                          color: Colors.white,
                         ),
                       ),
                       const SizedBox(height: 16),
@@ -297,12 +314,14 @@ class CreatePaymentView extends GetView<CreatePaymentController> {
                             '1x Premium App',
                             style: GoogleFonts.leagueSpartan(
                               fontSize: 16,
+                              color: Colors.white.withValues(alpha: 0.8),
                             ),
                           ),
                           Text(
                             'Rp 29.900,00',
                             style: GoogleFonts.leagueSpartan(
                               fontSize: 16,
+                              color: Colors.white,
                             ),
                           ),
                         ],
@@ -315,12 +334,14 @@ class CreatePaymentView extends GetView<CreatePaymentController> {
                             'Biaya Admin',
                             style: GoogleFonts.leagueSpartan(
                               fontSize: 16,
+                              color: Colors.white.withValues(alpha: 0.8),
                             ),
                           ),
                           Text(
                             'Rp 0,00',
                             style: GoogleFonts.leagueSpartan(
                               fontSize: 16,
+                              color: Colors.white,
                             ),
                           ),
                         ],
@@ -336,6 +357,7 @@ class CreatePaymentView extends GetView<CreatePaymentController> {
                             style: GoogleFonts.leagueSpartan(
                               fontSize: 16,
                               fontWeight: FontWeight.bold,
+                              color: Colors.white,
                             ),
                           ),
                           Text(
@@ -343,6 +365,7 @@ class CreatePaymentView extends GetView<CreatePaymentController> {
                             style: GoogleFonts.leagueSpartan(
                               fontSize: 20,
                               fontWeight: FontWeight.bold,
+                              color: Colors.white,
                             ),
                           ),
                         ],
