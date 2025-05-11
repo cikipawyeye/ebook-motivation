@@ -504,7 +504,7 @@ class HomeView extends GetView<HomeController> {
                                     if (subcategory.premium &&
                                         !controller.userResponse.value!.user
                                             .isPremium) {
-                                      Get.toNamed(Routes.ticketPremium);
+                                      Get.toNamed(Routes.accountStatus);
                                     } else {
                                       Get.offNamed('/contents',
                                           arguments: subcategory);
@@ -549,11 +549,10 @@ class HomeView extends GetView<HomeController> {
                                           !controller.userResponse.value!.user
                                               .isPremium)
                                         Center(
-                                          child: Icon(
-                                            Icons.lock,
-                                            color: Colors.white
-                                                .withValues(alpha: 0.8),
-                                            size: 48,
+                                          child: Image.asset(
+                                            'assets/icons/lock_fill.png',
+                                            width: 48,
+                                            height: 48,
                                           ),
                                         ),
                                     ]),

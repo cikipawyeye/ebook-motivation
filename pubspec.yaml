@@ -99,6 +99,8 @@ flutter:
     - assets/icons/arrow_down.png
     - assets/icons/arrow_left.png
     - assets/icons/arrow_right.png
+    - assets/icons/lock.png
+    - assets/icons/lock_fill.png
 
     # Audio
     - assets/audio/PenyejukHati1.mp3
