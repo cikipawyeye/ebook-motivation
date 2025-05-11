@@ -47,7 +47,7 @@ enum VirtualAccountChannel implements Option {
   bri,
   bni,
   mandiri,
-  bsi,
+  // bsi,
   bjb,
   cimb,
   sahabatSampoerna;
@@ -61,8 +61,9 @@ enum VirtualAccountChannel implements Option {
         return 'BNI';
       case VirtualAccountChannel.mandiri:
         return 'Mandiri';
-      case VirtualAccountChannel.bsi:
-        return 'BSI';
+      // Uncomment this block if you want to add BSI payment instructions
+      // case VirtualAccountChannel.bsi:
+      //   return 'BSI';
       case VirtualAccountChannel.bjb:
         return 'BJB';
       case VirtualAccountChannel.cimb:
@@ -81,8 +82,9 @@ enum VirtualAccountChannel implements Option {
         return 'BNI';
       case VirtualAccountChannel.mandiri:
         return 'MANDIRI';
-      case VirtualAccountChannel.bsi:
-        return 'BSI';
+      // Uncomment this block if you want to add BSI payment instructions
+      // case VirtualAccountChannel.bsi:
+      //   return 'BSI';
       case VirtualAccountChannel.bjb:
         return 'BJB';
       case VirtualAccountChannel.cimb:

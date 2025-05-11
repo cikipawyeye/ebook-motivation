@@ -1,6 +1,6 @@
 import 'package:ebookapp/app/modules/account_upgrade/controllers/create_payment_controller.dart';
+import 'package:ebookapp/app/modules/account_upgrade/models/payment/payment_method.dart';
 import 'package:ebookapp/app/modules/settings/controllers/setting_theme_controller.dart';
-import 'package:ebookapp/app/modules/settings/enums/payment.dart';
 import 'package:ebookapp/core/constants/constant.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -176,9 +176,10 @@ class CreatePaymentView extends GetView<CreatePaymentController> {
                                 color: Colors.white,
                               ),
                             ),
-                            children: PaymentType.values
-                                .where((val) => val != PaymentType.ewallet)
-                                .map((PaymentType paymentType) {
+                            children: PaymentMethodType.values
+                                .where(
+                                    (val) => val != PaymentMethodType.ewallet)
+                                .map((PaymentMethodType paymentType) {
                               return Container(
                                 margin: const EdgeInsets.symmetric(vertical: 4),
                                 decoration: BoxDecoration(

@@ -210,26 +210,27 @@ class PaymentDetailController extends GetxController {
         ];
       }
 
-      if (payment.value?.paymentMethod.virtualAccount!.channelCode ==
-          VirtualAccountChannel.bsi) {
-        return [
-          PaymentInstruction(title: '1. Melalui ATM BSI:', instruction: [
-            '- Masukkan kartu ATM dan PIN Anda.',
-            '- Pilih menu "Transfer".',
-            '- Pilih "Virtual Account Billing".',
-            '- Masukkan nomor Virtual Account (VA).',
-            '- Konfirmasi detail transaksi dan masukkan PIN.'
-          ]),
-          PaymentInstruction(title: '2. Melalui BSI Mobile:', instruction: [
-            '- Buka aplikasi BSI Mobile dan login.',
-            '- Pilih menu "Bayar".',
-            '- Pilih "Akademik" (atau menu terkait, seperti "Institusi").',
-            '- Masukkan kode institusi (jika ada).',
-            '- Masukkan nomor VA tanpa kode institusi (jika ada).',
-            '- Konfirmasi detail transaksi dan masukkan PIN.'
-          ]),
-        ];
-      }
+      // Uncomment this block if you want to add BSI payment instructions
+      // if (payment.value?.paymentMethod.virtualAccount!.channelCode ==
+      //     VirtualAccountChannel.bsi) {
+      //   return [
+      //     PaymentInstruction(title: '1. Melalui ATM BSI:', instruction: [
+      //       '- Masukkan kartu ATM dan PIN Anda.',
+      //       '- Pilih menu "Transfer".',
+      //       '- Pilih "Virtual Account Billing".',
+      //       '- Masukkan nomor Virtual Account (VA).',
+      //       '- Konfirmasi detail transaksi dan masukkan PIN.'
+      //     ]),
+      //     PaymentInstruction(title: '2. Melalui BSI Mobile:', instruction: [
+      //       '- Buka aplikasi BSI Mobile dan login.',
+      //       '- Pilih menu "Bayar".',
+      //       '- Pilih "Akademik" (atau menu terkait, seperti "Institusi").',
+      //       '- Masukkan kode institusi (jika ada).',
+      //       '- Masukkan nomor VA tanpa kode institusi (jika ada).',
+      //       '- Konfirmasi detail transaksi dan masukkan PIN.'
+      //     ]),
+      //   ];
+      // }
 
       if (payment.value?.paymentMethod.virtualAccount!.channelCode ==
           VirtualAccountChannel.bjb) {

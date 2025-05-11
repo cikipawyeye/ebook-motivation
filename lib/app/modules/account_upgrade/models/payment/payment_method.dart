@@ -1,6 +1,7 @@
 import 'package:ebookapp/app/data/enum/option.dart';
 import 'package:ebookapp/app/modules/account_upgrade/models/payment/qr_code.dart';
 import 'package:ebookapp/app/modules/account_upgrade/models/payment/virtual_account.dart';
+import 'package:ebookapp/app/modules/settings/enums/payment.dart';
 
 class PaymentMethod {
   final PaymentMethodType type;
@@ -52,6 +53,17 @@ enum PaymentMethodType implements Option {
         return 'QR_CODE';
       case PaymentMethodType.virtualAccount:
         return 'VIRTUAL_ACCOUNT';
+    }
+  }
+
+  List<Option> get channels {
+    switch (this) {
+      case PaymentMethodType.ewallet:
+        return EWalletChannel.values;
+      case PaymentMethodType.qrCode:
+        return QRCodeChannel.values;
+      case PaymentMethodType.virtualAccount:
+        return VirtualAccountChannel.values;
     }
   }
 }
