@@ -124,7 +124,7 @@ class WallpaperMusicView extends GetView<WallpaperMusicController> {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
-                  'Silahkan pilih dulu\nwallpapernya...',
+                  'Silahkan pilih wallpapernya...',
                   style: GoogleFonts.leagueSpartan(
                       fontSize: 24, color: Colors.white),
                   textAlign: TextAlign.left,
@@ -184,7 +184,7 @@ class WallpaperMusicView extends GetView<WallpaperMusicController> {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Text(
-          'Pilih backsoundnya juga yaa...',
+          'Pilih audionya juga yaa...',
           style: GoogleFonts.leagueSpartan(fontSize: 24, color: Colors.white),
         ),
       ],

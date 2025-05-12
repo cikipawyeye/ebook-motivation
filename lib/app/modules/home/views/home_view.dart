@@ -551,6 +551,9 @@ class HomeView extends GetView<HomeController> {
                                         Center(
                                           child: Image.asset(
                                             'assets/icons/lock_fill.png',
+                                            opacity:
+                                                const AlwaysStoppedAnimation(
+                                                    0.8),
                                             width: 48,
                                             height: 48,
                                           ),

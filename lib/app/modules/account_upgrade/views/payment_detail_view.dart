@@ -37,6 +37,9 @@ class PaymentDetailView extends GetView<PaymentDetailController> {
             icon: const Icon(Icons.arrow_back),
             onPressed: () => Get.back(),
           ),
+          iconTheme: const IconThemeData(
+            color: Colors.white, // Warna ikon di AppBar
+          ),
         ),
         body: Container(
           decoration: BoxDecoration(

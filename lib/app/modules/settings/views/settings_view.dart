@@ -67,7 +67,7 @@ class SettingsView extends GetView<SettingsController> {
               const SizedBox(height: 8),
               _buildSettingItem(
                 image: 'assets/icons/pencil_icon.png',
-                title: 'Ganti Wallpaper dan Musik',
+                title: 'Ganti Wallpaper dan Audio',
                 onTap: () {
                   Get.offNamed(Routes.wallpaperMusic);
                 },
@@ -96,7 +96,7 @@ class SettingsView extends GetView<SettingsController> {
                   // URI untuk email
                   final Uri emailLaunchUri = Uri(
                     scheme: 'mailto',
-                    path: 'sarielinurnirmala@gmail.com',
+                    path: 'motivasi.ph@gmail.com',
                     query: _encodeQueryParameters(<String, String>{
                       'subject': 'Permintaan Bantuan Aplikasi',
                       'body': 'Halo Tim Support,\n\n'
@@ -205,83 +205,97 @@ class SettingsView extends GetView<SettingsController> {
       context: context,
       builder: (BuildContext context) {
         return Dialog(
+          backgroundColor: Colors.black.withValues(alpha: 0.8),
+          insetPadding: EdgeInsets.all(18),
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(10),
           ),
-          child: Container(
-            width: 320,
-            height: 270,
-            color: Colors.white,
-            padding: const EdgeInsets.all(16.0),
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              crossAxisAlignment: CrossAxisAlignment.end,
-              children: [
-                IconButton(
-                  icon: Icon(Icons.close),
-                  onPressed: () {
-                    Navigator.of(context).pop();
-                  },
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            crossAxisAlignment: CrossAxisAlignment.end,
+            children: [
+              IconButton(
+                icon: Icon(
+                  Icons.close,
+                  color: Colors.white.withValues(alpha: 0.7),
                 ),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                onPressed: () {
+                  Navigator.of(context).pop();
+                },
+              ),
+              Container(
+                padding: const EdgeInsets.only(
+                  left: 16.0,
+                  right: 16.0,
+                  bottom: 16.0,
+                ),
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  crossAxisAlignment: CrossAxisAlignment.end,
                   children: [
-                    SizedBox(height: 18),
-                    Expanded(
-                      child: Text(
-                        'Keluar dari akun',
-                        textAlign: TextAlign.center,
-                        style: GoogleFonts.leagueSpartan(
-                          fontSize: 28,
-                          fontWeight: FontWeight.bold,
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        SizedBox(height: 18),
+                        Expanded(
+                          child: Text(
+                            'Keluar dari akun',
+                            textAlign: TextAlign.center,
+                            style: GoogleFonts.leagueSpartan(
+                              fontSize: 28,
+                              fontWeight: FontWeight.bold,
+                              color: Colors.white,
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+                    const SizedBox(height: 10),
+                    Text(
+                      'Kamu yakin ingin keluar dari akunmu untuk sementara?',
+                      style: GoogleFonts.leagueSpartan(color: Colors.white),
+                      textAlign: TextAlign.center,
+                    ),
+                    const SizedBox(height: 20),
+                    SizedBox(
+                      width: double.infinity,
+                      child: ElevatedButton(
+                        onPressed: () async {
+                          final prefs = await SharedPreferences.getInstance();
+                          final userController = Get.find<UserController>();
+
+                          final int? storedUserId = prefs.getInt('userId');
+                          final int? currentUserId =
+                              userController.userId.value;
+
+                          if (storedUserId != currentUserId) {
+                            await prefs.setInt('userId', currentUserId ?? 0);
+                            debugPrint(
+                                "SharedPreferences diperbarui dengan userId baru: $currentUserId");
+                          } else {
+                            debugPrint(
+                                "UserId sama, memuat kembali data SharedPreferences");
+                          }
+
+                          await userController.logout();
+                          Get.offAllNamed(Routes.login);
+                        },
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor: const Color(0xFFE33535),
+                        ),
+                        child: Text(
+                          'Keluar',
+                          style: GoogleFonts.leagueSpartan(
+                            fontSize: 18,
+                            color: Colors.white,
+                          ),
                         ),
                       ),
                     ),
                   ],
                 ),
-                const SizedBox(height: 10),
-                Text(
-                  'Kamu yakin ingin keluar dari akumu untuk sementara?',
-                  style: GoogleFonts.leagueSpartan(),
-                  textAlign: TextAlign.center,
-                ),
-                const SizedBox(height: 20),
-                SizedBox(
-                  width: double.infinity,
-                  child: ElevatedButton(
-                    onPressed: () async {
-                      final prefs = await SharedPreferences.getInstance();
-                      final userController = Get.find<UserController>();
-
-                      final int? storedUserId = prefs.getInt('userId');
-                      final int? currentUserId = userController.userId.value;
-
-                      if (storedUserId != currentUserId) {
-                        await prefs.setInt('userId', currentUserId ?? 0);
-                        debugPrint(
-                            "SharedPreferences diperbarui dengan userId baru: $currentUserId");
-                      } else {
-                        debugPrint(
-                            "UserId sama, memuat kembali data SharedPreferences");
-                      }
-
-                      await userController.logout();
-                      Get.offAllNamed(Routes.login);
-                    },
-                    style: ElevatedButton.styleFrom(
-                      backgroundColor: const Color(0xFFE33535),
-                    ),
-                    child: Text(
-                      'Keluar',
-                      style: GoogleFonts.leagueSpartan(
-                        fontSize: 15,
-                        color: Colors.white,
-                      ),
-                    ),
-                  ),
-                ),
-              ],
-            ),
+              )
+            ],
           ),
         );
       },

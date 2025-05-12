@@ -85,7 +85,7 @@ class WallpaperMusicController extends GetxController {
     debugPrint("Kesalahan: $error");
   }
 
-  Future<void> loadSelections() async {
+  Future<void> loadSelections({bool playVideo = false}) async {
     final prefs = await SharedPreferences.getInstance();
     int? selectedWallpaperId = prefs.getInt('selectedWallpaperId');
     int? selectedMusicId = prefs.getInt('selectedMusicId');
@@ -93,6 +93,10 @@ class WallpaperMusicController extends GetxController {
       try {
         selectedWallpaper.value = wallpapers
             .firstWhere((wallpaper) => wallpaper.id == selectedWallpaperId);
+
+        if (playVideo) {
+          selectWallpaper(selectedWallpaper.value!);
+        }
       } catch (e) {
         selectedWallpaper.value = null;
       }
@@ -142,7 +146,7 @@ class WallpaperMusicController extends GetxController {
     } catch (e) {
       _handleError('Gagal mengambil data wallpapers', e);
     } finally {
-      loadSelections();
+      loadSelections(playVideo: true);
       isLoadingWallpaper.value = false;
     }
   }

@@ -213,7 +213,7 @@ const privacyPolicy =
     'Anda menyetujui Ketentuan yang diperbarui.\n\n'
     '9. Kontak Kami\n'
     'Jika Anda memiliki pertanyaan, saran, atau keluhan terkait Aplikasi atau Ketentuan ini, silakan hubungi Kami melalui:\n'
-    'Email: 3linnsari@gmail.com\n\n'
+    'Email: motivasi.ph@gmail.com\n\n'
     'KEBIJAKAN PRIVASI\n'
     'Aplikasi Mobile Motivasi Penyejuk Hati\n'
     'Versi Terakhir: 6 Desember 2024\n'
@@ -290,4 +290,4 @@ const privacyPolicy =
     'Aplikasi ini tidak ditujukan untuk anak-anak di bawah usia 13 tahun. Kami tidak secara sengaja mengumpulkan informasi pribadi dari anak-anak tanpa persetujuan orang tua atau wali mereka. Jika Anda mengetahui bahwa seorang anak telah memberikan data pribadinya tanpa persetujuan, silakan hubungi Kami untuk penghapusan.\n\n'
     '10. Kontak Kami\n'
     'Jika Anda memiliki pertanyaan, saran, atau keluhan terkait Kebijakan Privasi ini, silakan hubungi Kami melalui:\n'
-    'Email: 3linnsari@gmail.com';
+    'Email: motivasi.ph@gmail.com';

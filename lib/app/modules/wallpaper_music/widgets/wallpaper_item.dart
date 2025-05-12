@@ -29,9 +29,9 @@ class WallpaperItem extends StatelessWidget {
           decoration: BoxDecoration(
             border: Border.all(
               color: isSelected ? colorBackground : Colors.grey,
-              width: isSelected ? 2 : 1,
+              width: isSelected ? 5 : 1,
             ),
-            borderRadius: BorderRadius.circular(15),
+            borderRadius: BorderRadius.circular(isSelected ? 20 : 15),
           ),
           child: Stack(
             alignment: Alignment.center,
@@ -79,9 +79,21 @@ class WallpaperItem extends StatelessWidget {
   }
 
   Widget _buildVideoPlayer(Wallpaper wallpaper, bool isSelected) {
-    if (!isSelected || wallpaper.type != 'video') {
+    if (!isSelected ||
+        wallpaper.type != 'video' ||
+        controller.videoController.value == null) {
       return SizedBox.shrink(); // Hide video player if not selected
     }
+
+    // if (controller.videoController.value!.value.isInitialized) {
+    //   if (!controller.videoController.value!.value.isPlaying) {
+    //     controller.videoController.value!.play();
+    //   }
+    // } else {
+    //   controller.videoController.value!.initialize().then((_) {
+    //     controller.videoController.value!.play();
+    //   });
+    // }
 
     return Container(
       width: double.infinity,
