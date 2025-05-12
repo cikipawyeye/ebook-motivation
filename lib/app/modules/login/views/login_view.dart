@@ -58,50 +58,46 @@ class LoginView extends GetView<LoginController> {
               ),
             ),
             SizedBox(height: 5),
-            Obx(
-              () => Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  TextField(
-                    autocorrect: false,
-                    controller: emailC,
-                    keyboardType: TextInputType.emailAddress,
-                    onChanged: (value) {
-                      controller.resetErrorState();
-                    },
-                    style: TextStyle(
-                      color: Colors.white,
-                      fontSize: 16,
-                    ),
-                    decoration: InputDecoration(
-                      contentPadding: EdgeInsets.symmetric(horizontal: 18),
-                      floatingLabelBehavior: FloatingLabelBehavior.never,
-                      labelText: 'Email',
-                      labelStyle: TextStyle(
-                          fontSize: 12,
-                          color: Colors.white.withValues(alpha: 0.5)),
-                      errorText: controller.isEmailError.value
-                          ? 'Kredensial tidak valid'
-                          : null,
-                      focusedBorder: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(30),
-                        borderSide: BorderSide(
-                            color: Colors.white.withValues(alpha: 0.5),
-                            width: 1.0),
+            Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Obx(() => TextField(
+                      autocorrect: false,
+                      controller: emailC,
+                      keyboardType: TextInputType.emailAddress,
+                      onChanged: (value) {
+                        controller.resetErrorState();
+                      },
+                      style: TextStyle(
+                        color: Colors.white,
+                        fontSize: 16,
                       ),
-                      enabledBorder: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(30),
-                        borderSide: BorderSide(
-                            color: Colors.white.withValues(alpha: 0.5),
-                            width: 1.0),
+                      decoration: InputDecoration(
+                        contentPadding: EdgeInsets.symmetric(horizontal: 18),
+                        floatingLabelBehavior: FloatingLabelBehavior.never,
+                        labelText: 'Email',
+                        labelStyle: TextStyle(
+                            fontSize: 12,
+                            color: Colors.white.withValues(alpha: 0.5)),
+                        errorText: controller.emailError.value,
+                        focusedBorder: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(30),
+                          borderSide: BorderSide(
+                              color: Colors.white.withValues(alpha: 0.5),
+                              width: 1.0),
+                        ),
+                        enabledBorder: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(30),
+                          borderSide: BorderSide(
+                              color: Colors.white.withValues(alpha: 0.5),
+                              width: 1.0),
+                        ),
+                        border: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(30),
+                        ),
                       ),
-                      border: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(30),
-                      ),
-                    ),
-                  ),
-                ],
-              ),
+                    )),
+              ],
             ),
             const SizedBox(height: 10),
 
@@ -131,6 +127,7 @@ class LoginView extends GetView<LoginController> {
                       color: Colors.white,
                     ),
                     decoration: InputDecoration(
+                      errorText: controller.passwordError.value,
                       contentPadding: EdgeInsets.symmetric(horizontal: 18),
                       floatingLabelBehavior: FloatingLabelBehavior.never,
                       labelText: 'Kata sandi',
@@ -166,14 +163,6 @@ class LoginView extends GetView<LoginController> {
                       ),
                     ),
                   ),
-                  if (controller.isPasswordError.value)
-                    Padding(
-                      padding: const EdgeInsets.only(top: 5),
-                      child: Text(
-                        controller.errorMessage.value,
-                        style: TextStyle(color: Colors.red, fontSize: 12),
-                      ),
-                    ),
                 ],
               ),
             ),
@@ -194,9 +183,8 @@ class LoginView extends GetView<LoginController> {
                 bool success = await controller.loginWithEmail();
                 if (success) {
                   Get.offAllNamed(Routes.welcomeBack);
-                } else {
-                  controller.setErrorState();
                 }
+
                 isSubmitting.value = false;
               },
               style: ElevatedButton.styleFrom(

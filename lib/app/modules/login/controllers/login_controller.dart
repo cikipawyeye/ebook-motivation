@@ -12,9 +12,8 @@ class LoginController extends GetxController {
   final Future<SharedPreferences> _prefs = SharedPreferences.getInstance();
   RxBool isHidden = true.obs;
   RxBool isLoggedIn = false.obs;
-  RxBool isEmailError = false.obs;
-  RxBool isPasswordError = false.obs;
-  RxString errorMessage = ''.obs;
+  final emailError = RxnString();
+  final passwordError = RxnString();
 
   LoginController() {
     _checkLoginStatus();
@@ -30,7 +29,10 @@ class LoginController extends GetxController {
   }
 
   Future<bool> loginWithEmail() async {
-    var headers = {'Content-Type': 'application/json'};
+    var headers = {
+      'Accept': 'application/json',
+      'Content-Type': 'application/json'
+    };
 
     try {
       var url =
@@ -43,8 +45,10 @@ class LoginController extends GetxController {
       http.Response response =
           await http.post(url, body: jsonEncode(body), headers: headers);
 
+      debugPrint('Response: ${response.body}');
+      final json = jsonDecode(response.body);
+
       if (response.statusCode == 200) {
-        final json = jsonDecode(response.body);
         if (json['data'] != null && json['data']['token'] != null) {
           var token = json['data']['token'];
           final SharedPreferences prefs = await _prefs;
@@ -52,22 +56,34 @@ class LoginController extends GetxController {
           isLoggedIn.value = true;
           return true;
         } else {
-          setErrorState();
-          errorMessage.value = 'Email atau kata sandi yang dimasukkan salah';
-          Get.snackbar('Login Gagal', errorMessage.value);
+          Get.snackbar(
+              'Login Gagal', 'Email atau kata sandi yang dimasukkan salah');
           return false;
         }
       } else {
-        setErrorState();
-        errorMessage.value = 'Email atau kata sandi yang dimasukkan salah';
-        Get.snackbar('Login Gagal', errorMessage.value);
+        if (json['message'] != null) {
+          Get.snackbar('Login Gagal', json['message']);
+        } else {
+          Get.snackbar('Login Gagal', 'Terjadi kesalahan, silakan coba lagi.');
+        }
+
+        if (json['errors'] != null) {
+          if (json['errors']['email'] != null) {
+            setErrorState(email: json['errors']['email'][0]);
+          }
+          if (json['errors']['password'] != null) {
+            setErrorState(password: json['errors']['password'][0]);
+          }
+        } else {
+          setErrorState();
+        }
+
         return false;
       }
     } catch (e) {
       debugPrint('$e');
       setErrorState();
-      errorMessage.value = 'Silahkan Coba Kembali.';
-      Get.snackbar('Login Gagal', errorMessage.value);
+      Get.snackbar(errorTitle, errorDescription);
       return false;
     }
   }
@@ -100,13 +116,13 @@ class LoginController extends GetxController {
     return true;
   }
 
-  void setErrorState() {
-    isEmailError.value = true;
-    isPasswordError.value = true;
+  void setErrorState({String? email, String? password}) {
+    emailError.value = email;
+    passwordError.value = password;
   }
 
   void resetErrorState() {
-    isEmailError.value = false;
-    isPasswordError.value = false;
+    emailError.value = null;
+    passwordError.value = null;
   }
 }
