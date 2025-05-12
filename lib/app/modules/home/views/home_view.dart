@@ -72,9 +72,9 @@ class HomeView extends GetView<HomeController> {
                   Container(
                     padding: EdgeInsets.all(10),
                     child: Text(
-                      "Terima kasih.\nSemoga bermanfaat.",
+                      "Terima kasih. Semoga bermanfaat.",
                       style: GoogleFonts.leagueSpartan(
-                          fontSize: 24, color: Colors.white),
+                          fontSize: 20, color: Colors.white),
                     ),
                   ),
                   const SizedBox(height: 20),
@@ -202,7 +202,9 @@ class HomeView extends GetView<HomeController> {
                         style: OutlinedButton.styleFrom(
                           padding: const EdgeInsets.symmetric(
                               horizontal: 20, vertical: 12),
-                          side: const BorderSide(color: appBarColor, width: 2),
+                          side: BorderSide(
+                              color: appBarColor.withValues(alpha: 0.5),
+                              width: 2),
                           shape: RoundedRectangleBorder(
                             borderRadius: BorderRadius.circular(16),
                           ),
@@ -317,8 +319,12 @@ class HomeView extends GetView<HomeController> {
                             child: Row(
                               children: [
                                 IconButton(
-                                  icon: Icon(Icons.arrow_back,
-                                      color: Colors.white),
+                                  icon: Image.asset(
+                                    'assets/icons/arrow_left.png',
+                                    fit: BoxFit.contain,
+                                    width: 22,
+                                    height: 22,
+                                  ),
                                   onPressed: () => Navigator.of(context).pop(),
                                 ),
                                 const SizedBox(width: 8),
@@ -554,8 +560,8 @@ class HomeView extends GetView<HomeController> {
                                             opacity:
                                                 const AlwaysStoppedAnimation(
                                                     0.8),
-                                            width: 48,
-                                            height: 48,
+                                            width: 86,
+                                            height: 86,
                                           ),
                                         ),
                                     ]),
@@ -574,16 +580,35 @@ class HomeView extends GetView<HomeController> {
             Obx(() =>
                 controller.canScrollDown.value || controller.canScrollUp.value
                     ? Positioned(
-                        bottom: 20,
-                        right: 20,
-                        child: Image.asset(
-                          controller.canScrollDown.value
-                              ? 'assets/icons/arrow_down.png'
-                              : 'assets/icons/arrow_top.png',
-                          opacity: const AlwaysStoppedAnimation(0.4),
-                          fit: BoxFit.contain,
-                          width: 40,
-                          height: 40,
+                        bottom: 14,
+                        right: 10,
+                        child: GestureDetector(
+                          onTap: () {
+                            if (controller.canScrollDown.value) {
+                              controller.scrollController.animateTo(
+                                controller
+                                    .scrollController.position.maxScrollExtent,
+                                duration: Duration(milliseconds: 200),
+                                curve: Curves.easeIn,
+                              );
+                            } else if (controller.canScrollUp.value) {
+                              controller.scrollController.animateTo(
+                                controller
+                                    .scrollController.position.minScrollExtent,
+                                duration: Duration(milliseconds: 200),
+                                curve: Curves.easeIn,
+                              );
+                            }
+                          },
+                          child: Image.asset(
+                            controller.canScrollDown.value
+                                ? 'assets/icons/arrow_down.png'
+                                : 'assets/icons/arrow_top.png',
+                            opacity: const AlwaysStoppedAnimation(0.4),
+                            fit: BoxFit.contain,
+                            width: 52,
+                            height: 52,
+                          ),
                         ),
                       )
                     : SizedBox.shrink()),

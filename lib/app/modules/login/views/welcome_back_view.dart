@@ -48,7 +48,7 @@ class WelcomeBackView extends GetView {
                   ],
                 ),
                 Text(
-                  "Selamat datang kembali.",
+                  "Selamat datang!",
                   textAlign: TextAlign.center,
                   style: GoogleFonts.poppins(
                     fontSize: 24,
@@ -60,7 +60,7 @@ class WelcomeBackView extends GetView {
                   height: 30,
                 ),
                 Text(
-                  "Mulai lagi yuk...",
+                  "Kita mulai yuk...",
                   style: GoogleFonts.poppins(
                     fontSize: 16,
                     fontWeight: FontWeight.w400,

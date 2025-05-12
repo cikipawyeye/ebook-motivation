@@ -34,7 +34,12 @@ class PaymentDetailView extends GetView<PaymentDetailController> {
           ),
           backgroundColor: const Color(0xFF32497B),
           leading: IconButton(
-            icon: const Icon(Icons.arrow_back),
+            icon: Image.asset(
+              'assets/icons/arrow_left.png',
+              fit: BoxFit.contain,
+              width: 24,
+              height: 24,
+            ),
             onPressed: () => Get.back(),
           ),
           iconTheme: const IconThemeData(

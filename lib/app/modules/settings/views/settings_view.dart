@@ -45,6 +45,15 @@ class SettingsView extends GetView<SettingsController> {
           iconTheme: const IconThemeData(
             color: Colors.white,
           ),
+          leading: IconButton(
+            icon: Image.asset(
+              'assets/icons/arrow_left.png',
+              fit: BoxFit.contain,
+              width: 24,
+              height: 24,
+            ),
+            onPressed: () => Get.back(),
+          ),
         ),
         body: Container(
           padding: const EdgeInsets.symmetric(horizontal: 8.0),

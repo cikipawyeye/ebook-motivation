@@ -27,6 +27,15 @@ class AccountStatusView extends GetView<AccountStatusController> {
               fontSize: 25,
             ),
           ),
+          leading: IconButton(
+            icon: Image.asset(
+              'assets/icons/arrow_left.png',
+              fit: BoxFit.contain,
+              width: 24,
+              height: 24,
+            ),
+            onPressed: () => Get.back(),
+          ),
           centerTitle: true,
           backgroundColor: themeController.currentColor,
           iconTheme: const IconThemeData(
