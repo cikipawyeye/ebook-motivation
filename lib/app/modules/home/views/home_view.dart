@@ -203,7 +203,7 @@ class HomeView extends GetView<HomeController> {
                           padding: const EdgeInsets.symmetric(
                               horizontal: 20, vertical: 12),
                           side: BorderSide(
-                              color: appBarColor.withValues(alpha: 0.5),
+                              color: appBarColor.withValues(alpha: 0.3),
                               width: 2),
                           shape: RoundedRectangleBorder(
                             borderRadius: BorderRadius.circular(16),

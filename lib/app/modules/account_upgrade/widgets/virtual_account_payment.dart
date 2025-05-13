@@ -84,6 +84,7 @@ class VirtualAccountPayment extends StatelessWidget {
                         style: GoogleFonts.leagueSpartan(
                           fontSize: 16,
                           color: Colors.blue,
+                          fontWeight: FontWeight.bold,
                         ),
                       ),
                     ),

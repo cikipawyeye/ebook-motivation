@@ -4,6 +4,7 @@ import 'package:ebookapp/app/data/models/motivasi_model.dart';
 import 'package:ebookapp/app/modules/content/controllers/audio_controller.dart';
 import 'package:ebookapp/app/modules/content/controllers/content_controller.dart';
 import 'package:ebookapp/app/modules/content/controllers/live_controller.dart';
+import 'package:ebookapp/app/modules/settings/controllers/user_controller.dart';
 import 'package:ebookapp/app/routes/app_pages.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -45,6 +46,7 @@ class ContentView extends GetView<ContentController> {
 
     final liveWallpaperController = Get.find<LiveWallpaperController>();
     final audioController = Get.find<AudioController>();
+    final userController = Get.find<UserController>();
 
     return Scaffold(
       backgroundColor: Color.fromARGB(255, 23, 37, 67),
@@ -91,12 +93,19 @@ class ContentView extends GetView<ContentController> {
                           }
                         }
 
+                        if (index > 2 && !userController.isPremium.value) {
+                          Future.microtask(
+                              () => Get.offNamed(Routes.ticketPremium));
+                        }
+
                         // Loop ke awal jika sudah di akhir dan nextCursor == null
                         if (index >= controller.images.length &&
                             controller.nextCursor == null) {
                           Future.delayed(Duration(milliseconds: 230), () {
                             _pageController.jumpToPage(0);
                           });
+
+                          return;
                         }
                       },
                       itemBuilder: (context, index) => _buildContentItem(index),

@@ -4,7 +4,6 @@ import 'package:ebookapp/app/data/models/content_model.dart';
 import 'package:ebookapp/app/data/models/cursor_pagination_model.dart';
 import 'package:ebookapp/app/modules/content/repositories/content_repository.dart';
 import 'package:ebookapp/app/modules/settings/controllers/user_controller.dart';
-import 'package:ebookapp/app/routes/app_pages.dart';
 import 'package:get/get.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -30,12 +29,6 @@ class ContentController extends GetxController {
     getSharedPreferenceInstance().then((prefs) {
       _prefs = prefs;
 
-      if (!userController.isPremium.value &&
-          (_prefs.getStringList('contentViewed') ?? []).length >= 3) {
-        Future.microtask(() => Get.offNamed(Routes.ticketPremium));
-        return;
-      }
-
       token.value = _prefs.getString('token');
       isLoading.value = false;
     });
@@ -51,10 +44,6 @@ class ContentController extends GetxController {
 
     if (reset) {
       images.clear();
-
-      if (!response['images'].isEmpty) {
-        addSlideCount(response['images'][0]);
-      }
     }
 
     images.addAll(response['images']);
@@ -68,10 +57,6 @@ class ContentController extends GetxController {
 
     if (images.length - index <= fetchThreshold && nextCursor != null) {
       fetchImages(subcategoryId: subcategoryId);
-    }
-
-    if (index < 3 && index < images.length) {
-      addSlideCount(images[index]);
     }
   }
 
@@ -100,23 +85,6 @@ class ContentController extends GetxController {
 
   Future<SharedPreferences> getSharedPreferenceInstance() async {
     return await SharedPreferences.getInstance();
-  }
-
-  void addSlideCount(Content content) {
-    if (!userController.isPremium.value) {
-      final current = _prefs.getStringList('contentViewed') ?? [];
-      final Set<String> uniqueSet = Set<String>.from(current);
-
-      uniqueSet.add(content.id.toString());
-
-      _prefs.setStringList('contentViewed', uniqueSet.toList()).then((_) {
-        if (uniqueSet.length > 3) {
-          Future.microtask(() => Get.offNamed(Routes.ticketPremium));
-        }
-      });
-    } else {
-      _prefs.setStringList('contentViewed', []);
-    }
   }
 }
 
