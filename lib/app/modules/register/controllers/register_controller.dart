@@ -31,7 +31,7 @@ class RegisterController extends GetxController {
   final selectedJobType = 8.obs;
   final isAgreed = false.obs;
   final isNameError = false.obs;
-  final isEmailError = false.obs;
+  final emailError = RxnString();
   final isPasswordError = false.obs;
   final isConfirmPasswordError = false.obs;
   final isDobError = false.obs;
@@ -87,15 +87,70 @@ class RegisterController extends GetxController {
     return isValid && isUnique;
   }
 
-  bool validateEmail() {
+  Timer? _emailInputDebounce;
+  final isValidatingEmail = RxBool(false);
+
+  Future<bool> validateEmail() async {
     final email = emailController.text.trim();
     final emailRegex = RegExp(
         r'^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$',
         caseSensitive: false);
     final isValid =
         email.isNotEmpty && emailRegex.hasMatch(email) && email.length <= 254;
-    isEmailError.value = !isValid;
-    return isValid;
+    emailError.value = isValid ? null : 'Email tidak valid';
+
+    if (!isValid) {
+      return false;
+    }
+
+    if (_emailInputDebounce?.isActive ?? false) {
+      _emailInputDebounce?.cancel();
+    }
+
+    final completer = Completer<bool>();
+
+    _emailInputDebounce = Timer(const Duration(milliseconds: 250), () async {
+      isLoading.value = true;
+
+      try {
+        final response = await http.post(
+          Uri.parse('$baseUrl/api/v1/register/check-email'),
+          headers: {
+            'Content-Type': 'application/json',
+            'Accept': 'application/json',
+          },
+          body: jsonEncode({"email": emailController.text.trim()}),
+        );
+
+        debugPrint('Request Body: ${jsonEncode({
+              "email": emailController.text.trim()
+            })}');
+        debugPrint('Response Body: ${response.body}');
+
+        final jsonResponse = json.decode(response.body);
+
+        if (response.statusCode == 200) {
+          final isEmailTaken = jsonResponse['data']['exists'];
+          if (isEmailTaken) {
+            emailError.value = 'Email sudah terdaftar';
+          } else {
+            emailError.value = null;
+          }
+        } else {
+          emailError.value = jsonResponse['message'] ?? 'Gagal memeriksa email';
+        }
+
+        completer.complete(emailError.value == null);
+      } catch (e) {
+        emailError.value = 'Terjadi kesalahan';
+        completer.complete(false);
+      } finally {
+        isLoading.value = false;
+      }
+    });
+
+    // Tunggu sampai Timer selesai dan completer dipanggil
+    return completer.future;
   }
 
   bool validatePassword(String value) {
@@ -153,8 +208,8 @@ class RegisterController extends GetxController {
     }
   }
 
-  bool isEmailValid() {
-    return validateEmail();
+  Future<bool> isEmailValid() async {
+    return await validateEmail();
   }
 
   bool isPhoneNumberValid() {
@@ -186,7 +241,6 @@ class RegisterController extends GetxController {
     switch (currentPage) {
       case 'personal_info':
         return validateName() &&
-            validateEmail() &&
             validatePassword(passwordController.text) &&
             validateConfirmPassword(confirmPasswordController.text);
       case 'contact_info':
@@ -243,7 +297,6 @@ class RegisterController extends GetxController {
 
   bool validateAllFields() {
     return validateName() &&
-        validateEmail() &&
         validatePassword(passwordController.text) &&
         validateConfirmPassword(confirmPasswordController.text) &&
         validatePhoneNumber() &&
@@ -471,7 +524,7 @@ class RegisterController extends GetxController {
     isAgreed.value = false;
 
     isNameError.value = false;
-    isEmailError.value = false;
+    emailError.value = null;
     isPasswordError.value = false;
     isConfirmPasswordError.value = false;
     isDobError.value = false;

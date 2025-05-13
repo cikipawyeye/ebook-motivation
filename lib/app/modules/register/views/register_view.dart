@@ -258,8 +258,7 @@ class RegisterPage extends GetView<RegisterController> {
                 labelText: 'Email',
                 labelStyle: TextStyle(
                     fontSize: 12, color: Colors.white.withValues(alpha: 0.5)),
-                errorText:
-                    controller.isEmailError.value ? 'Email tidak valid' : null,
+                errorText: controller.emailError.value,
                 focusedBorder: OutlineInputBorder(
                   borderRadius: BorderRadius.circular(30),
                   borderSide: BorderSide(
@@ -853,7 +852,7 @@ class RegisterPage extends GetView<RegisterController> {
   }
 
   // Logic Navigation
-  void _navigateOrRegister(BuildContext context) {
+  Future<void> _navigateOrRegister(BuildContext context) async {
     int currentPage = _pageController.page?.round() ?? 0;
 
     // Validasi untuk memastikan bahwa setiap halaman diisi sebelum melanjutkan
@@ -862,7 +861,7 @@ class RegisterPage extends GetView<RegisterController> {
         if (!controller.validateName()) return;
         break;
       case 1:
-        if (!controller.isEmailValid()) return;
+        if (!await controller.isEmailValid()) return;
         break;
       case 2:
         if (!controller.isPhoneNumberValid()) return;
