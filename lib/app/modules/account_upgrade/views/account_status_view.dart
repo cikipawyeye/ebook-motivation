@@ -218,9 +218,12 @@ class AccountStatusView extends GetView<AccountStatusController> {
                                           });
                                     },
                                     style: ElevatedButton.styleFrom(
-                                      backgroundColor: const Color(0xFFE2E2E2),
+                                      backgroundColor: Colors.white.withValues(
+                                          alpha: 0.3), // Warna tombol
                                       padding: const EdgeInsets.symmetric(
-                                          horizontal: 30, vertical: 8),
+                                        horizontal: 44,
+                                        vertical: 12,
+                                      ),
                                       shape: RoundedRectangleBorder(
                                         borderRadius: BorderRadius.circular(30),
                                       ),
@@ -229,7 +232,7 @@ class AccountStatusView extends GetView<AccountStatusController> {
                                       'Lihat status pembayaran',
                                       style: GoogleFonts.leagueSpartan(
                                         fontSize: 16,
-                                        color: Colors.black54,
+                                        color: Colors.white,
                                       ),
                                     ),
                                   );

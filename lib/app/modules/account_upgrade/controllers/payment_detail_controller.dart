@@ -13,6 +13,7 @@ import 'package:ebookapp/core/constants/constant.dart';
 
 class PaymentDetailController extends GetxController {
   final isLoading = RxBool(false);
+  final isCanceling = RxBool(false);
   final isExpanded = RxBool(false);
   final payment = Rxn<Payment>();
   final paymentType = Rxn<PaymentMethodType>();
@@ -135,6 +136,46 @@ class PaymentDetailController extends GetxController {
         Get.offAllNamed(Routes.home);
       }
     });
+  }
+
+  Future<void> cancelPayment() async {
+    if (isCanceling.value) return;
+    isCanceling.value = true;
+
+    try {
+      final token = await _getToken();
+      if (token == null) {
+        _handleApiError('Pengguna tidak terautentikasi!', null);
+        isCanceling.value = false;
+        return;
+      }
+
+      final response = await http.post(
+        Uri.parse('$baseUrl/api/v1/upgrade/cancel-payment'),
+        headers: {
+          'Authorization': 'Bearer $token',
+          'Content-Type': 'application/json',
+          'Accept': 'application/json',
+        },
+      );
+
+      if (response.statusCode != 200 && response.statusCode != 204) {
+        _handleApiError('Gagal mengambil informasi pembayaran', response.body);
+        isCanceling.value = false;
+        return;
+      }
+
+      Get.snackbar(
+        'Pembayaran Dibatalkan',
+        'Silakan buat metode pembayaran baru!',
+      );
+      Get.offNamed(Routes.createPayment);
+    } catch (e) {
+      _handleApiError(
+          'Terjadi kesalahan saat membatalkan metode pembayaran.', e);
+    } finally {
+      isCanceling.value = false;
+    }
   }
 
   List<PaymentInstruction>? getPaymentInstructions() {
