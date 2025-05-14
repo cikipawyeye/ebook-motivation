@@ -185,7 +185,7 @@ class HomeView extends GetView<HomeController> {
                   // Tombol Premium
                   Row(
                     children: [
-                      OutlinedButton.icon(
+                      ElevatedButton.icon(
                         onPressed: () {
                           Get.toNamed(Routes.accountStatus);
                         },
@@ -199,12 +199,11 @@ class HomeView extends GetView<HomeController> {
                           style:
                               _getTextStyle(fontSize: 16, color: Colors.white),
                         ),
-                        style: OutlinedButton.styleFrom(
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor: Colors.white.withValues(alpha: 0.3),
                           padding: const EdgeInsets.symmetric(
                               horizontal: 20, vertical: 12),
-                          side: BorderSide(
-                              color: appBarColor.withValues(alpha: 0.3),
-                              width: 2),
+                          side: BorderSide(color: appBarColor, width: 2),
                           shape: RoundedRectangleBorder(
                             borderRadius: BorderRadius.circular(16),
                           ),
