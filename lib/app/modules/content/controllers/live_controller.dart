@@ -13,7 +13,7 @@ class LiveWallpaperController extends GetxController {
   // Observable untuk wallpaper saat ini
   final _videoController = Rxn<VideoPlayerController>();
   final wallpaperImagePath = RxnString();
-  final RxDouble _wallpaperOpacity = RxDouble(0.8);
+  final RxDouble _wallpaperOpacity = RxDouble(0.5);
   final RxBool _isWallpaperVisible = RxBool(true);
 
   bool get isWallpaperVisible => _isWallpaperVisible.value;
@@ -145,6 +145,12 @@ class LiveWallpaperController extends GetxController {
 
   void toggleWallpaperVisibility() {
     _isWallpaperVisible.value = !_isWallpaperVisible.value;
+
+    if (_isWallpaperVisible.value) {
+      _videoController.value?.play();
+    } else {
+      _videoController.value?.pause();
+    }
   }
 
   void setWallpaperOpacity(double opacity) {
@@ -152,9 +158,6 @@ class LiveWallpaperController extends GetxController {
   }
 
   Widget renderWallpaper() {
-    // Jika wallpaper tidak terlihat
-    if (!_isWallpaperVisible.value) return const SizedBox.shrink();
-
     // Render video
     if (_videoController.value != null) {
       return _renderVideoWallpaper();
@@ -179,7 +182,7 @@ class LiveWallpaperController extends GetxController {
       );
     } else {
       return Container(
-        color: Colors.black,
+        color: Color.fromARGB(255, 23, 37, 67),
         child: const Center(child: CircularProgressIndicator()),
       );
     }

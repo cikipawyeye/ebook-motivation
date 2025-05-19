@@ -49,16 +49,21 @@ class ContentView extends GetView<ContentController> {
     final userController = Get.find<UserController>();
 
     return Scaffold(
-      backgroundColor: Color.fromARGB(255, 23, 37, 67),
+      backgroundColor: Colors.black,
       body: Obx(() {
         return Stack(
           children: [
             //  Background wallpaper
             Positioned.fill(
-              child: liveWallpaperController.isWallpaperVisible
-                  ? liveWallpaperController.renderWallpaper()
-                  : const SizedBox.shrink(),
+              child: liveWallpaperController.renderWallpaper(),
             ),
+            if (!liveWallpaperController.isWallpaperVisible)
+              // tutup wallpaper dengan warna navy
+              Positioned.fill(
+                child: Container(
+                  color: Color.fromARGB(255, 23, 37, 67),
+                ),
+              ),
             // Konten utama
             !(controller.isLoading.value ||
                     (controller.isFetchingData.value &&
@@ -70,7 +75,7 @@ class ContentView extends GetView<ContentController> {
                     child: PageView.builder(
                       controller: _pageController,
                       scrollDirection: Axis.vertical,
-                      itemCount: subcategory.contentsCount + 1,
+                      itemCount: controller.images.length,
                       onPageChanged: (index) {
                         controller.handlePageChanged(subcategory.id, index);
 
@@ -95,7 +100,8 @@ class ContentView extends GetView<ContentController> {
 
                         if (index > 2 && !userController.isPremium.value) {
                           Future.microtask(
-                              () => Get.offNamed(Routes.ticketPremium));
+                            () => Get.toNamed(Routes.ticketPremium),
+                          );
                         }
 
                         // Loop ke awal jika sudah di akhir dan nextCursor == null
@@ -188,14 +194,23 @@ class ContentView extends GetView<ContentController> {
     }
 
     return Center(
-      child: Column(
-        mainAxisSize: MainAxisSize.min,
+      child: Stack(
+        alignment: Alignment.center,
         children: [
+          // Watermark di belakang gambar utama
+          Image.asset(
+            'assets/images/watermark_icon.png', // Path gambar watermark
+            fit: BoxFit.contain,
+            errorBuilder: (context, error, stackTrace) {
+              return const SizedBox.shrink();
+            },
+          ),
+
           // Gambar utama
           Container(
             constraints: BoxConstraints(
               maxHeight: Get.height * 0.65,
-              maxWidth: double.infinity,
+              maxWidth: Get.width * 0.75,
             ),
             child: ClipRRect(
               borderRadius: BorderRadius.circular(8),
@@ -232,15 +247,6 @@ class ContentView extends GetView<ContentController> {
                   }),
             ),
           ),
-
-          // Watermark di bawah gambar utama
-          Image.asset(
-            'assets/images/watermark_icon.png', // Path gambar watermark
-            fit: BoxFit.contain,
-            errorBuilder: (context, error, stackTrace) {
-              return const SizedBox.shrink();
-            },
-          )
         ],
       ),
     );
@@ -255,22 +261,25 @@ class ContentView extends GetView<ContentController> {
           child: Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              if (controller.currentPage.value > 0)
-                GestureDetector(
-                  onTap: () {
+              GestureDetector(
+                onTap: () {
+                  if (controller.currentPage.value > 0) {
                     _pageController.previousPage(
                       duration: const Duration(milliseconds: 300),
                       curve: Curves.easeInOut,
                     );
-                  },
-                  child: Image.asset(
-                    'assets/icons/arrow_left.png',
-                    opacity: AlwaysStoppedAnimation(0.5),
-                    fit: BoxFit.contain,
-                    width: 40,
-                    height: 40,
-                  ),
+                  } else {
+                    Get.back();
+                  }
+                },
+                child: Image.asset(
+                  'assets/icons/arrow_left.png',
+                  opacity: AlwaysStoppedAnimation(0.5),
+                  fit: BoxFit.contain,
+                  width: 40,
+                  height: 40,
                 ),
+              ),
               Expanded(child: const SizedBox.shrink()),
               if (controller.currentPage.value < controller.images.length - 1)
                 GestureDetector(

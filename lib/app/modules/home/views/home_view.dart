@@ -27,6 +27,7 @@ class HomeView extends GetView<HomeController> {
         resizeToAvoidBottomInset: false,
         backgroundColor: Colors.white,
         appBar: AppBar(
+          automaticallyImplyLeading: false,
           title: Text(
             'Home',
             style: _getTextStyle(color: Colors.white),
@@ -511,7 +512,7 @@ class HomeView extends GetView<HomeController> {
                                             .isPremium) {
                                       Get.toNamed(Routes.accountStatus);
                                     } else {
-                                      Get.offNamed('/contents',
+                                      Get.toNamed('/contents',
                                           arguments: subcategory);
                                     }
                                   },
