@@ -210,7 +210,7 @@ class ContentView extends GetView<ContentController> {
           Container(
             constraints: BoxConstraints(
               maxHeight: Get.height * 0.65,
-              maxWidth: Get.width * 0.75,
+              maxWidth: Get.width * 0.85,
             ),
             child: ClipRRect(
               borderRadius: BorderRadius.circular(8),
