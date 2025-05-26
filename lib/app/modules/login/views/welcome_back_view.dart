@@ -30,7 +30,7 @@ class WelcomeBackView extends GetView {
       backgroundColor: Colors.white,
       body: Stack(children: [
         Image.asset(
-          "assets/images/Template.png",
+          "assets/images/background.gif",
           fit: BoxFit.cover,
           width: double.infinity,
           height: double.infinity,

@@ -3,6 +3,7 @@ import 'package:ebookapp/app/routes/app_pages.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class LoginView extends GetView<LoginController> {
   LoginView({super.key});
@@ -182,6 +183,8 @@ class LoginView extends GetView<LoginController> {
                 // Authenticate user
                 bool success = await controller.loginWithEmail();
                 if (success) {
+                  (await SharedPreferences.getInstance())
+                      .setBool('hasAccount', true);
                   Get.offAllNamed(Routes.welcomeBack);
                 }
 

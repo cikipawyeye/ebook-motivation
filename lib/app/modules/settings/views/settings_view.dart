@@ -13,7 +13,7 @@ import 'package:ebookapp/app/modules/settings/controllers/settings_controller.da
 import 'package:ebookapp/app/routes/app_pages.dart';
 
 class SettingsView extends GetView<SettingsController> {
-  const SettingsView({Key? key}) : super(key: key);
+  const SettingsView({super.key});
 
   // Method untuk encode query parameters email
   String? _encodeQueryParameters(Map<String, String> params) {
@@ -78,7 +78,7 @@ class SettingsView extends GetView<SettingsController> {
                 image: 'assets/icons/pencil_icon.png',
                 title: 'Ganti Wallpaper dan Audio',
                 onTap: () {
-                  Get.offNamed(Routes.wallpaperMusic);
+                  Get.toNamed(Routes.wallpaperMusic);
                 },
               ),
               const SizedBox(height: 8),
@@ -273,20 +273,9 @@ class SettingsView extends GetView<SettingsController> {
                           final prefs = await SharedPreferences.getInstance();
                           final userController = Get.find<UserController>();
 
-                          final int? storedUserId = prefs.getInt('userId');
-                          final int? currentUserId =
-                              userController.userId.value;
-
-                          if (storedUserId != currentUserId) {
-                            await prefs.setInt('userId', currentUserId ?? 0);
-                            debugPrint(
-                                "SharedPreferences diperbarui dengan userId baru: $currentUserId");
-                          } else {
-                            debugPrint(
-                                "UserId sama, memuat kembali data SharedPreferences");
-                          }
-
+                          await prefs.remove('userId');
                           await userController.logout();
+
                           Get.offAllNamed(Routes.login);
                         },
                         style: ElevatedButton.styleFrom(

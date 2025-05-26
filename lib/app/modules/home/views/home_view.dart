@@ -512,7 +512,7 @@ class HomeView extends GetView<HomeController> {
                                             .isPremium) {
                                       Get.toNamed(Routes.accountStatus);
                                     } else {
-                                      Get.toNamed('/contents',
+                                      Get.toNamed(Routes.contents,
                                           arguments: subcategory);
                                     }
                                   },

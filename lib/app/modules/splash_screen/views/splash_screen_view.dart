@@ -1,3 +1,4 @@
+import 'package:ebookapp/app/modules/splash_screen/views/welcome_view.dart';
 import 'package:ebookapp/app/routes/app_pages.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -9,10 +10,11 @@ class SplashScreenView extends GetView<SplashScreenController> {
 
   @override
   Widget build(BuildContext context) {
-    // Gunakan Future.delayed untuk menunda navigasi selama 2 detik
-    Future.delayed(const Duration(seconds: 2), () {
-      // Panggil fungsi untuk mengarahkan pengguna
-      _redirect();
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      // Gunakan Future.delayed untuk menunda navigasi selama 2 detik
+      Future.delayed(const Duration(seconds: 2), () {
+        _redirect();
+      });
     });
 
     return Scaffold(
@@ -39,16 +41,16 @@ class SplashScreenView extends GetView<SplashScreenController> {
 
     String? token = prefs.getString('token');
     if (token != null) {
-      Get.offNamed(Routes.home);
+      Get.offNamed(Routes.welcomeSplash, arguments: NextScreen.home);
       return;
     }
 
     bool? hasAccount = prefs.getBool('hasAccount') ?? false;
 
     if (!hasAccount) {
-      Get.offNamed(Routes.register);
+      Get.offNamed(Routes.welcomeSplash, arguments: NextScreen.register);
     } else {
-      Get.offNamed(Routes.login);
+      Get.offNamed(Routes.welcomeSplash, arguments: NextScreen.login);
     }
   }
 }

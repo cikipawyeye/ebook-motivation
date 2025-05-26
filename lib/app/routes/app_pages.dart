@@ -7,6 +7,7 @@ import 'package:ebookapp/app/modules/account_upgrade/views/payment_detail_view.d
 import 'package:ebookapp/app/modules/login/views/forgot_password.dart';
 import 'package:ebookapp/app/modules/login/views/success_forgot.dart';
 import 'package:ebookapp/app/modules/login/views/welcome_back_view.dart';
+import 'package:ebookapp/app/modules/splash_screen/views/welcome_view.dart';
 import 'package:get/get.dart';
 
 import '../modules/home/bindings/home_binding.dart';
@@ -160,6 +161,12 @@ class AppPages {
     GetPage(
       name: _Paths.welcomeBack,
       page: () => WelcomeBackView(),
+      transition: Transition.cupertinoDialog,
+      transitionDuration: const Duration(milliseconds: 500),
+    ),
+    GetPage(
+      name: _Paths.welcomeSplash,
+      page: () => WelcomeView(),
       transition: Transition.cupertinoDialog,
       transitionDuration: const Duration(milliseconds: 500),
     ),

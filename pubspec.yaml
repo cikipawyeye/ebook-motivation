@@ -84,7 +84,7 @@ flutter:
     - assets/images/watermark_icon.png
     - assets/images/Template.png
     - assets/images/logo_white.png
-    # - assets/images/background.gif
+    - assets/images/background.gif
 
     #load icons assets
     - assets/icons/crown_icon.png

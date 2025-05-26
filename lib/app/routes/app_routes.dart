@@ -33,6 +33,8 @@ abstract class Routes {
   static const createPayment = _Paths.createPayment;
   static const paymentInfo = _Paths.paymentInfo;
   static const welcomeBack = _Paths.welcomeBack;
+  static const welcomeSplash = _Paths.welcomeSplash;
+  static const contents = _Paths.contents;
 }
 
 abstract class _Paths {
@@ -69,4 +71,5 @@ abstract class _Paths {
   static const createPayment = '/upgrade/create-payment';
   static const paymentInfo = '/upgrade/payment-info';
   static const welcomeBack = '/login/welcome';
+  static const welcomeSplash = '/splash-screen/welcome';
 }
