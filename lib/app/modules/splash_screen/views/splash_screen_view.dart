@@ -1,4 +1,3 @@
-import 'package:ebookapp/app/modules/splash_screen/views/welcome_view.dart';
 import 'package:ebookapp/app/routes/app_pages.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -41,16 +40,16 @@ class SplashScreenView extends GetView<SplashScreenController> {
 
     String? token = prefs.getString('token');
     if (token != null) {
-      Get.offNamed(Routes.welcomeSplash, arguments: NextScreen.home);
+      Get.offNamed(Routes.home);
       return;
     }
 
     bool? hasAccount = prefs.getBool('hasAccount') ?? false;
 
-    if (!hasAccount) {
-      Get.offNamed(Routes.welcomeSplash, arguments: NextScreen.register);
+    if (hasAccount) {
+      Get.offNamed(Routes.login);
     } else {
-      Get.offNamed(Routes.welcomeSplash, arguments: NextScreen.login);
+      Get.offNamed(Routes.welcomeSplash);
     }
   }
 }

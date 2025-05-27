@@ -1,5 +1,6 @@
+// in case of background audio, you can uncomment the following line
+// import 'package:ebookapp/app/modules/splash_screen/controllers/background_audio_controller.dart';
 import 'package:ebookapp/app/modules/content/controllers/audio_controller.dart';
-import 'package:ebookapp/app/modules/splash_screen/controllers/background_audio_controller.dart';
 import 'package:ebookapp/app/modules/wallpaper_music/controllers/wallpaper_music_controller.dart';
 import 'package:ebookapp/app/routes/app_pages.dart';
 import 'package:flutter/widgets.dart';
@@ -21,7 +22,8 @@ class GlobalLifecycleObserver extends WidgetsBindingObserver {
           return;
         }
 
-        (Get.find<BackgroundAudioController>()).pause();
+        // in case of background audio, you can uncomment the following line
+        // (Get.find<BackgroundAudioController>()).pause();
         break;
       case AppLifecycleState.resumed:
         if (Get.currentRoute == Routes.contents) {
@@ -36,7 +38,8 @@ class GlobalLifecycleObserver extends WidgetsBindingObserver {
           return;
         }
 
-        (Get.find<BackgroundAudioController>()).resume();
+        // in case of background audio, you can uncomment the following line
+        // (Get.find<BackgroundAudioController>()).resume();
         break;
       default:
         break;

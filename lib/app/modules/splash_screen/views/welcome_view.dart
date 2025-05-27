@@ -3,41 +3,15 @@ import 'package:ebookapp/app/routes/app_pages.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:shared_preferences/shared_preferences.dart';
-
-enum NextScreen {
-  home,
-  register,
-  login,
-}
 
 class WelcomeView extends GetView {
   const WelcomeView({super.key});
 
   @override
   Widget build(BuildContext context) {
-    final NextScreen nextScreen = Get.arguments as NextScreen;
     final audioCtrl = Get.find<BackgroundAudioController>();
 
     WidgetsBinding.instance.addPostFrameCallback((_) {
-      Future.delayed(const Duration(seconds: 2), () async {
-        SharedPreferences prefs = await SharedPreferences.getInstance();
-
-        String? token = prefs.getString('token');
-        if (token != null) {
-          Get.offNamed(Routes.home);
-          return;
-        }
-
-        final nextRoute = nextScreen == NextScreen.register
-            ? Routes.register
-            : nextScreen == NextScreen.login
-                ? Routes.login
-                : Routes.home;
-
-        Get.offNamed(nextRoute);
-      });
-
       audioCtrl.play();
     });
 
@@ -78,16 +52,23 @@ class WelcomeView extends GetView {
                 const SizedBox(
                   height: 30,
                 ),
-                Text(
-                  nextScreen == NextScreen.register
-                      ? "Sebelum memulai, kita kenalan dulu yuk..."
-                      : 'Kita mulai lagi yuk...',
-                  textAlign: TextAlign.center,
-                  style: GoogleFonts.leagueSpartan(
-                    fontSize: 18,
-                    fontWeight: FontWeight.w400,
-                    color: Colors.white,
+                ElevatedButton(
+                  onPressed: () {
+                    Get.offNamed(Routes.register);
+                    audioCtrl.pause();
+                  },
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: Colors.white.withValues(alpha: 0.3),
                   ),
+                  child: Padding(
+                      padding: EdgeInsets.symmetric(horizontal: 26),
+                      child: Text(
+                        "Kenalan dulu yuk...",
+                        style: GoogleFonts.leagueSpartan(
+                          color: Colors.white,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      )),
                 ),
                 Row(
                   children: [
