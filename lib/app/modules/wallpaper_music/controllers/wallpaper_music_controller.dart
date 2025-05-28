@@ -49,6 +49,7 @@ class WallpaperMusicController extends GetxController {
   void onClose() {
     super.onClose();
     pageController.dispose();
+    audioPlayer.dispose();
     if (videoController.value != null) {
       videoController.value!.dispose();
     }

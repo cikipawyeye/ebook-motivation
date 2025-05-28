@@ -30,7 +30,7 @@ class WelcomeView extends GetView {
               mainAxisAlignment: MainAxisAlignment.end,
               children: [
                 Text(
-                  "Assalamualaikum...\nSelamat datang di aplikasi ini!",
+                  "Assalamualaikum...\nSelamat datang di aplikasi ini.",
                   textAlign: TextAlign.center,
                   style: GoogleFonts.leagueSpartan(
                     fontSize: 18,
@@ -61,10 +61,13 @@ class WelcomeView extends GetView {
                     backgroundColor: Colors.white.withValues(alpha: 0.3),
                   ),
                   child: Padding(
-                      padding: EdgeInsets.symmetric(horizontal: 26),
+                      padding:
+                          EdgeInsets.symmetric(vertical: 10, horizontal: 26),
                       child: Text(
-                        "Kenalan dulu yuk...",
+                        "Sebelum memulai, kita kenalan dulu yuk...",
+                        textAlign: TextAlign.center,
                         style: GoogleFonts.leagueSpartan(
+                          fontSize: 17,
                           color: Colors.white,
                           fontWeight: FontWeight.bold,
                         ),
