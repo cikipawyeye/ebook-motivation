@@ -1,3 +1,4 @@
+import 'package:ebookapp/app/modules/splash_screen/controllers/background_audio_controller.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -8,22 +9,10 @@ class WelcomeBackView extends GetView {
 
   @override
   Widget build(BuildContext context) {
-    WidgetsBinding.instance.addPostFrameCallback((_) {
-      Future.delayed(const Duration(seconds: 2), () async {
-        SharedPreferences prefs = await SharedPreferences.getInstance();
-        // Cek apakah ini adalah pengguna baru
-        bool isNewUser = prefs.getBool('isNewUser') ?? true;
+    final audioCtrl = Get.find<BackgroundAudioController>();
 
-        if (isNewUser) {
-          // Jika pengguna baru, arahkan ke wallpaper-music
-          Get.offAllNamed('/wallpaper-music');
-          // Set status pengguna baru menjadi false
-          prefs.setBool('isNewUser', false);
-        } else {
-          // Jika bukan pengguna baru, arahkan ke halaman utama
-          Get.offAllNamed('/home');
-        }
-      });
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      audioCtrl.play();
     });
 
     return Scaffold(
@@ -59,17 +48,44 @@ class WelcomeBackView extends GetView {
                 const SizedBox(
                   height: 30,
                 ),
-                Text(
-                  "Kita mulai yuk...",
-                  style: GoogleFonts.poppins(
-                    fontSize: 16,
-                    fontWeight: FontWeight.w400,
-                    color: Colors.white,
+                ElevatedButton(
+                  onPressed: () {
+                    redirect().then((_) {
+                      audioCtrl.pause();
+                    });
+                  },
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: Colors.white.withValues(alpha: 0.3),
                   ),
+                  child: Padding(
+                      padding: EdgeInsets.symmetric(horizontal: 26),
+                      child: Text(
+                        "Kita mulai yuk...",
+                        style: GoogleFonts.leagueSpartan(
+                          color: Colors.white,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      )),
                 ),
               ],
             ))
       ]),
     );
+  }
+
+  Future<void> redirect() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    // Cek apakah ini adalah pengguna baru
+    bool isNewUser = prefs.getBool('isNewUser') ?? true;
+
+    if (isNewUser) {
+      // Jika pengguna baru, arahkan ke wallpaper-music
+      Get.offAllNamed('/wallpaper-music');
+      // Set status pengguna baru menjadi false
+      prefs.setBool('isNewUser', false);
+    } else {
+      // Jika bukan pengguna baru, arahkan ke halaman utama
+      Get.offAllNamed('/home');
+    }
   }
 }

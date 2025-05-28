@@ -1,7 +1,6 @@
 import 'dart:convert';
 import 'dart:io';
 import 'package:dio/dio.dart';
-import 'package:ebookapp/app/modules/splash_screen/controllers/background_audio_controller.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:http/http.dart' as http;
@@ -33,9 +32,6 @@ class WallpaperMusicController extends GetxController {
   final audioPlayerState = Rx<ProcessingState>(ProcessingState.idle);
   final isPlayingAudio = RxBool(false);
 
-  final BackgroundAudioController _backgroundAudioController =
-      Get.find<BackgroundAudioController>();
-
   @override
   void onInit() {
     super.onInit();
@@ -47,19 +43,15 @@ class WallpaperMusicController extends GetxController {
     audioPlayer.playerStateStream.listen((state) {
       audioPlayerState.value = state.processingState;
     });
-
-    _backgroundAudioController.pause();
   }
 
   @override
   void onClose() {
     super.onClose();
     pageController.dispose();
-    audioPlayer.dispose();
     if (videoController.value != null) {
       videoController.value!.dispose();
     }
-    _backgroundAudioController.resume();
   }
 
   Future<String?> _getToken() async {

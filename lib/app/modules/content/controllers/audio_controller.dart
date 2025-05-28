@@ -1,7 +1,6 @@
 import 'dart:async';
 import 'dart:io';
 import 'dart:convert';
-import 'package:ebookapp/app/modules/splash_screen/controllers/background_audio_controller.dart';
 import 'package:http/http.dart' as http;
 import 'package:dio/dio.dart';
 import 'package:ebookapp/core/constants/constant.dart';
@@ -25,13 +24,9 @@ class AudioController extends GetxController {
   // Volume control
   final RxDouble audioVolume = 0.5.obs;
 
-  final BackgroundAudioController _backgroundAudioController =
-      Get.find<BackgroundAudioController>();
-
   @override
   void onInit() {
     super.onInit();
-    _backgroundAudioController.pause();
     _initializeAudioPlayer();
   }
 
@@ -164,6 +159,8 @@ class AudioController extends GetxController {
     }
   }
 
+  /// Pause the audio player by the app
+  /// This is used to pause the audio when the app is in the background
   Future<void> pauseByApp() async {
     await _audioPlayer.pause();
   }
@@ -231,7 +228,6 @@ class AudioController extends GetxController {
     debugPrint('AudioController closed');
     _audioPlayer.stop();
     _audioPlayer.dispose();
-    _backgroundAudioController.resume();
     super.onClose();
   }
 }
